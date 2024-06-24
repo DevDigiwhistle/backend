@@ -25,10 +25,8 @@ app.listen(PORT, () => {
 
 process.on('uncaughtException', (err: any) => {
   console.error(err)
-  process.exit(1)
 })
 
 process.on('unhandledRejection', (err: any) => {
   console.error(err)
-  process.exit(1)
 })
