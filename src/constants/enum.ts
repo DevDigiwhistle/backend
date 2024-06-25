@@ -21,3 +21,12 @@ export enum RESPONSE_CODES{
     SERVICE_UNAVAILABLE = 503,
     GATEWAY_TIMEOUT = 504,
 }
+
+export enum ROLES{
+    INFLUENCER='Influencer',
+    BRAND='Brand',
+    AGENCY='Agency',
+    ADMIN='Admin',
+    EMPLOYEE='Employee',
+    ACCOUNTS='Accounts'
+}
