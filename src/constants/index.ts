@@ -1,5 +1,3 @@
 import * as Enum from './enum'
 
-export{
-    Enum
-}
+export { Enum }

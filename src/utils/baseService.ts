@@ -1,19 +1,25 @@
-import { ObjectLiteral, DeepPartial, FindOptionsWhere } from 'typeorm'
-import { ICRUDBase } from './baseCrud'
+import {
+  type ObjectLiteral,
+  type DeepPartial,
+  type FindOptionsWhere,
+} from 'typeorm'
+import { type ICRUDBase } from './baseCrud'
 import HttpException from './HttpException'
 
 export interface IBaseService<T extends ObjectLiteral> {
-  add(data: DeepPartial<T>): Promise<string>
-  findAll(
+  add: (data: DeepPartial<T>) => Promise<string>
+  findAll: (
     query: FindOptionsWhere<T> | undefined,
     relations?: string[]
-  ): Promise<T[]>
-  findOne(query: FindOptionsWhere<T>, relations?: string[]): Promise<T>
-  update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T>
-  delete(query: FindOptionsWhere<T>): Promise<void>
+  ) => Promise<T[]>
+  findOne: (query: FindOptionsWhere<T>, relations?: string[]) => Promise<T>
+  update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
+  delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
 
-export abstract class BaseService<T extends ObjectLiteral> implements IBaseService<T> {
+export abstract class BaseService<T extends ObjectLiteral>
+  implements IBaseService<T>
+{
   private readonly crudBase: ICRUDBase<T>
 
   constructor(crudBase: ICRUDBase<T>) {

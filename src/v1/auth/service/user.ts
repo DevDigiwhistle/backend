@@ -1,30 +1,46 @@
-import { IBaseService,BaseService } from "../../../utils/baseService";
-import { IUserCRUD } from "../crud";
-import { IUser } from "../interface";
+import { HttpException } from '../../../utils'
+import { type IUserCRUD } from '../crud'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { type LoginDTO, type SignUpDTO } from '../types/auth'
 
-interface IUserService{}
-
-class UserService{
-    private userCRUD: IUserCRUD
-
-    constructor(userCRUD: IUserCRUD){
-        this.userCRUD=userCRUD
-    }
-
-    async signUp(){
-
-    }
-
-    async logIn(){
-
-    }
-
-    async resetPassword(){
-        
-    }
+interface IUserService {
+  signUp: (signUpData: SignUpDTO) => Promise<string>
+  logIn: (logInData: LoginDTO) => Promise<string>
 }
 
-export{
-    IUserService,
-    UserService
+class UserService implements IUserService {
+  private readonly userCRUD: IUserCRUD
+
+  constructor(userCRUD: IUserCRUD) {
+    this.userCRUD = userCRUD
+  }
+
+  async signUp(signUpData: SignUpDTO): Promise<string> {
+    try {
+      const { email, password, name, role } = signUpData
+      const hashedPassword = bcrypt.hashSync(password, 10)
+
+      const userData = {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      }
+
+      const data = await this.userCRUD.add(userData as any)
+      const token = jwt.sign({ id: data.id }, process.env.SECRET ?? '')
+      return token
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async logIn(loginData: LoginDTO): Promise<string> {
+    return ''
+  }
+
+  // async resetPassword() { }
 }
+
+export { type IUserService, UserService }

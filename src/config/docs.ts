@@ -1,15 +1,14 @@
-import swaggerAutogen from 'swagger-autogen';
+import swaggerAutogen from 'swagger-autogen'
 
 const doc = {
   info: {
     title: 'Digiwhistle API',
-    description: 'Description'
+    description: 'Description',
   },
-  host: 'localhost:3000'
-};
+  host: 'localhost:3000',
+}
 
-const outputFile = './swagger-output.json';
-const routes = ['./src/v1/auth/routes'];
+const outputFile = './swagger-output.json'
+const routes = ['./src/v1/auth/routes']
 
-
-swaggerAutogen()(outputFile, routes, doc);
+swaggerAutogen()(outputFile, routes, doc)

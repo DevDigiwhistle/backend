@@ -1,5 +1,3 @@
-import { AppDataSource } from "./db";
+import { AppDataSource } from './db'
 
-export{
-    AppDataSource
-}
+export { AppDataSource }

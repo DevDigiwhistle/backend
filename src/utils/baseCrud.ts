@@ -1,22 +1,22 @@
 import { AppDataSource } from '../config'
 import HttpException from './HttpException'
 import {
-  DeepPartial,
-  EntityTarget,
-  ObjectLiteral,
-  Repository,
-  FindOptionsWhere,
+  type DeepPartial,
+  type EntityTarget,
+  type ObjectLiteral,
+  type Repository,
+  type FindOptionsWhere,
 } from 'typeorm'
 
 export interface ICRUDBase<T extends ObjectLiteral> {
-  add(data: DeepPartial<T>): Promise<T>
-  findAll(
+  add: (data: DeepPartial<T>) => Promise<T>
+  findAll: (
     query: FindOptionsWhere<T> | undefined,
     relations: string[]
-  ): Promise<T[]>
-  findOne(query: FindOptionsWhere<T>, relations: string[]): Promise<T>
-  update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T>
-  delete(query: FindOptionsWhere<T>): Promise<void>
+  ) => Promise<T[]>
+  findOne: (query: FindOptionsWhere<T>, relations: string[]) => Promise<T>
+  update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
+  delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
 
 export abstract class CRUDBase<T extends ObjectLiteral>
@@ -31,13 +31,13 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   async add(data: DeepPartial<T>): Promise<T> {
     try {
       const entity = this.repository.create(data)
-      return this.repository.save(entity)
+      return await this.repository.save(entity)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
 
-   async findAll(
+  async findAll(
     query: FindOptionsWhere<T> | undefined,
     relations: string[] = []
   ): Promise<T[]> {
@@ -52,7 +52,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       } else {
         const data = await this.repository.find({
           where: query,
-          relations: relations,
+          relations,
         })
         return data
       }
@@ -61,7 +61,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-   async findOne(
+  async findOne(
     query: FindOptionsWhere<T>,
     relations: string[] = []
   ): Promise<T> {
@@ -76,7 +76,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
 
       const data = await this.repository.findOne({
         where: query,
-        relations: relations,
+        relations,
       })
 
       if (data === null) throw new HttpException(404, 'Data Not Found!!')
@@ -87,10 +87,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-   async update(
-    query: FindOptionsWhere<T>,
-    data: Partial<T>
-  ): Promise<T> {
+  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
     try {
       if (
         query === undefined ||
@@ -101,13 +98,13 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       }
 
       await this.repository.update(query, data)
-      return this.findOne(query)
+      return await this.findOne(query)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
 
-   async delete(query: FindOptionsWhere<T>): Promise<void> {
+  async delete(query: FindOptionsWhere<T>): Promise<void> {
     try {
       if (
         query === undefined ||

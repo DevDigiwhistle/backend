@@ -1,14 +1,14 @@
-import { BaseController } from "./baseController";
-import { CRUDBase,CRUDBaseInterface } from "./baseCrud";
-import HttpException from "./HttpException";
-import { errorHandler } from "./errorHandler";
-import { BaseValidator } from "./baseValidators";
+import { BaseController } from './baseController'
+import { CRUDBase, ICRUDBase } from './baseCrud'
+import HttpException from './HttpException'
+import { errorHandler } from './errorHandler'
+import { BaseValidator } from './baseValidators'
 
 export {
-    BaseController,
-    CRUDBase,
-    CRUDBaseInterface,
-    HttpException,
-    errorHandler,
-    BaseValidator
+  BaseController,
+  CRUDBase,
+  ICRUDBase,
+  HttpException,
+  errorHandler,
+  BaseValidator,
 }

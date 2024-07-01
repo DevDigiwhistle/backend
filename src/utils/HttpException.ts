@@ -1,4 +1,4 @@
-import { Enum } from "../constants"
+import { Enum } from '../constants'
 
 class HttpException extends Error {
   errorCode: number
@@ -7,7 +7,7 @@ class HttpException extends Error {
     errorCode: number,
     public readonly message: string | any
   ) {
-    super(message ?? "Internal Server Error")
+    super(message ?? 'Internal Server Error')
     this.errorCode = errorCode ?? Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR
   }
 }

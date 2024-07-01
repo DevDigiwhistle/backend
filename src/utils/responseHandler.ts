@@ -1,4 +1,4 @@
-import { Response } from 'express'
+import { type Response } from 'express'
 import { Enum } from '../constants'
 
 export const responseHandler = async (
@@ -7,12 +7,9 @@ export const responseHandler = async (
   message: string,
   data: any
 ): Promise<Response> => {
-  
-    return res
-      .status(statusCode)
-      .json({
-        message: message,
-        status: Enum.RESPONSE_STATES.SUCCESS,
-        data: data,
-      })
+  return res.status(statusCode).json({
+    message,
+    status: Enum.RESPONSE_STATES.SUCCESS,
+    data,
+  })
 }

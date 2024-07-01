@@ -1,7 +1,7 @@
 import Ajv, { type Schema } from 'ajv'
 import HttpException from './HttpException'
 import { Enum } from '../constants'
-import {Request,Response,NextFunction} from 'express'
+import { type Request, type Response, type NextFunction } from 'express'
 
 export class BaseValidator {
   private readonly schemaObj: Schema
@@ -10,15 +10,19 @@ export class BaseValidator {
     this.schemaObj = schemaObj
   }
 
-  public async validateInput(req: Request,res: Response,next: NextFunction): Promise<void> {
+  public async validateInput(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const ajv = new Ajv()
 
       const validate = ajv.compile(this.schemaObj)
       const valid = validate(req.body)
-      
-      if(valid) next()
-      else{
+
+      if (valid) next()
+      else {
         const validationError = validate.errors?.map((message) => {
           return message.message ?? ''
         })

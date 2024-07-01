@@ -1,6 +1,3 @@
-import { IUserCRUD,UserCRUD } from "./user";
+import { type IUserCRUD, UserCRUD } from './user'
 
-export {
-    IUserCRUD,
-    UserCRUD
-}
+export { type IUserCRUD, UserCRUD }
