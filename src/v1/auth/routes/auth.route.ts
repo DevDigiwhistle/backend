@@ -1,5 +1,5 @@
 import Router from 'express'
-import { AuthController } from '../controller/auth'
+import { AuthController } from '../controller/auth.controller'
 import { UserService } from '../service'
 import { UserCRUD } from '../crud'
 
@@ -8,6 +8,6 @@ const authCrud = new UserCRUD()
 const authService = new UserService(authCrud)
 const authController = new AuthController(authService)
 
-authRouter.post('/signup', authController.signUpController.bind(authController))
+authRouter.post('/signup', authController.signUpController)
 
 export default authRouter

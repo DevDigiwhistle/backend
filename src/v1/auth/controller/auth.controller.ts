@@ -11,13 +11,9 @@ interface IAuthController {
 
 class AuthController implements IAuthController {
   private readonly authService: IUserService
-  //   private readonly loginDTOSchema
-  //   private readonly signUpDTOSchema
 
   constructor(authService: IUserService) {
     this.authService = authService
-    // this.loginDTOSchema = loginDTOSchema
-    // this.signUpDTOSchema = signUpDTOSchema
   }
 
   async signUpController(req: Request, res: Response): Promise<Response> {
