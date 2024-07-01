@@ -1,5 +1,8 @@
 import cors from 'cors'
+
 import dotenv from 'dotenv'
+dotenv.config({ debug: true })
+
 import express, { type Request, type Response } from 'express'
 import apiRouter from './v1/auth/routes'
 import { AppDataSource } from './config'
@@ -9,7 +12,7 @@ app.use(cors({ origin: '*' }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-dotenv.config({ debug: true })
+
 
 const PORT = 8000
 
