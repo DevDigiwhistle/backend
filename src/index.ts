@@ -2,6 +2,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { type Request, type Response } from 'express'
 import apiRouter from './v1/auth/routes'
+import { AppDataSource } from './config'
 
 const app = express()
 app.use(cors({ origin: '*' }))
@@ -24,6 +25,13 @@ app.get('*', (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`)
+  AppDataSource.initialize()
+    .then(() => {
+      console.log('Connected Successfully!!')
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 })
 
 process.on('uncaughtException', (err: any) => {
