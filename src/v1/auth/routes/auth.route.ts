@@ -8,6 +8,6 @@ const authCrud = new UserCRUD()
 const authService = new UserService(authCrud)
 const authController = new AuthController(authService)
 
-authRouter.post('/signup', authController.signUpController)
+authRouter.post('/signup', authController.signUpController.bind(authController))
 
 export default authRouter
