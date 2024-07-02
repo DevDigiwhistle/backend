@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/space-before-function-paren */
 import { type Request, type Response } from 'express'
 import { type IUserService } from '../service'
 import { errorHandler } from '../../../utils'
@@ -21,7 +20,7 @@ class AuthController implements IAuthController {
     try {
       const resp = await this.authService.signUp(req.body)
 
-      return responseHandler(Enum.RESPONSE_CODES.CREATED, res, 'SignUp Successfull!!', { token: resp })
+      return responseHandler(Enum.RESPONSE_CODES.CREATED, res, 'SignUp Successfull!!', resp)
     } catch (e) {
       return await errorHandler(e?.errorCode, e?.message)
     }
