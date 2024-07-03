@@ -14,7 +14,10 @@ export interface ICRUDBase<T extends ObjectLiteral> {
     query: FindOptionsWhere<T> | undefined,
     relations: string[]
   ) => Promise<T[]>
-  findOne: (query: FindOptionsWhere<T>, relations: string[]) => Promise<T>
+  findOne: (
+    query: FindOptionsWhere<T>,
+    relations: string[]
+  ) => Promise<T | null>
   update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
   delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
@@ -64,7 +67,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   async findOne(
     query: FindOptionsWhere<T>,
     relations: string[] = []
-  ): Promise<T> {
+  ): Promise<T | null> {
     try {
       if (
         query === undefined ||
@@ -78,8 +81,6 @@ export abstract class CRUDBase<T extends ObjectLiteral>
         where: query,
         relations,
       })
-
-      if (data === null) throw new HttpException(404, 'Data Not Found!!')
 
       return data
     } catch (e) {
@@ -98,7 +99,10 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       }
 
       await this.repository.update(query, data)
-      return await this.findOne(query)
+      const result = await this.findOne(query)
+
+      if (result === null) throw new HttpException(404, 'Not Found!!')
+      return result
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

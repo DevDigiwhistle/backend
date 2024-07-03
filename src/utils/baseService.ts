@@ -51,7 +51,10 @@ export abstract class BaseService<T extends ObjectLiteral>
     relations: string[] = []
   ): Promise<T> {
     try {
-      return await this.crudBase.findOne(query, relations)
+      const data=await this.crudBase.findOne(query, relations)
+      if(data===null)
+          throw new HttpException(404,'Entity Not Found!!')
+      return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

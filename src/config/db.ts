@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm'
-import { User } from '../v1/auth/models'
+import { User } from '../v1/modules/auth/models/index'
+import { ContactUsForm } from '../v1/modules/landing/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -10,6 +11,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.ENV !== 'production',
   logging: process.env.ENV !== 'production',
-  entities: [User],
+  entities: [User,ContactUsForm],
   ssl: true
 })

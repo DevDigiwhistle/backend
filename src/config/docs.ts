@@ -1,14 +1,27 @@
-import swaggerAutogen from 'swagger-autogen'
+import swaggerJSDoc from 'swagger-jsdoc'
 
-const doc = {
+const swaggerDefinition = {
+  openapi: '3.0.0',
   info: {
     title: 'Digiwhistle API',
-    description: 'Description',
+    version: '1.0.0'
   },
-  host: 'localhost:3000',
+  servers: [
+    {
+      url: 'http://localhost:8000',
+      description: 'Development Server'
+    },
+    {
+      url: '',
+      description: 'Production Server'
+    }
+  ]
 }
 
-const outputFile = './swagger-output.json'
-const routes = ['./src/v1/auth/routes']
+const options = {
+  swaggerDefinition,
+  apis: ['./src/v1/docs/*.yaml']
+}
 
-swaggerAutogen()(outputFile, routes, doc)
+const swaggerSpec = swaggerJSDoc(options)
+export default swaggerSpec

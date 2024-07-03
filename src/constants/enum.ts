@@ -29,3 +29,8 @@ export enum ROLES {
   EMPLOYEE = 'Employee',
   ACCOUNTS = 'Accounts',
 }
+
+export enum PersonType{
+  INFLUENCER = 'Influencer',
+  BRAND = 'Brand',
+}

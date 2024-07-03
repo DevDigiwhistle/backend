@@ -2,6 +2,7 @@ import Ajv, { type Schema } from 'ajv'
 import HttpException from './HttpException'
 import { Enum } from '../constants'
 import { type Request, type Response, type NextFunction } from 'express'
+import addFormats from 'ajv-formats'
 
 export class BaseValidator {
   private readonly schemaObj: Schema
@@ -17,7 +18,7 @@ export class BaseValidator {
   ): Promise<void> {
     try {
       const ajv = new Ajv()
-
+      addFormats(ajv, { mode: 'full' })
       const validate = ajv.compile(this.schemaObj)
       const valid = validate(req.body)
 
@@ -39,7 +40,7 @@ export class BaseValidator {
         )
       }
     } catch (e: any) {
-      res.status(e?.errorCode).json(e?.message)
+      res.status(e?.errorCode ?? 500).json(e?.message ?? 'Internal Server Error')
     }
   }
 }

@@ -1,0 +1,83 @@
+tags:
+  name: Landing
+  description: Endpoints for Landing Page
+
+paths:
+  /v1/contactUs:
+    post:
+      summary: Create a new contact us form
+      tags:
+        - Landing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactUsForm'
+      responses:
+        '200':
+          description: The form was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createResponseModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    ContactUsForm:
+      type: object
+      required:
+        - name
+        - email
+        - personType
+      properties:
+        
+        name:
+          type: string
+          description: Name of the person
+        email:
+          type: string
+          format: email
+          description: Email address of the person
+        followersCount:
+          type: string
+          description: Number of followers
+          nullable: true
+        profileLink:
+          type: string
+          description: Profile link
+          nullable: true
+        mobileNo:
+          type: string
+          description: Mobile number
+          nullable: true
+        message:
+          type: string
+          description: Message from the person
+          nullable: true
+        personType:
+          type: string
+          enum:
+            - Brand
+            - Influencer
+          description: Type of person
+      example:
+        name: John Doe
+        email: john.doe@example.com
+        followersCount: "1000"
+        profileLink: "https://example.com/profile/johndoe"
+        mobileNo: "1234567890"
+        message: "Hello, this is John!"
+        personType: Brand

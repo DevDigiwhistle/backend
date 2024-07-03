@@ -1,13 +1,9 @@
-import { HttpException } from '../../../utils'
-import { type IUserCRUD } from '../crud'
+import { HttpException } from '../../../../utils'
+import { type IUserCRUD } from '../interface'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { type LoginDTO, type SignUpDTO } from '../types/auth'
-
-interface IUserService {
-  signUp: (signUpData: SignUpDTO) => Promise<string>
-  logIn: (logInData: LoginDTO) => Promise<string>
-}
+import { IUserService } from '../interface'
 
 class UserService implements IUserService {
   private readonly userCRUD: IUserCRUD

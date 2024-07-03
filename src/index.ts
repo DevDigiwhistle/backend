@@ -5,7 +5,8 @@ dotenv.config({ debug: true })
 
 import express, { type Request, type Response } from 'express'
 import { AppDataSource } from './config'
-import authRouter from './v1/auth/routes'
+import apiRouter from './v1/routes'
+
 
 const app = express()
 app.use(cors({ origin: '*' }))
@@ -19,7 +20,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello world')
 })
 
-app.use('/auth', authRouter)
+app.use('/v1',apiRouter)
 
 app.get('*', (req: Request, res: Response) => {
   res.status(403).send('Sorry, the page you requested was not found.')

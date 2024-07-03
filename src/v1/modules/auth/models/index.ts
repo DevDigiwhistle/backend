@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
-import { Enum } from '../../../constants'
+import { Enum } from '../../../../constants'
 import { type IUser } from '../interface'
 import "reflect-metadata";
 
