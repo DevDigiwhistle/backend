@@ -18,3 +18,9 @@ export interface IUserService {
   signUp: (signUpData: SignUpDTO) => Promise<string>
   logIn: (logInData: LoginDTO) => Promise<string>
 }
+
+export interface IGoogleAuthService{
+  registerAndLogin(idToken: string): Promise<string>
+  generateResetLink(email: string): Promise<string>
+  resetPassword(password: string,oobCode: string): Promise<void>
+}

@@ -1,3 +1,5 @@
 import { AppDataSource } from './db'
+import firebase from './firebase'
+import swaggerSpec from './docs'
 
-export { AppDataSource }
+export { AppDataSource,firebase,swaggerSpec }
