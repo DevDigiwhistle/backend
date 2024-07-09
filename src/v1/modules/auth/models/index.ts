@@ -1,26 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Enum } from '../../../../constants'
-import { type IUser } from '../interface'
+import { IRole, type IUser } from '../interface'
 import "reflect-metadata";
 
 @Entity()
 export class User extends BaseEntity implements IUser {
-  @PrimaryGeneratedColumn('uuid')
+  @Column({primary: true,type:'varchar'})
   id: string
 
-  @Column({ unique: true })
+  @Column({ unique: true,type:'varchar' })
   email: string
 
-  @Column({ nullable: false })
-  password: string
 
-  @Column({ nullable: false })
-  name: string
+  @ManyToOne(()=>Role,(role)=>role.users)
+  role: Role
+}
+
+@Entity()
+export class Role extends BaseEntity implements IRole{
+  @PrimaryGeneratedColumn()
+  id: number
 
   @Column({
     type: 'enum',
     enum: Enum.ROLES,
-    nullable: false,
+    nullable: false
   })
-  role: Enum.ROLES
+  name: Enum.ROLES
+
+  @OneToMany(()=>User,(user)=>user.role)
+  users: User[]
 }

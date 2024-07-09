@@ -12,7 +12,7 @@ export interface IBaseService<T extends ObjectLiteral> {
     query: FindOptionsWhere<T> | undefined,
     relations?: string[]
   ) => Promise<T[]>
-  findOne: (query: FindOptionsWhere<T>, relations?: string[]) => Promise<T>
+  findOne: (query: FindOptionsWhere<T>, relations?: string[]) => Promise<T | null>
   update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
   delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
@@ -49,11 +49,10 @@ export abstract class BaseService<T extends ObjectLiteral>
   async findOne(
     query: FindOptionsWhere<T>,
     relations: string[] = []
-  ): Promise<T> {
+  ): Promise<T | null> {
     try {
       const data=await this.crudBase.findOne(query, relations)
-      if(data===null)
-          throw new HttpException(404,'Entity Not Found!!')
+      
       return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
