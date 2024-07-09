@@ -35,8 +35,4 @@ const resetPasswordSchema = {
   additionalProperties: false,
 }
 
-export{
-    resetPasswordEmailSchema,
-    resetPasswordSchema,
-    authSchema
-}
+export { resetPasswordEmailSchema, resetPasswordSchema, authSchema }

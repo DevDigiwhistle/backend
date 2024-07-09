@@ -40,7 +40,13 @@ export class BaseValidator {
         )
       }
     } catch (e: any) {
-      res.status(e?.errorCode ?? 500).json(e?.message ?? 'Internal Server Error')
+      if (typeof e?.errorCode !== 'number') {
+        e.errorCode = 500
+      }
+
+      res
+        .status(e.errorCode as number)
+        .json(e?.message ?? 'Internal Server Error')
     }
   }
 }

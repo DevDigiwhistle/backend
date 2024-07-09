@@ -156,7 +156,7 @@ paths:
                     type: string
                   message:
                     type: string
-                  
+
         '400':
           description: Bad request
           content:

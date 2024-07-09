@@ -1,14 +1,20 @@
-import { Enum } from '../constants'
-
 class HttpException extends Error {
-  errorCode: number
+  errorCode: number | any
 
   constructor(
-    errorCode: number,
+    errorCode: number | any,
     public readonly message: string | any
   ) {
-    super(message ?? 'Internal Server Error')
-    this.errorCode = errorCode ?? Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR
+    if (typeof errorCode !== 'number') {
+      errorCode = 500
+    }
+
+    if (message === undefined || message === null) {
+      message = 'Internal Server Error'
+    }
+
+    super(message as string)
+    this.errorCode = errorCode as number
   }
 }
 

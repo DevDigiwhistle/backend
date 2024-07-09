@@ -4,23 +4,23 @@ const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
     title: 'Digiwhistle API',
-    version: '1.0.0'
+    version: '1.0.0',
   },
   servers: [
     {
       url: 'http://localhost:8000',
-      description: 'Development Server'
+      description: 'Development Server',
     },
     {
       url: '',
-      description: 'Production Server'
-    }
-  ]
+      description: 'Production Server',
+    },
+  ],
 }
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/v1/docs/*.yaml']
+  apis: ['./src/v1/docs/*.yaml'],
 }
 
 const swaggerSpec = swaggerJSDoc(options)

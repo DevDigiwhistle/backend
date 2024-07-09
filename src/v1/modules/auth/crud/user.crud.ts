@@ -8,5 +8,3 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
     super(user)
   }
 }
-
-

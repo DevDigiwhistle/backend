@@ -1,6 +1,3 @@
-import { ContactUsFormService } from "./contactUs.service";
+import { ContactUsFormService } from './contactUs.service'
 
-export{
-    
-    ContactUsFormService
-}
+export { ContactUsFormService }

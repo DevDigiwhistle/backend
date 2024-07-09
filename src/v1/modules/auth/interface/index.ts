@@ -9,18 +9,17 @@ export interface IUser extends ObjectLiteral {
   role: IRole | number
 }
 
-export interface IRole extends ObjectLiteral{
+export interface IRole extends ObjectLiteral {
   id: number
   name: Enum.ROLES
   users: IUser[]
 }
 
-
 export interface IUserCRUD extends ICRUDBase<IUser> {}
 
-export interface IRoleCRUD extends ICRUDBase<IRole>{}
+export interface IRoleCRUD extends ICRUDBase<IRole> {}
 
-export interface IRoleService extends IBaseService<IRole>{}
+export interface IRoleService extends IBaseService<IRole> {}
 
 export interface IUserService {
   signUp(signUpData: authDTO): Promise<string>
@@ -29,9 +28,9 @@ export interface IUserService {
   resetPassword(resetPassData: resetPassDTO): Promise<void>
 }
 
-export interface IGoogleAuthService{
+export interface IGoogleAuthService {
   registerAndLogin(idToken: string): Promise<userDTO>
   generateResetLink(email: string): Promise<string>
   generateSessionToken(idToken: string): Promise<string>
-  resetPassword(password: string,oobCode: string): Promise<void>
+  resetPassword(password: string, oobCode: string): Promise<void>
 }

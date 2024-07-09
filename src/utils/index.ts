@@ -1,18 +1,18 @@
-import { BaseController,IBaseController } from './baseController'
-import { CRUDBase, ICRUDBase } from './baseCrud'
+import { BaseController, type IBaseController } from './baseController'
+import { CRUDBase, type ICRUDBase } from './baseCrud'
 import HttpException from './HttpException'
 import { errorHandler } from './errorHandler'
 import { BaseValidator } from './baseValidators'
-import { IBaseService,BaseService } from './baseService'
+import { type IBaseService, BaseService } from './baseService'
 
 export {
   BaseController,
   CRUDBase,
-  ICRUDBase,
+  type ICRUDBase,
   HttpException,
   errorHandler,
   BaseValidator,
-  IBaseService,
+  type IBaseService,
   BaseService,
-  IBaseController
+  type IBaseController,
 }

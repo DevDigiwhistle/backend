@@ -30,7 +30,7 @@ export enum ROLES {
   ACCOUNTS = 'Accounts',
 }
 
-export enum PersonType{
+export enum PersonType {
   INFLUENCER = 'Influencer',
   BRAND = 'Brand',
 }

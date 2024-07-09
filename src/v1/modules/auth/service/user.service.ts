@@ -39,10 +39,9 @@ class UserService implements IUserService {
       if (userExists !== null)
         throw new HttpException(400, 'User Already Exists!!')
 
-      const role=await this.roleService.findOne({id: user.roleId},[])
+      const role = await this.roleService.findOne({ id: user.roleId }, [])
 
-      if(role===null)
-          throw new HttpException(400,'Invalid RoleId')
+      if (role === null) throw new HttpException(400, 'Invalid RoleId')
 
       await this.userCRUD.add({
         id: user.uid,

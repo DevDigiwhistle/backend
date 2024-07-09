@@ -9,7 +9,7 @@ export const errorHandler = async (
   console.log('Error in controller--->', e)
   if (e instanceof HttpException) {
     return res
-      .status(e.errorCode)
+      .status(e.errorCode as number)
       .json({ message: e.message, status: Enum.RESPONSE_STATES.ERROR })
   } else {
     return res.status(Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({

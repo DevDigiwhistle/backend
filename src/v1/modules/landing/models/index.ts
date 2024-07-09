@@ -7,28 +7,28 @@ export class ContactUsForm implements IContactUsForm {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({nullable: false,type: 'varchar'})
+  @Column({ nullable: false, type: 'varchar' })
   name: string
 
-  @Column({nullable: false,type: 'varchar'})
+  @Column({ nullable: false, type: 'varchar' })
   email: string
 
-  @Column({nullable: true,type: 'varchar'})
+  @Column({ nullable: true, type: 'varchar' })
   followersCount: string
 
-  @Column({nullable: true,type: 'varchar'})
+  @Column({ nullable: true, type: 'varchar' })
   profileLink: string
 
-  @Column({nullable: true,type: 'varchar'})
+  @Column({ nullable: true, type: 'varchar' })
   mobileNo: string
 
-  @Column({nullable: true,type: 'text'})
+  @Column({ nullable: true, type: 'text' })
   message: string
 
   @Column({
     type: 'enum',
     enum: Enum.PersonType,
-    nullable: false
+    nullable: false,
   })
   personType: Enum.PersonType
 }

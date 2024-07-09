@@ -43,7 +43,6 @@ components:
         - email
         - personType
       properties:
-        
         name:
           type: string
           description: Name of the person
@@ -76,8 +75,8 @@ components:
       example:
         name: John Doe
         email: john.doe@example.com
-        followersCount: "1000"
-        profileLink: "https://example.com/profile/johndoe"
-        mobileNo: "1234567890"
-        message: "Hello, this is John!"
+        followersCount: '1000'
+        profileLink: 'https://example.com/profile/johndoe'
+        mobileNo: '1234567890'
+        message: 'Hello, this is John!'
         personType: Brand

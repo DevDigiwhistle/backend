@@ -1,6 +1,10 @@
 import { type Request, type Response } from 'express'
 import { type IBaseService } from './baseService'
-import { type ObjectLiteral } from 'typeorm'
+import {
+  type DeepPartial,
+  type FindOptionsWhere,
+  type ObjectLiteral,
+} from 'typeorm'
 import { errorHandler } from './errorHandler'
 import { Enum } from '../constants'
 import { responseHandler } from './responseHandler'
@@ -24,7 +28,7 @@ export abstract class BaseController<T extends ObjectLiteral>
 
   public async addController(req: Request, res: Response): Promise<Response> {
     try {
-      const id = await this.service.add(req.body)
+      const id = await this.service.add(req.body as DeepPartial<T>)
       return await responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
@@ -41,7 +45,7 @@ export abstract class BaseController<T extends ObjectLiteral>
     res: Response
   ): Promise<Response> {
     try {
-      const data = await this.service.findAll(req.query as any)
+      const data = await this.service.findAll(req.query as FindOptionsWhere<T>)
       return await responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
@@ -58,12 +62,12 @@ export abstract class BaseController<T extends ObjectLiteral>
     res: Response
   ): Promise<Response> {
     try {
-      const id = req.params.id
-      if (!id) {
+      const id = req.params?.id
+      if (typeof id !== 'string') {
         return res.status(400).json('Id not provided')
       }
-
-      const data = await this.service.findOne({ id } as any)
+      const query: FindOptionsWhere<T> = { id } as any
+      const data = await this.service.findOne(query)
       return await responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
@@ -80,13 +84,17 @@ export abstract class BaseController<T extends ObjectLiteral>
     res: Response
   ): Promise<Response> {
     try {
-      const id = req.params.id
+      const id = req.params?.id
       let data: T
 
-      if (id) {
-        data = await this.service.update({ id } as any, req.body)
+      if (typeof id !== 'string') {
+        const query: FindOptionsWhere<T> = { id } as any
+        data = await this.service.update(query, req.body as Partial<T>)
       } else {
-        data = await this.service.update(req.query as any, req.body)
+        data = await this.service.update(
+          req.query as FindOptionsWhere<T>,
+          req.body as Partial<T>
+        )
       }
 
       return await responseHandler(
@@ -105,12 +113,13 @@ export abstract class BaseController<T extends ObjectLiteral>
     res: Response
   ): Promise<Response> {
     try {
-      const id = req.params.id
+      const id = req.params?.id
 
-      if (id) {
-        await this.service.delete({ id } as any)
+      if (typeof id === 'string') {
+        const query: FindOptionsWhere<T> = { id } as any
+        await this.service.delete(query)
       } else {
-        await this.service.delete(req.query as any)
+        await this.service.delete(req.query as FindOptionsWhere<T>)
       }
 
       return await responseHandler(

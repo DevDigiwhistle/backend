@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-interface IAxiosService{
-    post(url: string, data: any, headers?: any): Promise<any>
-    get(url: string,params?: any,headers?: any): Promise<any>
+interface IAxiosService {
+  post(url: string, data: any, headers?: any): Promise<any>
+  get(url: string, params?: any, headers?: any): Promise<any>
 }
 
 class AxiosService implements IAxiosService {
@@ -21,12 +21,12 @@ class AxiosService implements IAxiosService {
     })
   }
 
-  public async get(url: string,params?: any,headers?: any): Promise<any> {
+  public async get(url: string, params?: any, headers?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       axios
-        .get(url,{
+        .get(url, {
           headers: headers === undefined ? {} : headers,
-          params: params===undefined?{}: params
+          params: params === undefined ? {} : params,
         })
         .then((res) => {
           resolve(res.data)
@@ -38,7 +38,4 @@ class AxiosService implements IAxiosService {
   }
 }
 
-export {
-    AxiosService,
-    IAxiosService
-}
+export { AxiosService, IAxiosService }
