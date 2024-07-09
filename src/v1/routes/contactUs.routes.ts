@@ -1,4 +1,4 @@
-import { ContactUsController } from "../controller/contactUs.controller";
+import { ContactUsController } from "../controller";
 import { contactUsFormService } from "../modules/landing";
 import { BaseValidator } from "../../utils";
 import { Router } from "express";

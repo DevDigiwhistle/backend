@@ -6,7 +6,12 @@ import { IUserService } from '../modules/auth/interface'
 
 interface IAuthController {
   signUpController: (req: Request, res: Response) => Promise<Response>
-  //   logInController: (req: Request, res: Response) => Promise<Response>
+  logInController: (req: Request, res: Response) => Promise<Response>
+  resetPasswordController(req: Request, res: Response): Promise<Response>
+  sendResetPasswordEmailController(
+    req: Request,
+    res: Response
+  ): Promise<Response>
 }
 
 class AuthController implements IAuthController {
@@ -20,10 +25,65 @@ class AuthController implements IAuthController {
     try {
       const resp = await this.authService.signUp(req.body)
 
-      return responseHandler(Enum.RESPONSE_CODES.CREATED, res, 'SignUp Successful!!', resp)
+      return responseHandler(
+        Enum.RESPONSE_CODES.CREATED,
+        res,
+        'SignUp Successfully!!',
+        { token: resp }
+      )
     } catch (e) {
-      return await errorHandler(e,res)
+      return await errorHandler(e, res)
+    }
+  }
 
+  async logInController(req: Request, res: Response): Promise<Response> {
+    try {
+      const resp = await this.authService.logIn(req.body)
+
+      return responseHandler(
+        Enum.RESPONSE_CODES.OK,
+        res,
+        'Login Successfully!!',
+        { token: resp }
+      )
+    } catch (e) {
+      return await errorHandler(e, res)
+    }
+  }
+
+  async sendResetPasswordEmailController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      await this.authService.emailResetPasswordLink(req.body.email)
+
+      return responseHandler(
+        Enum.RESPONSE_CODES.OK,
+        res,
+        'Email Sent Successfully!!',
+        {}
+      )
+    } catch (e) {
+      return await errorHandler(e, res)
+    }
+  }
+
+  async resetPasswordController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      await this.authService.resetPassword(req.body)
+
+      return responseHandler(
+        Enum.RESPONSE_CODES.OK,
+        res,
+        'Password updated Successfully!!',
+        {}
+      )
+    } catch (e) {
+      return await errorHandler(e, res)
     }
   }
 }
