@@ -1,11 +1,14 @@
 import { HttpException } from '../../../../utils'
-import { IRoleService, type IUserCRUD } from '../interface'
+import {
+  IAuthService,
+  IRoleService,
+  type IUserCRUD,
+  IGoogleAuthService,
+} from '../interface'
 import { authDTO, resetPassDTO } from '../types'
-import { IUserService } from '../interface'
-import { IGoogleAuthService } from '../interface'
 import { IMailerService } from '../../../utils'
 
-class UserService implements IUserService {
+class AuthService implements IAuthService {
   private readonly userCRUD: IUserCRUD
   private readonly googleAuthService: IGoogleAuthService
   private readonly roleService: IRoleService
@@ -36,8 +39,12 @@ class UserService implements IUserService {
         []
       )
 
-      if (userExists !== null)
+      if (userExists !== null) {
+        if (userExists.isVerified === false)
+          throw new HttpException(400, 'Waiting for Approval!!')
+
         throw new HttpException(400, 'User Already Exists!!')
+      }
 
       const role = await this.roleService.findOne({ id: user.roleId }, [])
 
@@ -72,6 +79,9 @@ class UserService implements IUserService {
 
       if (_user === null) throw new HttpException(404, 'User does not exists!!')
 
+      if (_user.isVerified === false)
+        throw new HttpException(400, 'Waiting for Approval!!')
+
       const token = await this.googleAuthService.generateSessionToken(idToken)
 
       return token
@@ -101,4 +111,4 @@ class UserService implements IUserService {
   }
 }
 
-export { type IUserService, UserService }
+export { AuthService }

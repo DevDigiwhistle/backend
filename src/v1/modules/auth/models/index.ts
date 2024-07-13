@@ -36,4 +36,7 @@ export class User extends BaseEntity implements IUser {
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role
+
+  @Column({ default: false, type: 'boolean' })
+  isVerified: boolean
 }

@@ -1,5 +1,5 @@
 import { AxiosService, MailerService } from '../../utils'
-import { GoogleAuthService, UserService, RoleService } from './service'
+import { GoogleAuthService, AuthService, RoleService } from './service'
 
 import { UserCRUD, RoleCRUD } from './crud'
 
@@ -13,7 +13,7 @@ const googleAuthService = new GoogleAuthService(axiosService)
 const mailerService = new MailerService()
 
 const userCRUD = new UserCRUD(User)
-const userService = new UserService(
+const userService = new AuthService(
   userCRUD,
   googleAuthService,
   roleService,

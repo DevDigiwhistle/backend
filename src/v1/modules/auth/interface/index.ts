@@ -7,6 +7,7 @@ export interface IUser extends ObjectLiteral {
   id: string
   email: string
   role: IRole | number
+  isVerified: boolean
 }
 
 export interface IRole extends ObjectLiteral {
@@ -21,7 +22,7 @@ export interface IRoleCRUD extends ICRUDBase<IRole> {}
 
 export interface IRoleService extends IBaseService<IRole> {}
 
-export interface IUserService {
+export interface IAuthService {
   signUp(signUpData: authDTO): Promise<string>
   logIn(logInData: authDTO): Promise<string>
   emailResetPasswordLink(email: string): Promise<void>
