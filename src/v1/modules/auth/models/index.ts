@@ -9,6 +9,8 @@ import {
 import { Enum } from '../../../../constants'
 import { IRole, type IUser } from '../interface'
 import 'reflect-metadata'
+import { BrandProfile } from '../../brands/models'
+import { IBrandProfile } from '../../brands/interface'
 
 @Entity()
 export class Role extends BaseEntity implements IRole {
@@ -39,4 +41,7 @@ export class User extends BaseEntity implements IUser {
 
   @Column({ default: false, type: 'boolean' })
   isVerified: boolean
+
+  @OneToMany(() => BrandProfile, (brandProfile) => brandProfile.user)
+  brandProfile: IBrandProfile
 }
