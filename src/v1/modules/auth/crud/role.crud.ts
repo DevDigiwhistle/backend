@@ -4,7 +4,16 @@ import { IRoleCRUD } from '../interface'
 import { EntityTarget } from 'typeorm'
 
 export class RoleCRUD extends CRUDBase<IRole> implements IRoleCRUD {
-  constructor(role: EntityTarget<IRole>) {
+  private static instance: IRoleCRUD | null = null
+
+  static getInstance(role: EntityTarget<IRole>) {
+    if (RoleCRUD.instance === null) {
+      RoleCRUD.instance = new RoleCRUD(role)
+    }
+    return RoleCRUD.instance
+  }
+
+  private constructor(role: EntityTarget<IRole>) {
     super(role)
   }
 }

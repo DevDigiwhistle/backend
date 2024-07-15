@@ -6,8 +6,16 @@ import { userDTO } from '../types'
 
 class GoogleAuthService implements IGoogleAuthService {
   private readonly axiosService: IAxiosService
+  private static instance: IGoogleAuthService | null = null
 
-  constructor(axiosService: IAxiosService) {
+  static getInstance(axiosService: IAxiosService) {
+    if (GoogleAuthService.instance === null) {
+      GoogleAuthService.instance = new GoogleAuthService(axiosService)
+    }
+    return GoogleAuthService.instance
+  }
+
+  private constructor(axiosService: IAxiosService) {
     this.axiosService = axiosService
   }
 

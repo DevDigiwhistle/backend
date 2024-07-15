@@ -6,8 +6,9 @@ import { authDTO, resetPassDTO, userDTO } from '../types'
 export interface IUser extends ObjectLiteral {
   id: string
   email: string
-  role: IRole | number
+  role: IRole
   isVerified: boolean
+  roleId?: number
 }
 
 export interface IRole extends ObjectLiteral {

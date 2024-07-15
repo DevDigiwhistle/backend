@@ -5,15 +5,15 @@ import { UserCRUD, RoleCRUD } from './crud'
 
 import { User, Role } from './models'
 
-const roleCRUD = new RoleCRUD(Role)
-const roleService = new RoleService(roleCRUD)
+const roleCRUD = RoleCRUD.getInstance(Role)
+const roleService = RoleService.getInstance(roleCRUD)
 
-const axiosService = new AxiosService()
-const googleAuthService = new GoogleAuthService(axiosService)
-const mailerService = new MailerService()
+const axiosService = AxiosService.getInstance()
+const googleAuthService = GoogleAuthService.getInstance(axiosService)
+const mailerService = MailerService.getInstance()
 
-const userCRUD = new UserCRUD(User)
-const userService = new AuthService(
+const userCRUD = UserCRUD.getInstance(User)
+const userService = AuthService.getInstance(
   userCRUD,
   googleAuthService,
   roleService,

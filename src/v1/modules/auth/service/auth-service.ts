@@ -13,8 +13,26 @@ class AuthService implements IAuthService {
   private readonly googleAuthService: IGoogleAuthService
   private readonly roleService: IRoleService
   private readonly mailerService: IMailerService
+  private static instance: IAuthService | null = null
 
-  constructor(
+  static getInstance(
+    userCRUD: IUserCRUD,
+    googleAuthService: IGoogleAuthService,
+    roleService: IRoleService,
+    mailerService: IMailerService
+  ) {
+    if (AuthService.instance === null) {
+      AuthService.instance = new AuthService(
+        userCRUD,
+        googleAuthService,
+        roleService,
+        mailerService
+      )
+    }
+    return AuthService.instance
+  }
+
+  private constructor(
     userCRUD: IUserCRUD,
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,
@@ -53,7 +71,7 @@ class AuthService implements IAuthService {
       await this.userCRUD.add({
         id: user.uid,
         email: user.email,
-        role: user.roleId,
+        roleId: user.roleId,
       })
 
       const token = await this.googleAuthService.generateSessionToken(idToken)

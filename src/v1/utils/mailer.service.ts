@@ -5,6 +5,17 @@ interface IMailerService {
 }
 
 class MailerService implements IMailerService {
+  private static instance: IMailerService | null = null
+
+  static getInstance() {
+    if (MailerService.instance === null) {
+      MailerService.instance = new MailerService()
+    }
+    return MailerService.instance
+  }
+
+  private constructor() {}
+
   async sendMail(to: string, subject: string, message: string): Promise<void> {
     const port: number = parseInt(process.env.MAIL_PORT as string) ?? 0
     const user: string = process.env.MAIL_USER ?? ''

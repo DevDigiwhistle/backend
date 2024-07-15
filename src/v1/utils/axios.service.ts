@@ -6,6 +6,17 @@ interface IAxiosService {
 }
 
 class AxiosService implements IAxiosService {
+  private static instance: IAxiosService | null = null
+
+  static getInstance() {
+    if (AxiosService.instance === null) {
+      AxiosService.instance = new AxiosService()
+    }
+    return AxiosService.instance
+  }
+
+  private constructor() {}
+
   public async post(url: string, data: any, headers?: any): Promise<any> {
     return new Promise((resolve, reject) => {
       axios
