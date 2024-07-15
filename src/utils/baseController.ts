@@ -3,7 +3,7 @@ import { type IBaseService } from './baseService'
 import {
   type DeepPartial,
   type FindOptionsWhere,
-  type ObjectLiteral,
+  type ObjectLiteral
 } from 'typeorm'
 import { errorHandler } from './errorHandler'
 import { Enum } from '../constants'
@@ -18,15 +18,14 @@ export interface IBaseController {
 }
 
 export abstract class BaseController<T extends ObjectLiteral>
-  implements IBaseController
-{
+implements IBaseController {
   private readonly service: IBaseService<T>
 
-  constructor(service: IBaseService<T>) {
+  constructor (service: IBaseService<T>) {
     this.service = service
   }
 
-  public async addController(req: Request, res: Response): Promise<Response> {
+  public async addController (req: Request, res: Response): Promise<Response> {
     try {
       const id = await this.service.add(req.body as DeepPartial<T>)
       return await responseHandler(
@@ -40,7 +39,7 @@ export abstract class BaseController<T extends ObjectLiteral>
     }
   }
 
-  public async getAllController(
+  public async getAllController (
     req: Request,
     res: Response
   ): Promise<Response> {
@@ -57,7 +56,7 @@ export abstract class BaseController<T extends ObjectLiteral>
     }
   }
 
-  public async getByIdController(
+  public async getByIdController (
     req: Request,
     res: Response
   ): Promise<Response> {
@@ -79,7 +78,7 @@ export abstract class BaseController<T extends ObjectLiteral>
     }
   }
 
-  public async updateController(
+  public async updateController (
     req: Request,
     res: Response
   ): Promise<Response> {
@@ -108,7 +107,7 @@ export abstract class BaseController<T extends ObjectLiteral>
     }
   }
 
-  public async deleteController(
+  public async deleteController (
     req: Request,
     res: Response
   ): Promise<Response> {

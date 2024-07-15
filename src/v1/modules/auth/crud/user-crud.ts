@@ -6,7 +6,7 @@ import { EntityTarget } from 'typeorm'
 export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
   private static instance: IUserCRUD | null = null
 
-  static getInstance(user: EntityTarget<IUser>) {
+  static getInstance(user: EntityTarget<IUser>): IUserCRUD {
     if (UserCRUD.instance === null) {
       UserCRUD.instance = new UserCRUD(user)
     }

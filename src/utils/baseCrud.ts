@@ -5,7 +5,7 @@ import {
   type EntityTarget,
   type ObjectLiteral,
   type Repository,
-  type FindOptionsWhere,
+  type FindOptionsWhere
 } from 'typeorm'
 
 export interface ICRUDBase<T extends ObjectLiteral> {
@@ -23,15 +23,14 @@ export interface ICRUDBase<T extends ObjectLiteral> {
 }
 
 export abstract class CRUDBase<T extends ObjectLiteral>
-  implements ICRUDBase<T>
-{
+implements ICRUDBase<T> {
   private readonly repository: Repository<T>
 
-  constructor(entity: EntityTarget<T>) {
+  constructor (entity: EntityTarget<T>) {
     this.repository = AppDataSource.getRepository(entity)
   }
 
-  async add(data: DeepPartial<T>): Promise<T> {
+  async add (data: DeepPartial<T>): Promise<T> {
     try {
       const entity = this.repository.create(data)
       return await this.repository.save(entity)
@@ -40,7 +39,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async findAll(
+  async findAll (
     query: FindOptionsWhere<T> | undefined,
     relations: string[] = []
   ): Promise<T[]> {
@@ -55,7 +54,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       } else {
         const data = await this.repository.find({
           where: query,
-          relations,
+          relations
         })
         return data
       }
@@ -64,7 +63,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async findOne(
+  async findOne (
     query: FindOptionsWhere<T>,
     relations: string[] = []
   ): Promise<T | null> {
@@ -79,7 +78,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
 
       const data = await this.repository.findOne({
         where: query,
-        relations,
+        relations
       })
 
       return data
@@ -88,7 +87,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
+  async update (query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
     try {
       if (
         query === undefined ||
@@ -108,7 +107,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async delete(query: FindOptionsWhere<T>): Promise<void> {
+  async delete (query: FindOptionsWhere<T>): Promise<void> {
     try {
       if (
         query === undefined ||

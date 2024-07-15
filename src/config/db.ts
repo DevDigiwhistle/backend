@@ -12,5 +12,5 @@ export const AppDataSource = new DataSource({
   synchronize: process.env.ENV !== 'production',
   logging: process.env.ENV !== 'production',
   entities: [User, ContactUsForm, Role],
-  ssl: true,
+  ssl: true
 })

@@ -8,7 +8,7 @@ export class ContactUsFormService
 {
   private static instance: IContactUsService | null = null
 
-  static getInstance(contactUsFormCRUD: IContactUsFormCRUD) {
+  static getInstance(contactUsFormCRUD: IContactUsFormCRUD): IContactUsService {
     if (ContactUsFormService.instance === null) {
       ContactUsFormService.instance = new ContactUsFormService(
         contactUsFormCRUD

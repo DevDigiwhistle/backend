@@ -8,7 +8,7 @@ class GoogleAuthService implements IGoogleAuthService {
   private readonly axiosService: IAxiosService
   private static instance: IGoogleAuthService | null = null
 
-  static getInstance(axiosService: IAxiosService) {
+  static getInstance(axiosService: IAxiosService): IGoogleAuthService {
     if (GoogleAuthService.instance === null) {
       GoogleAuthService.instance = new GoogleAuthService(axiosService)
     }

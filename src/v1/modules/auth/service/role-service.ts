@@ -5,7 +5,7 @@ import { IRoleCRUD } from '../interface'
 class RoleService extends BaseService<IRole> implements IRoleService {
   private static instance: IRoleService | null = null
 
-  static getInstance(roleCRUD: IRoleCRUD) {
+  static getInstance(roleCRUD: IRoleCRUD): IRoleService {
     if (RoleService.instance === null) {
       RoleService.instance = new RoleService(roleCRUD)
     }

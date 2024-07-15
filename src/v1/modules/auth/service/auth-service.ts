@@ -20,7 +20,7 @@ class AuthService implements IAuthService {
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,
     mailerService: IMailerService
-  ) {
+  ): IAuthService {
     if (AuthService.instance === null) {
       AuthService.instance = new AuthService(
         userCRUD,

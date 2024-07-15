@@ -1,7 +1,7 @@
 import {
   type ObjectLiteral,
   type DeepPartial,
-  type FindOptionsWhere,
+  type FindOptionsWhere
 } from 'typeorm'
 import { type ICRUDBase } from './baseCrud'
 import HttpException from './HttpException'
@@ -21,15 +21,14 @@ export interface IBaseService<T extends ObjectLiteral> {
 }
 
 export abstract class BaseService<T extends ObjectLiteral>
-  implements IBaseService<T>
-{
+implements IBaseService<T> {
   private readonly crudBase: ICRUDBase<T>
 
-  constructor(crudBase: ICRUDBase<T>) {
+  constructor (crudBase: ICRUDBase<T>) {
     this.crudBase = crudBase
   }
 
-  async add(data: DeepPartial<T>): Promise<string> {
+  async add (data: DeepPartial<T>): Promise<string> {
     try {
       const results = await this.crudBase.add(data)
       return results.id
@@ -38,7 +37,7 @@ export abstract class BaseService<T extends ObjectLiteral>
     }
   }
 
-  async findAll(
+  async findAll (
     query: FindOptionsWhere<T> | undefined,
     relations: string[] = []
   ): Promise<T[]> {
@@ -49,7 +48,7 @@ export abstract class BaseService<T extends ObjectLiteral>
     }
   }
 
-  async findOne(
+  async findOne (
     query: FindOptionsWhere<T>,
     relations: string[] = []
   ): Promise<T | null> {
@@ -62,7 +61,7 @@ export abstract class BaseService<T extends ObjectLiteral>
     }
   }
 
-  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
+  async update (query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
     try {
       const results = await this.crudBase.update(query, data)
       return results
@@ -71,7 +70,7 @@ export abstract class BaseService<T extends ObjectLiteral>
     }
   }
 
-  async delete(query: FindOptionsWhere<T>): Promise<void> {
+  async delete (query: FindOptionsWhere<T>): Promise<void> {
     try {
       await this.crudBase.delete(query)
     } catch (e) {

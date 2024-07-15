@@ -9,7 +9,9 @@ export class ContactUsFormCRUD
 {
   private static instance: IContactUsFormCRUD | null = null
 
-  static getInstance(contactUsForm: EntityTarget<IContactUsForm>) {
+  static getInstance(
+    contactUsForm: EntityTarget<IContactUsForm>
+  ): IContactUsFormCRUD {
     if (ContactUsFormCRUD.instance === null) {
       ContactUsFormCRUD.instance = new ContactUsFormCRUD(contactUsForm)
     }
