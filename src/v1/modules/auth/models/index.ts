@@ -5,12 +5,15 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm'
 import { Enum } from '../../../../constants'
 import { IRole, type IUser } from '../interface'
 import 'reflect-metadata'
 import { BrandProfile } from '../../brands/models'
 import { IBrandProfile } from '../../brands/interface'
+import { influencerProfile } from '../../influencer/models'
+import { IInfluencerProfile } from '../../influencer/interface'
 
 @Entity()
 export class Role extends BaseEntity implements IRole {
@@ -42,6 +45,12 @@ export class User extends BaseEntity implements IUser {
   @Column({ default: false, type: 'boolean' })
   isVerified: boolean
 
-  @OneToMany(() => BrandProfile, (brandProfile) => brandProfile.user)
+  @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user)
   brandProfile: IBrandProfile
+
+  @OneToOne(
+    () => influencerProfile,
+    (influencerProfile) => influencerProfile.user
+  )
+  influencerProfile: IInfluencerProfile
 }
