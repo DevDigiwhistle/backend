@@ -7,7 +7,16 @@ export class ContactUsFormCRUD
   extends CRUDBase<IContactUsForm>
   implements IContactUsFormCRUD
 {
-  constructor(ContactUsForm: EntityTarget<IContactUsForm>) {
-    super(ContactUsForm)
+  private static instance: IContactUsFormCRUD | null = null
+
+  static getInstance(contactUsForm: EntityTarget<IContactUsForm>) {
+    if (ContactUsFormCRUD.instance === null) {
+      ContactUsFormCRUD.instance = new ContactUsFormCRUD(contactUsForm)
+    }
+    return ContactUsFormCRUD.instance
+  }
+
+  private constructor(contactUsForm: EntityTarget<IContactUsForm>) {
+    super(contactUsForm)
   }
 }

@@ -6,7 +6,18 @@ export class ContactUsFormService
   extends BaseService<IContactUsForm>
   implements IContactUsService
 {
-  constructor(contactUsFormCRUD: IContactUsFormCRUD) {
+  private static instance: IContactUsService | null = null
+
+  static getInstance(contactUsFormCRUD: IContactUsFormCRUD) {
+    if (ContactUsFormService.instance === null) {
+      ContactUsFormService.instance = new ContactUsFormService(
+        contactUsFormCRUD
+      )
+    }
+    return ContactUsFormService.instance
+  }
+
+  private constructor(contactUsFormCRUD: IContactUsFormCRUD) {
     super(contactUsFormCRUD)
   }
 }

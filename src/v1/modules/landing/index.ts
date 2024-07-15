@@ -2,7 +2,7 @@ import { ContactUsFormCRUD } from './crud'
 import { ContactUsFormService } from './service'
 import { ContactUsForm } from './models'
 
-const contactUsFormCRUD = new ContactUsFormCRUD(ContactUsForm)
-const contactUsFormService = new ContactUsFormService(contactUsFormCRUD)
+const contactUsFormCRUD = ContactUsFormCRUD.getInstance(ContactUsForm)
+const contactUsFormService = ContactUsFormService.getInstance(contactUsFormCRUD)
 
 export { contactUsFormService }
