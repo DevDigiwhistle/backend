@@ -6,11 +6,11 @@ import {
   JoinColumn,
 } from 'typeorm'
 import { IUser } from '../../auth/interface'
-import { IInfluencerProfile } from '../interface'
+import { IEmployeeProfile } from '../interface'
 import { User } from '../../auth/models'
 
 @Entity()
-export class InfluencerProfile implements IInfluencerProfile {
+export class EmployeeProfile implements IEmployeeProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
@@ -20,19 +20,10 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column()
   lastName: string
 
+  @Column()
+  mobileNo: string
+
   @OneToOne(() => User, (user) => user.influencerProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
-
-  @Column({ nullable: true })
-  twitterURL?: string
-
-  @Column({ nullable: true })
-  youtubeURL?: string
-
-  @Column({ nullable: true })
-  instagramURL?: string
-
-  @Column({ nullable: true })
-  linkedInURL?: string
 }
