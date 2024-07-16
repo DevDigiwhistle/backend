@@ -14,25 +14,28 @@ export class InfluencerProfile implements IInfluencerProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   firstName: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: true })
   lastName: string
 
   @OneToOne(() => User, (user) => user.influencerProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   twitterURL?: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   youtubeURL?: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   instagramURL?: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   linkedInURL?: string
+
+  @Column({ type: 'varchar', nullable: false })
+  mobileNo: string
 }

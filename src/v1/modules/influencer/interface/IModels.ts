@@ -11,4 +11,5 @@ export interface IInfluencerProfile extends ObjectLiteral {
   youtubeURL?: string
   instagramURL?: string
   linkedInURL?: string
+  mobileNo: string
 }
