@@ -1,5 +1,5 @@
 import Ajv, { type Schema } from 'ajv'
-import HttpException from './HttpException'
+import HttpException from './http-exception'
 import { Enum } from '../constants'
 import { type Request, type Response, type NextFunction } from 'express'
 import addFormats from 'ajv-formats'
@@ -7,11 +7,11 @@ import addFormats from 'ajv-formats'
 export class BaseValidator {
   private readonly schemaObj: Schema
 
-  constructor (schemaObj: Schema) {
+  constructor(schemaObj: Schema) {
     this.schemaObj = schemaObj
   }
 
-  public async validateInput (
+  public async validateInput(
     req: Request,
     res: Response,
     next: NextFunction

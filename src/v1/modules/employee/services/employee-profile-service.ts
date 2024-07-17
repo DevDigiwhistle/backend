@@ -3,7 +3,7 @@ import { IEmployeeProfile, IEmployeeProfileCRUD } from '../interface'
 import { IEmployeeProfileService } from '../interface/IService'
 
 class EmployeeProfileService
-  extends BaseService<IEmployeeProfile>
+  extends BaseService<IEmployeeProfile, IEmployeeProfileCRUD>
   implements IEmployeeProfileService
 {
   private static instance: IEmployeeProfileService | null = null

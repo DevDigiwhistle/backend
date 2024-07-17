@@ -2,7 +2,10 @@ import { BaseService } from '../../../../utils'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
 
-class UserService extends BaseService<IUser> implements IUserService {
+class UserService
+  extends BaseService<IUser, IUserCRUD>
+  implements IUserService
+{
   private static instance: IUserService | null = null
 
   static getInstance(UserCRUD: IUserCRUD): IUserService {

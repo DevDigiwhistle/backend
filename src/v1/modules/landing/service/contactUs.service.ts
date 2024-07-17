@@ -1,4 +1,4 @@
-import { BaseService } from '../../../../utils/baseService'
+import { BaseService } from '../../../../utils/base-service'
 import { IContactUsForm, IContactUsService } from '../interface'
 import { IContactUsFormCRUD } from '../interface'
 

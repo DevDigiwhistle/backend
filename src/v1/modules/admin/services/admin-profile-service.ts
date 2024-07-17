@@ -3,7 +3,7 @@ import { IAdminProfile, IAdminProfileCRUD } from '../interface'
 import { IAdminProfileService } from '../interface/IService'
 
 class AdminProfileService
-  extends BaseService<IAdminProfile>
+  extends BaseService<IAdminProfile, IAdminProfileCRUD>
   implements IAdminProfileService
 {
   private static instance: IAdminProfileService | null = null

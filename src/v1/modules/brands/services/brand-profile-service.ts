@@ -3,7 +3,7 @@ import { IBrandProfile, IBrandProfileCRUD } from '../interface'
 import { IBrandProfileService } from '../interface/IService'
 
 class BrandProfileService
-  extends BaseService<IBrandProfile>
+  extends BaseService<IBrandProfile, IBrandProfileCRUD>
   implements IBrandProfileService
 {
   private static instance: IBrandProfileService | null = null

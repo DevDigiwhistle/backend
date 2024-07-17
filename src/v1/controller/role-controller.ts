@@ -1,11 +1,12 @@
 import { BaseController } from '../../utils'
-import { IBaseController } from '../../utils/baseController'
-import { IRole, IRoleService } from '../modules/auth/interface'
+import { IBaseController } from '../../utils/base-controller'
+import { IRole, IRoleCRUD, IRoleService } from '../modules/auth/interface'
 
-interface IRoleController extends IBaseController {}
+interface IRoleController
+  extends IBaseController<IRole, IRoleCRUD, IRoleService> {}
 
 export class RoleController
-  extends BaseController<IRole>
+  extends BaseController<IRole, IRoleCRUD, IRoleService>
   implements IRoleController
 {
   constructor(roleService: IRoleService) {

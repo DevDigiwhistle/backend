@@ -1,5 +1,5 @@
 import { type Response } from 'express'
-import HttpException from './HttpException'
+import HttpException from './http-exception'
 import { Enum } from '../constants'
 
 export const errorHandler = async (
@@ -14,7 +14,7 @@ export const errorHandler = async (
   } else {
     return res.status(Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
       message: e?.message ?? 'Internal Server Error',
-      status: Enum.RESPONSE_STATES.ERROR
+      status: Enum.RESPONSE_STATES.ERROR,
     })
   }
 }

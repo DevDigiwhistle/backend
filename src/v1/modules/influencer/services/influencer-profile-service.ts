@@ -3,7 +3,7 @@ import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
 import { IInfluencerProfileService } from '../interface/IService'
 
 class InfluencerProfileService
-  extends BaseService<IInfluencerProfile>
+  extends BaseService<IInfluencerProfile, IInfluencerProfileCRUD>
   implements IInfluencerProfileService
 {
   private static instance: IInfluencerProfileService | null = null

@@ -1,15 +1,20 @@
 import { type Request, type Response } from 'express'
-import { type IBaseService } from './baseService'
+import { type IBaseService } from './base-service'
 import {
   type DeepPartial,
   type FindOptionsWhere,
-  type ObjectLiteral
+  type ObjectLiteral,
 } from 'typeorm'
-import { errorHandler } from './errorHandler'
+import { errorHandler } from './error-handler'
 import { Enum } from '../constants'
-import { responseHandler } from './responseHandler'
+import { responseHandler } from './response-handler'
+import { ICRUDBase } from './base-crud'
 
-export interface IBaseController {
+export interface IBaseController<
+  T extends ObjectLiteral,
+  C extends ICRUDBase<T>,
+  S extends IBaseService<T, C>,
+> {
   addController: (req: Request, res: Response) => Promise<Response>
   getAllController: (req: Request, res: Response) => Promise<Response>
   getByIdController: (req: Request, res: Response) => Promise<Response>
@@ -17,15 +22,19 @@ export interface IBaseController {
   deleteController: (req: Request, res: Response) => Promise<Response>
 }
 
-export abstract class BaseController<T extends ObjectLiteral>
-implements IBaseController {
-  private readonly service: IBaseService<T>
+export abstract class BaseController<
+  T extends ObjectLiteral,
+  C extends ICRUDBase<T>,
+  S extends IBaseService<T, C>,
+> implements IBaseController<T, C, S>
+{
+  protected readonly service: S
 
-  constructor (service: IBaseService<T>) {
+  constructor(service: S) {
     this.service = service
   }
 
-  public async addController (req: Request, res: Response): Promise<Response> {
+  async addController(req: Request, res: Response): Promise<Response> {
     try {
       const id = await this.service.add(req.body as DeepPartial<T>)
       return await responseHandler(
@@ -39,10 +48,7 @@ implements IBaseController {
     }
   }
 
-  public async getAllController (
-    req: Request,
-    res: Response
-  ): Promise<Response> {
+  async getAllController(req: Request, res: Response): Promise<Response> {
     try {
       const data = await this.service.findAll(req.query as FindOptionsWhere<T>)
       return await responseHandler(
@@ -56,10 +62,7 @@ implements IBaseController {
     }
   }
 
-  public async getByIdController (
-    req: Request,
-    res: Response
-  ): Promise<Response> {
+  async getByIdController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
       if (typeof id !== 'string') {
@@ -78,10 +81,7 @@ implements IBaseController {
     }
   }
 
-  public async updateController (
-    req: Request,
-    res: Response
-  ): Promise<Response> {
+  async updateController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
       let data: T
@@ -107,10 +107,7 @@ implements IBaseController {
     }
   }
 
-  public async deleteController (
-    req: Request,
-    res: Response
-  ): Promise<Response> {
+  async deleteController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
 

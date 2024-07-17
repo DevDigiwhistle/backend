@@ -29,9 +29,9 @@ export interface IUserCRUD extends ICRUDBase<IUser> {}
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}
 
-export interface IRoleService extends IBaseService<IRole> {}
+export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}
 
-export interface IUserService extends IBaseService<IUser> {}
+export interface IUserService extends IBaseService<IUser, IUserCRUD> {}
 
 export interface IAuthService {
   signUp(signUpData: authDTO): Promise<string>

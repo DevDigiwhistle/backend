@@ -1,7 +1,7 @@
 import { type Request, type Response } from 'express'
 import { errorHandler } from '../../utils'
 import { Enum } from '../../constants'
-import { responseHandler } from '../../utils/responseHandler'
+import { responseHandler } from '../../utils/response-handler'
 import { IAuthService } from '../modules/auth/interface'
 
 interface IAuthController {

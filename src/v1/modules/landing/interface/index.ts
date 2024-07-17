@@ -14,4 +14,5 @@ export interface IContactUsForm {
 
 export interface IContactUsFormCRUD extends ICRUDBase<IContactUsForm> {}
 
-export interface IContactUsService extends IBaseService<IContactUsForm> {}
+export interface IContactUsService
+  extends IBaseService<IContactUsForm, IContactUsFormCRUD> {}

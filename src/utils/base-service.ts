@@ -1,12 +1,12 @@
 import {
   type ObjectLiteral,
   type DeepPartial,
-  type FindOptionsWhere
+  type FindOptionsWhere,
 } from 'typeorm'
-import { type ICRUDBase } from './baseCrud'
-import HttpException from './HttpException'
+import { type ICRUDBase } from './base-crud'
+import HttpException from './http-exception'
 
-export interface IBaseService<T extends ObjectLiteral> {
+export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
   add: (data: DeepPartial<T>) => Promise<string>
   findAll: (
     query: FindOptionsWhere<T> | undefined,
@@ -20,15 +20,18 @@ export interface IBaseService<T extends ObjectLiteral> {
   delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
 
-export abstract class BaseService<T extends ObjectLiteral>
-implements IBaseService<T> {
-  private readonly crudBase: ICRUDBase<T>
+export abstract class BaseService<
+  T extends ObjectLiteral,
+  C extends ICRUDBase<T>,
+> implements IBaseService<T, C>
+{
+  private readonly crudBase: C
 
-  constructor (crudBase: ICRUDBase<T>) {
+  constructor(crudBase: C) {
     this.crudBase = crudBase
   }
 
-  async add (data: DeepPartial<T>): Promise<string> {
+  async add(data: DeepPartial<T>): Promise<string> {
     try {
       const results = await this.crudBase.add(data)
       return results.id
@@ -37,7 +40,7 @@ implements IBaseService<T> {
     }
   }
 
-  async findAll (
+  async findAll(
     query: FindOptionsWhere<T> | undefined,
     relations: string[] = []
   ): Promise<T[]> {
@@ -48,7 +51,7 @@ implements IBaseService<T> {
     }
   }
 
-  async findOne (
+  async findOne(
     query: FindOptionsWhere<T>,
     relations: string[] = []
   ): Promise<T | null> {
@@ -61,7 +64,7 @@ implements IBaseService<T> {
     }
   }
 
-  async update (query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
+  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
     try {
       const results = await this.crudBase.update(query, data)
       return results
@@ -70,7 +73,7 @@ implements IBaseService<T> {
     }
   }
 
-  async delete (query: FindOptionsWhere<T>): Promise<void> {
+  async delete(query: FindOptionsWhere<T>): Promise<void> {
     try {
       await this.crudBase.delete(query)
     } catch (e) {
