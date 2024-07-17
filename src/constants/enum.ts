@@ -22,12 +22,12 @@ export enum RESPONSE_CODES {
 }
 
 export enum ROLES {
-  INFLUENCER = 'Influencer',
-  BRAND = 'Brand',
-  AGENCY = 'Agency',
-  ADMIN = 'Admin',
-  EMPLOYEE = 'Employee',
-  ACCOUNTS = 'Accounts',
+  INFLUENCER = 4,
+  BRAND = 3,
+  AGENCY = 5,
+  ADMIN = 1,
+  EMPLOYEE = 2,
+  ACCOUNTS = 6,
 }
 
 export enum PersonType {

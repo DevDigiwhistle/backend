@@ -1,11 +1,7 @@
 import { HttpException } from '../../utils'
 import { googleAuthService, userService } from '../modules/auth'
 import { NextFunction, Request, Response } from 'express'
-import { IUser } from '../modules/auth/interface'
-
-export interface IExtendedRequest extends Request {
-  user: IUser
-}
+import { IExtendedRequest } from '../interface'
 
 export const verifyToken = async (
   req: IExtendedRequest,
