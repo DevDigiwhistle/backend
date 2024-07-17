@@ -23,7 +23,7 @@ export class AdminProfile implements IAdminProfile {
   @Column()
   mobileNo: string
 
-  @OneToOne(() => User, (user) => user.influencerProfile)
+  @OneToOne(() => User, (user) => user.adminProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
 }

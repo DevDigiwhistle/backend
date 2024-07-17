@@ -1,5 +1,10 @@
 import { AxiosService, MailerService } from '../../utils'
-import { GoogleAuthService, AuthService, RoleService } from './service'
+import {
+  GoogleAuthService,
+  AuthService,
+  RoleService,
+  UserService,
+} from './service'
 
 import { UserCRUD, RoleCRUD } from './crud'
 
@@ -13,11 +18,13 @@ const googleAuthService = GoogleAuthService.getInstance(axiosService)
 const mailerService = MailerService.getInstance()
 
 const userCRUD = UserCRUD.getInstance(User)
-const userService = AuthService.getInstance(
+
+const userService = UserService.getInstance(userCRUD)
+const authService = AuthService.getInstance(
   userCRUD,
   googleAuthService,
   roleService,
   mailerService
 )
 
-export { roleService, userService }
+export { roleService, authService, googleAuthService, userService }

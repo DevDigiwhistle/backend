@@ -23,7 +23,7 @@ export class EmployeeProfile implements IEmployeeProfile {
   @Column()
   mobileNo: string
 
-  @OneToOne(() => User, (user) => user.influencerProfile)
+  @OneToOne(() => User, (user) => user.employeeProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
 }

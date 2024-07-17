@@ -76,6 +76,17 @@ class GoogleAuthService implements IGoogleAuthService {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async verifySessionCookie(token: string): Promise<string> {
+    try {
+      const decodedClaims = await firebase
+        .auth()
+        .verifySessionCookie(token, true)
+      return decodedClaims.uid
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 
 export { GoogleAuthService }

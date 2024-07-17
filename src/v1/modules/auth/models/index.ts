@@ -12,8 +12,12 @@ import { IRole, type IUser } from '../interface'
 import 'reflect-metadata'
 import { BrandProfile } from '../../brands/models'
 import { IBrandProfile } from '../../brands/interface'
-import { influencerProfile } from '../../influencer/models'
+import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
+import { EmployeeProfile } from '../../employee/models'
+import { IEmployeeProfile } from '../../employee/interface'
+import { AdminProfile } from '../../admin/models'
+import { IAdminProfile } from '../../admin/interface'
 
 @Entity()
 export class Role extends BaseEntity implements IRole {
@@ -49,8 +53,14 @@ export class User extends BaseEntity implements IUser {
   brandProfile: IBrandProfile
 
   @OneToOne(
-    () => influencerProfile,
+    () => InfluencerProfile,
     (influencerProfile) => influencerProfile.user
   )
   influencerProfile: IInfluencerProfile
+
+  @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user)
+  employeeProfile: IEmployeeProfile
+
+  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
+  adminProfile: IAdminProfile
 }
