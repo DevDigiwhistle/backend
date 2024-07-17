@@ -2,7 +2,7 @@ import { type Request, type Response } from 'express'
 import { errorHandler } from '../../utils'
 import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/responseHandler'
-import { IUserService } from '../modules/auth/interface'
+import { IAuthService } from '../modules/auth/interface'
 
 interface IAuthController {
   signUpController: (req: Request, res: Response) => Promise<Response>
@@ -15,9 +15,9 @@ interface IAuthController {
 }
 
 class AuthController implements IAuthController {
-  private readonly authService: IUserService
+  private readonly authService: IAuthService
 
-  constructor(authService: IUserService) {
+  constructor(authService: IAuthService) {
     this.authService = authService
   }
 

@@ -1,6 +1,6 @@
 import Router from 'express'
 import { AuthController } from '../controller'
-import { userService } from '../modules/auth'
+import { authService } from '../modules/auth'
 import { BaseValidator } from '../../utils'
 import {
   resetPasswordSchema,
@@ -10,7 +10,7 @@ import {
 
 const authRouter = Router()
 
-const authController = new AuthController(userService)
+const authController = new AuthController(authService)
 const authValidators = new BaseValidator(authSchema)
 const resetPasswordValidators = new BaseValidator(resetPasswordSchema)
 const resetPasswordEmailValidators = new BaseValidator(resetPasswordEmailSchema)

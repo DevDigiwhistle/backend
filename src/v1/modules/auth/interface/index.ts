@@ -21,7 +21,7 @@ export interface IUser extends ObjectLiteral {
 
 export interface IRole extends ObjectLiteral {
   id: number
-  name: Enum.ROLES
+  name: string
   users: IUser[]
 }
 

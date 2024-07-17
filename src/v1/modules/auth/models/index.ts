@@ -24,12 +24,8 @@ export class Role extends BaseEntity implements IRole {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({
-    type: 'enum',
-    enum: Enum.ROLES,
-    nullable: false,
-  })
-  name: Enum.ROLES
+  @Column({ type: 'varchar', nullable: false })
+  name: string
 
   @OneToMany(() => User, (user) => user.role)
   users: User[]

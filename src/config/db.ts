@@ -1,6 +1,10 @@
 import { DataSource } from 'typeorm'
 import { User, Role } from '../v1/modules/auth/models/index'
 import { ContactUsForm } from '../v1/modules/landing/models'
+import { BrandProfile } from '../v1/modules/brands/models'
+import { EmployeeProfile } from '../v1/modules/employee/models'
+import { AdminProfile } from '../v1/modules/admin/models'
+import { InfluencerProfile } from '../v1/modules/influencer/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -11,6 +15,14 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: process.env.ENV !== 'production',
   logging: process.env.ENV !== 'production',
-  entities: [User, ContactUsForm, Role],
-  ssl: true
+  entities: [
+    User,
+    ContactUsForm,
+    Role,
+    BrandProfile,
+    EmployeeProfile,
+    AdminProfile,
+    InfluencerProfile,
+  ],
+  ssl: true,
 })

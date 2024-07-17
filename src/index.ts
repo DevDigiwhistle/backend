@@ -7,15 +7,17 @@ import { AppDataSource } from './config'
 import apiRouter from './v1/routes'
 
 const app = express()
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "DELETE", "UPDATE", "PUT"],
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT'],
     credentials: true,
-}))
+  })
+)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const PORT =  process.env.PORT || 8000
+const PORT = process.env.PORT || 8000
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world')
