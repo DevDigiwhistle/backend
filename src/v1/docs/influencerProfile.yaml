@@ -111,6 +111,8 @@ components:
           type: string
         youtubeURL:
           type: string
+        userId:
+          type: string
 
       example:
         firstName: John
@@ -120,6 +122,7 @@ components:
         instagramURL: https://adaapt.ai
         youtubeURL: https://adaapt.ai
         linkedInURL: https://adaapt.ai
+        userId: '1'
 
     InfluencerProfile:
       type: object
