@@ -24,6 +24,7 @@ export const verifyToken = async (
   } catch (e) {
     res.send(401).json({
       message: e?.message ?? 'You are not authorized!!',
+      status: 'Authentication Failed!!',
     })
   }
 }

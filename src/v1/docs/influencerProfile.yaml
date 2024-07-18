@@ -1,0 +1,158 @@
+tags:
+  name: InfluencerProfile
+  description: Endpoints for influencer profiles
+
+paths:
+  /v1/influencer/profile:
+    post:
+      summary: Add a new Influencer profile
+      tags:
+        - InfluencerProfile
+      requestBody:
+        description: Influencer profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerProfileInput'
+      responses:
+        '201':
+          description: Influencer profile created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InfluencerProfileInput'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+    get:
+      summary: Get influencer profile by user ID
+      tags:
+        - InfluencerProfile
+
+      responses:
+        '200':
+          description: Influencer profile fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InfluencerProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: Influencer profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    InfluencerProfileInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        twitterURL:
+          type: string
+        linkedInURL:
+          type: string
+        instagramURL:
+          type: string
+        youtubeURL:
+          type: string
+
+      example:
+        firstName: John
+        lastName: Doe
+        mobileNo: '1234567890'
+        twitterURL: https://adaapt.ai
+        instagramURL: https://adaapt.ai
+        youtubeURL: https://adaapt.ai
+        linkedInURL: https://adaapt.ai
+
+    InfluencerProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        twitterURL:
+          type: string
+        linkedInURL:
+          type: string
+        instagramURL:
+          type: string
+        youtubeURL:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+      example:
+        id: '1'
+        firstName: John
+        lastName: Doe
+        mobileNo: '1234567890'
+        twitterURL: https://adaapt.ai
+        instagramURL: https://adaapt.ai
+        youtubeURL: https://adaapt.ai
+        linkedInURL: https://adaapt.ai
+        user:
+          id: '1'
+          username: johndoe
+          email: johndoe@example.com

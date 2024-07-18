@@ -24,4 +24,10 @@ influencerRouter.get(
   )
 )
 
+influencerRouter.put(
+  '/profile/:id',
+  authorizeUser([Enum.ROLES.INFLUENCER]),
+  influencerProfileController.updateController.bind(influencerProfileController)
+)
+
 export default influencerRouter

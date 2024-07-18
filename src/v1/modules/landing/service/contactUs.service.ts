@@ -3,7 +3,7 @@ import { IContactUsForm, IContactUsService } from '../interface'
 import { IContactUsFormCRUD } from '../interface'
 
 export class ContactUsFormService
-  extends BaseService<IContactUsForm>
+  extends BaseService<IContactUsForm, IContactUsFormCRUD>
   implements IContactUsService
 {
   private static instance: IContactUsService | null = null

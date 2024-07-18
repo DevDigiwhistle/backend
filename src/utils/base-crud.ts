@@ -34,7 +34,8 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   async add(data: DeepPartial<T>): Promise<T> {
     try {
       const entity = this.repository.create(data)
-      return await this.repository.save(entity)
+      const resp = await this.repository.save(entity)
+      return resp
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

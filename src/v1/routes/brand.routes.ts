@@ -20,4 +20,10 @@ brandRouter.get(
   brandProfileController.getByUserIdController.bind(brandProfileController)
 )
 
+brandRouter.put(
+  '/profile/:id',
+  authorizeUser([Enum.ROLES.BRAND]),
+  brandProfileController.updateController.bind(brandProfileController)
+)
+
 export default brandRouter

@@ -2,10 +2,7 @@ import { type Response } from 'express'
 import HttpException from './http-exception'
 import { Enum } from '../constants'
 
-export const errorHandler = async (
-  e: any,
-  res: Response
-): Promise<Response> => {
+export const errorHandler = (e: any, res: Response): Response => {
   console.log('Error in controller--->', e)
   if (e instanceof HttpException) {
     return res

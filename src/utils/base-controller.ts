@@ -36,29 +36,29 @@ export abstract class BaseController<
 
   async addController(req: Request, res: Response): Promise<Response> {
     try {
-      const id = await this.service.add(req.body as DeepPartial<T>)
-      return await responseHandler(
+      const createdDoc = await this.service.add(req.body as DeepPartial<T>)
+      return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
         'Created Successfully!!',
-        { id }
+        createdDoc
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
   async getAllController(req: Request, res: Response): Promise<Response> {
     try {
       const data = await this.service.findAll(req.query as FindOptionsWhere<T>)
-      return await responseHandler(
+      return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
         'Fetched Successfully!!',
         data
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
@@ -70,14 +70,14 @@ export abstract class BaseController<
       }
       const query: FindOptionsWhere<T> = { id } as any
       const data = await this.service.findOne(query)
-      return await responseHandler(
+      return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
         'Fetched Successfully!!',
         data
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
@@ -96,14 +96,14 @@ export abstract class BaseController<
         )
       }
 
-      return await responseHandler(
+      return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
         'Updated Successfully!!',
         data
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
@@ -118,14 +118,14 @@ export abstract class BaseController<
         await this.service.delete(req.query as FindOptionsWhere<T>)
       }
 
-      return await responseHandler(
+      return responseHandler(
         Enum.RESPONSE_CODES.NO_CONTENT,
         res,
         'Deleted Successfully!!',
         null
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 }

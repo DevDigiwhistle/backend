@@ -7,7 +7,7 @@ import { type ICRUDBase } from './base-crud'
 import HttpException from './http-exception'
 
 export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
-  add: (data: DeepPartial<T>) => Promise<string>
+  add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
     query: FindOptionsWhere<T> | undefined,
     relations?: string[]
@@ -31,10 +31,10 @@ export abstract class BaseService<
     this.crudBase = crudBase
   }
 
-  async add(data: DeepPartial<T>): Promise<string> {
+  async add(data: DeepPartial<T>): Promise<T> {
     try {
       const results = await this.crudBase.add(data)
-      return results.id
+      return results
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

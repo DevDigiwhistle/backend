@@ -24,4 +24,10 @@ employeeRouter.get(
   )
 )
 
+employeeRouter.put(
+  '/profile/:id',
+  authorizeUser([Enum.ROLES.EMPLOYEE]),
+  employeeProfileController.updateController.bind(employeeProfileController)
+)
+
 export default employeeRouter

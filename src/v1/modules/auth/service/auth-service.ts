@@ -74,9 +74,7 @@ class AuthService implements IAuthService {
         roleId: user.roleId,
       })
 
-      const token = await this.googleAuthService.generateSessionToken(idToken)
-
-      return token
+      return user.uid
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -111,7 +109,14 @@ class AuthService implements IAuthService {
   async emailResetPasswordLink(email: string): Promise<void> {
     try {
       const link = await this.googleAuthService.generateResetLink(email)
-      await this.mailerService.sendMail(email, 'Reset Password Link', link)
+      this.mailerService
+        .sendMail(email, 'Reset Password Link', link)
+        .then(() => {
+          console.log('mail sent successfully!!')
+        })
+        .catch((e) => {
+          console.log(`Error sending mail: ${e}`)
+        })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

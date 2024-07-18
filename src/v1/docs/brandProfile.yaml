@@ -1,0 +1,149 @@
+tags:
+  name: BrandProfile
+  description: Endpoints for brand profiles
+
+paths:
+  /v1/brand/profile:
+    post:
+      summary: Add a new brand profile
+      tags:
+        - BrandProfile
+      requestBody:
+        description: Brand profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BrandProfileInput'
+      responses:
+        '201':
+          description: Brand profile created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/BrandProfileInput'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+    get:
+      summary: Get brand profile by user ID
+      tags:
+        - BrandProfile
+
+      responses:
+        '200':
+          description: Brand profile fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/BrandProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: Brand profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    BrandProfileInput:
+      type: object
+      properties:
+        name:
+          type: string
+        pocFirstName:
+          type: string
+        pocLastName:
+          type: string
+        mobileNo:
+          type: string
+        websiteURL:
+          type: string
+        userId:
+          type: string
+
+      example:
+        name: Cipla
+        pocFirstName: John
+        pocLastName: Doe
+        mobileNo: '1234567890'
+        websiteURL: https://adaapt.ai
+        userId: '1'
+
+    BrandProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        pocFirstName:
+          type: string
+        pocLastName:
+          type: string
+        mobileNo:
+          type: string
+        websiteURL:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+      example:
+        id: '1'
+        name: Cipla
+        pocFirstName: John
+        pocLastName: Doe
+        mobileNo: '1234567890'
+        websiteURL: https://adaapt.ai
+        user:
+          id: '1'
+          username: johndoe
+          email: johndoe@example.com

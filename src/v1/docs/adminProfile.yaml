@@ -1,0 +1,155 @@
+tags:
+  name: AdminProfile
+  description: Endpoints for admin profiles
+
+paths:
+  /v1/admin/profile:
+    post:
+      summary: Add a new admin profile
+      tags:
+        - AdminProfile
+      requestBody:
+        description: Admin profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminProfileInput'
+      responses:
+        '201':
+          description: Admin profile created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AdminProfileInput'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+    get:
+      summary: Get admin profile by user ID
+      tags:
+        - AdminProfile
+
+      responses:
+        '200':
+          description: Admin profile fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AdminProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: Admin profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    AdminProfileInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        userId:
+          type: string
+
+      example:
+        firstName: John
+        lastName: Doe
+        mobileNo: '1234567890'
+        userId: '1'
+
+    AdminProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        userId:
+          type: string
+      example:
+        id: '1'
+        firstName: John
+        lastName: Doe
+        mobileNo: '1234567890'
+        user:
+          id: '1'
+          username: johndoe
+          email: johndoe@example.com
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        isVerified:
+          type: boolean
+        roleId:
+          type: string
+      example:
+        id: '1'
+        isVerified: false
+        email: johndoe@example.com
+        roleId: '1'

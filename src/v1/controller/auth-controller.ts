@@ -23,31 +23,31 @@ class AuthController implements IAuthController {
 
   async signUpController(req: Request, res: Response): Promise<Response> {
     try {
-      const resp = await this.authService.signUp(req.body)
+      const userId = await this.authService.signUp(req.body)
 
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
         'SignUp Successfully!!',
-        { token: resp }
+        { userId: userId }
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
   async logInController(req: Request, res: Response): Promise<Response> {
     try {
-      const resp = await this.authService.logIn(req.body)
+      const token = await this.authService.logIn(req.body)
 
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
         'Login Successfully!!',
-        { token: resp }
+        { token: token }
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
@@ -65,7 +65,7 @@ class AuthController implements IAuthController {
         {}
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 
@@ -83,7 +83,7 @@ class AuthController implements IAuthController {
         {}
       )
     } catch (e) {
-      return await errorHandler(e, res)
+      return errorHandler(e, res)
     }
   }
 }

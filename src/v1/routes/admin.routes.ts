@@ -20,4 +20,10 @@ adminRouter.get(
   adminProfileController.getByUserIdController.bind(adminProfileController)
 )
 
+adminRouter.put(
+  '/profile/:id',
+  authorizeUser([Enum.ROLES.ADMIN]),
+  adminProfileController.updateController.bind(adminProfileController)
+)
+
 export default adminRouter

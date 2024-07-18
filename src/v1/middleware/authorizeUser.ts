@@ -7,7 +7,7 @@ export const authorizeUser = (allowedUser: Enum.ROLES[]) => {
     const roleId = req.user?.roleId
 
     if (roleId === undefined || !allowedUser.includes(roleId)) {
-      res.send(403).json({ message: 'Access Denied!!' })
+      res.send(403).json({ message: 'Access Denied!!', status: 'Unauthorized' })
       return
     }
 
