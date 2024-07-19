@@ -8,6 +8,7 @@ import {
   addAdminProfileSchema,
   updateAdminProfileSchema,
 } from '../modules/admin/validators'
+import { verifyToken } from '../middleware'
 
 const adminRouter = Router()
 
@@ -17,21 +18,22 @@ const updateAdminProfileValidator = new BaseValidator(updateAdminProfileSchema)
 
 adminRouter.post(
   '/profile',
-  authorizeUser([Enum.ROLES.ADMIN]),
   addAdminProfileValidator.validateInput.bind(addAdminProfileSchema),
   adminProfileController.addController.bind(adminProfileController)
 )
 
 adminRouter.get(
   '/profile',
+  verifyToken,
   authorizeUser([Enum.ROLES.ADMIN]),
   adminProfileController.getByUserIdController.bind(adminProfileController)
 )
 
 adminRouter.put(
   '/profile/:id',
-  updateAdminProfileValidator.validateInput.bind(updateAdminProfileSchema),
+  verifyToken,
   authorizeUser([Enum.ROLES.ADMIN]),
+  updateAdminProfileValidator.validateInput.bind(updateAdminProfileSchema),
   adminProfileController.updateController.bind(adminProfileController)
 )
 

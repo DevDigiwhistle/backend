@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { influencerProfileService } from '../modules/influencer'
 import { InfluencerProfileController } from '../controller/influencer-profile-controller'
-import { authorizeUser } from '../middleware'
+import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
 import { BaseValidator } from '../../utils'
 import {
@@ -24,7 +24,6 @@ const updateInfluencerProfileValidator = new BaseValidator(
 
 influencerRouter.post(
   '/profile',
-  authorizeUser([Enum.ROLES.INFLUENCER]),
   addInfluencerProfileValidator.validateInput.bind(
     addInfluencerProfileValidator
   ),
@@ -33,6 +32,7 @@ influencerRouter.post(
 
 influencerRouter.get(
   '/profile',
+  verifyToken,
   authorizeUser([Enum.ROLES.INFLUENCER]),
   influencerProfileController.getByUserIdController.bind(
     influencerProfileController
@@ -41,6 +41,7 @@ influencerRouter.get(
 
 influencerRouter.put(
   '/profile/:id',
+  verifyToken,
   authorizeUser([Enum.ROLES.INFLUENCER]),
   updateInfluencerProfileValidator.validateInput.bind(
     updateInfluencerProfileValidator

@@ -16,9 +16,9 @@ apiRouter.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 apiRouter.use('/auth', authRouter)
 apiRouter.use('/contactUs', contactUsRouter)
 apiRouter.use('/role', roleRouter)
-apiRouter.use('/brand', verifyToken, brandRouter)
-apiRouter.use('/influencer', verifyToken, influencerRouter)
-apiRouter.use('/admin', verifyToken, adminRouter)
-apiRouter.use('/employee', verifyToken, employeeRouter)
+apiRouter.use('/brand', brandRouter)
+apiRouter.use('/influencer', influencerRouter)
+apiRouter.use('/admin', adminRouter)
+apiRouter.use('/employee', employeeRouter)
 
 export default apiRouter

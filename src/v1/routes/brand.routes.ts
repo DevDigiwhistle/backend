@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { brandProfileService } from '../modules/brands'
 import { BrandProfileController } from '../controller/brand-profile-controller'
-import { authorizeUser } from '../middleware'
+import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
 import { BaseValidator } from '../../utils'
 import {
@@ -17,19 +17,20 @@ const updateBrandProfileValidator = new BaseValidator(updateBrandProfileSchema)
 
 brandRouter.post(
   '/profile',
-  authorizeUser([Enum.ROLES.BRAND]),
   addBrandProfileValidator.validateInput.bind(addBrandProfileValidator),
   brandProfileController.addController.bind(brandProfileController)
 )
 
 brandRouter.get(
   '/profile',
+  verifyToken,
   authorizeUser([Enum.ROLES.BRAND]),
   brandProfileController.getByUserIdController.bind(brandProfileController)
 )
 
 brandRouter.put(
   '/profile/:id',
+  verifyToken,
   authorizeUser([Enum.ROLES.BRAND]),
   updateBrandProfileValidator.validateInput.bind(updateBrandProfileValidator),
   brandProfileController.updateController.bind(brandProfileController)
