@@ -23,3 +23,12 @@ export type loginResponseDTO = {
   token: string
   user: IUser
 }
+
+export type mobileDTO = {
+  mobileNo: string
+}
+
+export type verifyMobileDTO = {
+  mobileNo: string
+  otp: string
+}

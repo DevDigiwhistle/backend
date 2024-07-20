@@ -14,13 +14,13 @@ export class EmployeeProfile implements IEmployeeProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   firstName: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: true })
   lastName: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   mobileNo: string
 
   @OneToOne(() => User, (user) => user.employeeProfile)

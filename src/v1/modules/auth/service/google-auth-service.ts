@@ -35,17 +35,6 @@ class GoogleAuthService implements IGoogleAuthService {
     }
   }
 
-  async generateSessionToken(idToken: string): Promise<string> {
-    try {
-      const token = await firebase.auth().createSessionCookie(idToken, {
-        expiresIn: 86400000,
-      })
-      return token
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
   async generateResetLink(email: string): Promise<string> {
     try {
       const link = await firebase.auth().generatePasswordResetLink(email)
@@ -68,17 +57,6 @@ class GoogleAuthService implements IGoogleAuthService {
         },
         undefined
       )
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
-  async verifySessionCookie(token: string): Promise<string> {
-    try {
-      const decodedClaims = await firebase
-        .auth()
-        .verifySessionCookie(token, true)
-      return decodedClaims.uid
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

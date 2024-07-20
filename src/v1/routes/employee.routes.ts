@@ -22,7 +22,7 @@ const updateEmployeeProfileValidator = new BaseValidator(
 
 employeeRouter.post(
   '/profile',
-  addEmployeeProfileValidator.validateInput.bind(addEmployeeProfileSchema),
+  addEmployeeProfileValidator.validateInput.bind(addEmployeeProfileValidator),
   employeeProfileController.addController.bind(employeeProfileController)
 )
 

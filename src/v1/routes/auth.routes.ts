@@ -6,6 +6,8 @@ import {
   resetPasswordSchema,
   resetPasswordEmailSchema,
   authSchema,
+  mobileOTPSchema,
+  verifyMobileOTPSchema,
 } from '../modules/auth/validators'
 
 const authRouter = Router()
@@ -14,6 +16,8 @@ const authController = new AuthController(authService)
 const authValidators = new BaseValidator(authSchema)
 const resetPasswordValidators = new BaseValidator(resetPasswordSchema)
 const resetPasswordEmailValidators = new BaseValidator(resetPasswordEmailSchema)
+const mobileOTPValidator = new BaseValidator(mobileOTPSchema)
+const verifyMobileOTPValidator = new BaseValidator(verifyMobileOTPSchema)
 
 authRouter.post(
   '/signup',
@@ -37,6 +41,18 @@ authRouter.post(
   '/reset-password-email',
   resetPasswordEmailValidators.validateInput.bind(resetPasswordEmailValidators),
   authController.sendResetPasswordEmailController.bind(authController)
+)
+
+authRouter.post(
+  '/generate-mobile-otp',
+  mobileOTPValidator.validateInput.bind(mobileOTPValidator),
+  authController.sendMobileOTPController.bind(authController)
+)
+
+authRouter.post(
+  '/verify-mobile-otp',
+  verifyMobileOTPValidator.validateInput.bind(verifyMobileOTPValidator),
+  authController.verifyMobileOTPController.bind(authController)
 )
 
 export default authRouter

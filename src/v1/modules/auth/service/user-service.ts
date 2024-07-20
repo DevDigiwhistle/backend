@@ -1,4 +1,4 @@
-import { BaseService } from '../../../../utils'
+import { BaseService, HttpException } from '../../../../utils'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
 
@@ -17,6 +17,14 @@ class UserService
 
   private constructor(userCRUD: IUserCRUD) {
     super(userCRUD)
+  }
+
+  public async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
+    try {
+      return await this.findUserByMobileNo(mobileNo)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 export { UserService }

@@ -1,6 +1,6 @@
 import { HttpException } from '../../utils'
-import { googleAuthService, userService } from '../modules/auth'
-import { NextFunction, Request, Response } from 'express'
+import { authTokenService, userService } from '../modules/auth'
+import { NextFunction, Response } from 'express'
 import { IExtendedRequest } from '../interface'
 
 export const verifyToken = async (
@@ -14,8 +14,8 @@ export const verifyToken = async (
     if (token === null || token === undefined)
       throw new HttpException(401, 'Authorization Token Not Found!!')
 
-    const uid = await googleAuthService.verifySessionCookie(token)
-    const user = await userService.findOne({ id: uid })
+    const uid = authTokenService.decodeToken(token)
+    const user = await userService.findOne({ id: uid }, ['role'])
 
     if (user === null) throw new HttpException(401, 'User does not exists!!')
 

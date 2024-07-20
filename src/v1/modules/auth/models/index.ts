@@ -8,7 +8,7 @@ import {
   OneToOne,
 } from 'typeorm'
 import { Enum } from '../../../../constants'
-import { IRole, type IUser } from '../interface'
+import { IRole, IVerification, type IUser } from '../interface'
 import 'reflect-metadata'
 import { AgencyProfile, BrandProfile } from '../../brands/models'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
@@ -62,4 +62,19 @@ export class User extends BaseEntity implements IUser {
 
   @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
   adminProfile: IAdminProfile
+}
+
+@Entity()
+export class Verification extends BaseEntity implements IVerification {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column({ unique: true, nullable: false, type: 'varchar' })
+  mobileNo: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  otp: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  expireIn: number
 }

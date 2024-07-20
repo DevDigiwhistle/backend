@@ -2,47 +2,73 @@ import { HttpException } from '../../../../utils'
 import {
   IAuthService,
   IRoleService,
-  type IUserCRUD,
+  type IUserService,
   IGoogleAuthService,
   IUser,
+  IWhatsappService,
+  IVerificationService,
+  IAuthTokenService,
 } from '../interface'
-import { authDTO, loginDTO, loginResponseDTO, resetPassDTO } from '../types'
+import {
+  authDTO,
+  loginDTO,
+  loginResponseDTO,
+  mobileDTO,
+  resetPassDTO,
+  verifyMobileDTO,
+} from '../types'
 import { IMailerService } from '../../../utils'
+import OTPgenerator from 'otp-generator'
 
 class AuthService implements IAuthService {
-  private readonly userCRUD: IUserCRUD
+  private readonly userService: IUserService
   private readonly googleAuthService: IGoogleAuthService
   private readonly roleService: IRoleService
   private readonly mailerService: IMailerService
+  private readonly whatsappService: IWhatsappService
+  private readonly verificationService: IVerificationService
+  private readonly authTokenService: IAuthTokenService
   private static instance: IAuthService | null = null
 
   static getInstance(
-    userCRUD: IUserCRUD,
+    userService: IUserService,
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,
-    mailerService: IMailerService
+    mailerService: IMailerService,
+    whatsappService: IWhatsappService,
+    verificationService: IVerificationService,
+    authTokenService: IAuthTokenService
   ): IAuthService {
     if (AuthService.instance === null) {
       AuthService.instance = new AuthService(
-        userCRUD,
+        userService,
         googleAuthService,
         roleService,
-        mailerService
+        mailerService,
+        whatsappService,
+        verificationService,
+        authTokenService
       )
     }
     return AuthService.instance
   }
 
   private constructor(
-    userCRUD: IUserCRUD,
+    userService: IUserService,
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,
-    mailerService: IMailerService
+    mailerService: IMailerService,
+    whatsappService: IWhatsappService,
+    verificationService: IVerificationService,
+    authTokenService: IAuthTokenService
   ) {
-    this.userCRUD = userCRUD
+    this.userService = userService
     this.googleAuthService = googleAuthService
     this.roleService = roleService
     this.mailerService = mailerService
+    this.whatsappService = whatsappService
+    this.verificationService = verificationService
+    this.authTokenService = authTokenService
   }
 
   async signUp(signUpData: authDTO): Promise<IUser> {
@@ -51,7 +77,7 @@ class AuthService implements IAuthService {
 
       const user = await this.googleAuthService.verifyIdToken(idToken)
 
-      const userExists = await this.userCRUD.findOne(
+      const userExists = await this.userService.findOne(
         {
           id: user.uid,
         },
@@ -69,7 +95,7 @@ class AuthService implements IAuthService {
 
       if (_role === null) throw new HttpException(400, 'Invalid RoleId')
 
-      const results = await this.userCRUD.add({
+      const results = await this.userService.add({
         id: user.uid,
         email: user.email,
         roleId: _role.id,
@@ -87,16 +113,17 @@ class AuthService implements IAuthService {
 
       const user = await this.googleAuthService.verifyIdToken(idToken)
 
-      const _user = await this.userCRUD.findOne(
+      const _user = await this.userService.findOne(
         {
           id: user.uid,
         },
         [
-          'admin_profile',
-          'employee_profile',
-          'influencer_profile',
-          'brand_profile',
-          'agency_profile',
+          'adminProfile',
+          'employeeProfile',
+          'influencerProfile',
+          'brandProfile',
+          'agencyProfile',
+          'role',
         ]
       )
 
@@ -105,7 +132,7 @@ class AuthService implements IAuthService {
       if (_user.isVerified === false)
         throw new HttpException(400, 'Waiting for Approval!!')
 
-      const token = await this.googleAuthService.generateSessionToken(idToken)
+      const token = await this.authTokenService.generateToken(_user.id)
 
       return {
         token: token,
@@ -138,6 +165,93 @@ class AuthService implements IAuthService {
         resetPassData.oobCode,
         resetPassData.password
       )
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async sendMobileOTP(mobileData: mobileDTO): Promise<void> {
+    try {
+      const { mobileNo } = mobileData
+
+      const code: string = OTPgenerator.generate(6, {
+        digits: true,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
+      })
+
+      const existingOTP = await this.verificationService.findOne(
+        {
+          mobileNo: mobileNo,
+        },
+        []
+      )
+
+      const presentTime = new Date().getTime()
+
+      if (existingOTP !== null) {
+        await this.verificationService.update(
+          { mobileNo: mobileNo },
+          { otp: code }
+        )
+      } else {
+        await this.verificationService.add({
+          mobileNo: mobileNo,
+          otp: code,
+          expireIn: presentTime + 600000,
+        })
+      }
+
+      const otpMessage = `OTP for Login to Digiwhistle\nDear User,\n\n Your OTP is:** ${code}.\n\n it will expire in ** 10 mins`
+
+      this.whatsappService
+        .sendMessage(mobileNo, otpMessage)
+        .then(() => {
+          console.log('message sent')
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async verifyMobileOTP(
+    verifyMobileData: verifyMobileDTO
+  ): Promise<loginResponseDTO> {
+    try {
+      const { mobileNo, otp } = verifyMobileData
+
+      const existingOTP = await this.verificationService.findOne(
+        {
+          mobileNo: mobileNo,
+        },
+        []
+      )
+
+      const presentTime = new Date().getTime()
+
+      if (existingOTP === null)
+        throw new HttpException(404, 'OTP does not exists!!')
+      else {
+        if (existingOTP.expireIn < presentTime)
+          throw new HttpException(400, 'OTP has expired!!')
+        if (existingOTP.otp !== otp)
+          throw new HttpException(400, 'Invalid OTP!!')
+      }
+
+      const user = await this.userService.findUserByMobileNo(mobileNo)
+
+      if (user === null) throw new HttpException(404, 'User does not exists!!')
+
+      const token = await this.authTokenService.generateToken(user.id)
+
+      return {
+        user: user,
+        token: token,
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

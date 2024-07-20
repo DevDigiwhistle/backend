@@ -25,7 +25,7 @@ export interface ICRUDBase<T extends ObjectLiteral> {
 export abstract class CRUDBase<T extends ObjectLiteral>
   implements ICRUDBase<T>
 {
-  private readonly repository: Repository<T>
+  protected readonly repository: Repository<T>
 
   constructor(entity: EntityTarget<T>) {
     this.repository = AppDataSource.getRepository(entity)

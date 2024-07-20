@@ -38,4 +38,35 @@ const resetPasswordSchema = {
   additionalProperties: false,
 }
 
-export { resetPasswordEmailSchema, resetPasswordSchema, authSchema }
+const mobileOTPSchema = {
+  type: 'object',
+  properties: {
+    mobileNo: {
+      type: 'string',
+    },
+  },
+  required: ['mobileNo'],
+  additionalProperties: false,
+}
+
+const verifyMobileOTPSchema = {
+  type: 'object',
+  properties: {
+    mobileNo: {
+      type: 'string',
+    },
+    otp: {
+      type: 'string',
+    },
+  },
+  required: ['mobileNo', 'otp'],
+  additionalProperties: false,
+}
+
+export {
+  resetPasswordEmailSchema,
+  resetPasswordSchema,
+  authSchema,
+  verifyMobileOTPSchema,
+  mobileOTPSchema,
+}

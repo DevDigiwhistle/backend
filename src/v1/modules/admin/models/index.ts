@@ -14,13 +14,13 @@ export class AdminProfile implements IAdminProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   firstName: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: true })
   lastName: string
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   mobileNo: string
 
   @OneToOne(() => User, (user) => user.adminProfile)
