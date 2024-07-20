@@ -57,7 +57,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthDTO'
+              type: object
+              properties:
+                idToken:
+                  type: string
       responses:
         '200':
           description: Successful login
@@ -70,8 +73,13 @@ paths:
                     type: string
                   message:
                     type: string
-                  token:
-                    type: string
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      user:
+                        $ref: '#/components/schemas/user'
         '400':
           description: Bad request
           content:
@@ -178,13 +186,47 @@ paths:
 
 components:
   schemas:
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        isVerified:
+          type: boolean
+        roleId:
+          type: string
+        brand_profile:
+          $ref: '#/components/schemas/BrandProfileInput'
+          nullable: true
+
+        agency_profile:
+          $ref: '#/components/schemas/AgencyProfileInput'
+          nullable: true
+
+        admin_profile:
+          $ref: '#/components/schemas/AdminProfileInput'
+          nullable: true
+
+        employee_profile:
+          $ref: '#/components/schemas/EmployeeProfileInput'
+          nullable: true
+
+        influencer_profile:
+          $ref: '#/components/schemas/InfluencerProfileInput'
+          nullable: true
+
     AuthDTO:
       type: object
       properties:
         idToken:
           type: string
+        role:
+          type: string
       required:
         - idToken
+        - role
 
     ResetPasswordEmailDTO:
       type: object

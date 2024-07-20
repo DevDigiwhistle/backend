@@ -1,23 +1,23 @@
 tags:
-  name: InfluencerProfile
-  description: Endpoints for influencer profiles
+  name: AgencyProfile
+  description: Endpoints for agency profiles
 
 paths:
-  /v1/influencer/profile:
+  /v1/agency/profile:
     post:
-      summary: Add a new Influencer profile
+      summary: Add a new agency profile
       tags:
-        - InfluencerProfile
+        - AgencyProfile
       requestBody:
-        description: Influencer profile data
+        description: Agency profile data
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InfluencerProfileInput'
+              $ref: '#/components/schemas/AgencyProfileInput'
       responses:
         '201':
-          description: Influencer profile created successfully
+          description: Agency profile created successfully
           content:
             application/json:
               schema:
@@ -28,7 +28,7 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: '#/components/schemas/InfluencerProfileInput'
+                    $ref: '#/components/schemas/AgencyProfileInput'
         '400':
           description: Bad Request
           content:
@@ -49,13 +49,13 @@ paths:
                 $ref: '#/components/schemas/messageModel'
 
     get:
-      summary: Get influencer profile by user ID
+      summary: Get agency profile by user ID
       tags:
-        - InfluencerProfile
+        - AgencyProfile
 
       responses:
         '200':
-          description: Influencer profile fetched successfully
+          description: Agency profile fetched successfully
           content:
             application/json:
               schema:
@@ -66,7 +66,7 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: '#/components/schemas/InfluencerProfile'
+                    $ref: '#/components/schemas/AgencyProfile'
         '400':
           description: Bad Request
           content:
@@ -80,7 +80,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Influencer profile not found
+          description: Brand profile not found
           content:
             application/json:
               schema:
@@ -94,67 +94,55 @@ paths:
 
 components:
   schemas:
-    InfluencerProfileInput:
+    AgencyProfileInput:
       type: object
       properties:
-        firstName:
+        name:
           type: string
-        lastName:
+        pocFirstName:
+          type: string
+        pocLastName:
           type: string
         mobileNo:
           type: string
-        twitterURL:
-          type: string
-        linkedInURL:
-          type: string
-        instagramURL:
-          type: string
-        youtubeURL:
+        websiteURL:
           type: string
         user:
           type: string
 
       example:
-        firstName: John
-        lastName: Doe
+        name: Cipla
+        pocFirstName: John
+        pocLastName: Doe
         mobileNo: '1234567890'
-        twitterURL: https://adaapt.ai
-        instagramURL: https://adaapt.ai
-        youtubeURL: https://adaapt.ai
-        linkedInURL: https://adaapt.ai
+        websiteURL: https://adaapt.ai
         user: '1'
 
-    InfluencerProfile:
+    AgencyProfile:
       type: object
       properties:
         id:
           type: string
-        firstName:
+        name:
           type: string
-        lastName:
+        pocFirstName:
+          type: string
+        pocLastName:
           type: string
         mobileNo:
           type: string
-        twitterURL:
-          type: string
-        linkedInURL:
-          type: string
-        instagramURL:
-          type: string
-        youtubeURL:
+        websiteURL:
           type: string
         user:
           $ref: '#/components/schemas/User'
 
       example:
         id: '1'
-        firstName: John
-        lastName: Doe
+        name: Cipla
+        pocFirstName: John
+        pocLastName: Doe
         mobileNo: '1234567890'
-        twitterURL: https://adaapt.ai
-        instagramURL: https://adaapt.ai
-        youtubeURL: https://adaapt.ai
-        linkedInURL: https://adaapt.ai
+        websiteURL: https://adaapt.ai
         user:
           id: '1'
           username: johndoe

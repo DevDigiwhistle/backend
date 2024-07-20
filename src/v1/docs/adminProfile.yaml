@@ -103,14 +103,14 @@ components:
           type: string
         mobileNo:
           type: string
-        userId:
+        user:
           type: string
 
       example:
         firstName: John
         lastName: Doe
         mobileNo: '1234567890'
-        userId: '1'
+        user: '1'
 
     AdminProfile:
       type: object
@@ -125,8 +125,7 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/User'
-        userId:
-          type: string
+
       example:
         id: '1'
         firstName: John

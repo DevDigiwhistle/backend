@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { adminProfileService } from '../modules/admin'
-import { AdminProfileController } from '../controller/admin-profile-controller'
+import { AdminProfileController } from '../controller'
 import { authorizeUser } from '../middleware'
 import { Enum } from '../../constants'
 import { BaseValidator } from '../../utils'
@@ -18,7 +18,7 @@ const updateAdminProfileValidator = new BaseValidator(updateAdminProfileSchema)
 
 adminRouter.post(
   '/profile',
-  addAdminProfileValidator.validateInput.bind(addAdminProfileSchema),
+  addAdminProfileValidator.validateInput.bind(addAdminProfileValidator),
   adminProfileController.addController.bind(adminProfileController)
 )
 
@@ -33,7 +33,7 @@ adminRouter.put(
   '/profile/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN]),
-  updateAdminProfileValidator.validateInput.bind(updateAdminProfileSchema),
+  updateAdminProfileValidator.validateInput.bind(updateAdminProfileValidator),
   adminProfileController.updateController.bind(adminProfileController)
 )
 

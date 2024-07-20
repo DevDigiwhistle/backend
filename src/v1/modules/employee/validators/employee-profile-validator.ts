@@ -4,9 +4,9 @@ const addEmployeeProfileSchema = {
     firstName: { type: 'string', nullable: false },
     lastName: { type: 'string', nullable: true },
     mobileNo: { type: 'string', nullable: false },
-    userId: { type: 'string', nullable: false },
+    user: { type: 'string', nullable: false },
   },
-  required: ['firstName', 'mobileNo', 'userId'],
+  required: ['firstName', 'mobileNo', 'user'],
   additionalProperties: false,
 }
 

@@ -10,8 +10,8 @@ import {
 import { Enum } from '../../../../constants'
 import { IRole, type IUser } from '../interface'
 import 'reflect-metadata'
-import { BrandProfile } from '../../brands/models'
-import { IBrandProfile } from '../../brands/interface'
+import { AgencyProfile, BrandProfile } from '../../brands/models'
+import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { EmployeeProfile } from '../../employee/models'
@@ -47,6 +47,9 @@ export class User extends BaseEntity implements IUser {
 
   @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user)
   brandProfile: IBrandProfile
+
+  @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user)
+  agencyProfile: IAgencyProfile
 
   @OneToOne(
     () => InfluencerProfile,

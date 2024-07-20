@@ -7,15 +7,3 @@ components:
           type: string
         status:
           type: string
-    createResponseModel:
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            id:
-              type: string

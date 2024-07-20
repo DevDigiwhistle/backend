@@ -1,14 +1,25 @@
+import { IUser } from '../interface'
+
 export type authDTO = {
+  idToken: string
+  role: string
+}
+
+export type loginDTO = {
   idToken: string
 }
 
 export type userDTO = {
   email: string
   uid: string
-  roleId: number
 }
 
 export type resetPassDTO = {
   oobCode: string
   password: string
+}
+
+export type loginResponseDTO = {
+  token: string
+  user: IUser
 }

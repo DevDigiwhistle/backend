@@ -11,3 +11,14 @@ export interface IBrandProfile extends ObjectLiteral {
   user: IUser
   mobileNo: string
 }
+
+export interface IAgencyProfile extends ObjectLiteral {
+  id: string
+  pocFirstName: string
+  pocLastName: string
+  name: string
+  userId?: string
+  websiteURL: string
+  user: IUser
+  mobileNo: string
+}

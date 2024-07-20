@@ -4,13 +4,13 @@ const addInfluencerProfileSchema = {
     firstName: { type: 'string', nullable: false },
     lastName: { type: 'string', nullable: true },
     mobileNo: { type: 'string', nullable: false },
-    userId: { type: 'string', nullable: false },
+    user: { type: 'string', nullable: false },
     twitterURL: { type: 'string', nullable: true },
     instagramURL: { type: 'string', nullable: true },
     youtubeURL: { type: 'string', nullable: true },
     linkedInURL: { type: 'string', nullable: true },
   },
-  required: ['firstName', 'mobileNo', 'userId'],
+  required: ['firstName', 'mobileNo', 'user'],
   additionalProperties: false,
 }
 

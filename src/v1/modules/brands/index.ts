@@ -1,8 +1,11 @@
-import { BrandProfile } from './models'
-import { BrandProfileCRUD } from './crud/brand-profile-crud'
-import { BrandProfileService } from './services'
+import { BrandProfile, AgencyProfile } from './models'
+import { BrandProfileService, AgencyProfileService } from './services'
+import { AgencyProfileCRUD, BrandProfileCRUD } from './crud'
 
 const brandProfileCRUD = BrandProfileCRUD.getInstance(BrandProfile)
 const brandProfileService = BrandProfileService.getInstance(brandProfileCRUD)
 
-export { brandProfileService }
+const agencyProfileCRUD = AgencyProfileCRUD.getInstance(AgencyProfile)
+const agencyProfileService = AgencyProfileService.getInstance(agencyProfileCRUD)
+
+export { brandProfileService, agencyProfileService }

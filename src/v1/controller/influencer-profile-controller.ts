@@ -35,12 +35,9 @@ export class InfluencerProfileController
     try {
       const userId = req.user.id
       const profile = await this.service.findOne({ userId: userId }, ['user'])
-      return responseHandler(
-        200,
-        res,
-        'Profile fetched Successfully!!',
-        profile
-      )
+      return responseHandler(200, res, 'Profile fetched Successfully!!', {
+        data: profile,
+      })
     } catch (e) {
       return errorHandler(e, res)
     }

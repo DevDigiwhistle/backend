@@ -4,8 +4,9 @@ import {
   IRoleService,
   type IUserCRUD,
   IGoogleAuthService,
+  IUser,
 } from '../interface'
-import { authDTO, resetPassDTO } from '../types'
+import { authDTO, loginDTO, loginResponseDTO, resetPassDTO } from '../types'
 import { IMailerService } from '../../../utils'
 
 class AuthService implements IAuthService {
@@ -44,11 +45,11 @@ class AuthService implements IAuthService {
     this.mailerService = mailerService
   }
 
-  async signUp(signUpData: authDTO): Promise<string> {
+  async signUp(signUpData: authDTO): Promise<IUser> {
     try {
-      const { idToken } = signUpData
+      const { idToken, role } = signUpData
 
-      const user = await this.googleAuthService.registerAndLogin(idToken)
+      const user = await this.googleAuthService.verifyIdToken(idToken)
 
       const userExists = await this.userCRUD.findOne(
         {
@@ -64,33 +65,39 @@ class AuthService implements IAuthService {
         throw new HttpException(400, 'User Already Exists!!')
       }
 
-      const role = await this.roleService.findOne({ id: user.roleId }, [])
+      const _role = await this.roleService.findOne({ name: role }, [])
 
-      if (role === null) throw new HttpException(400, 'Invalid RoleId')
+      if (_role === null) throw new HttpException(400, 'Invalid RoleId')
 
-      await this.userCRUD.add({
+      const results = await this.userCRUD.add({
         id: user.uid,
         email: user.email,
-        roleId: user.roleId,
+        roleId: _role.id,
       })
 
-      return user.uid
+      return results
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
 
-  async logIn(loginData: authDTO): Promise<string> {
+  async logIn(loginData: loginDTO): Promise<loginResponseDTO> {
     try {
       const { idToken } = loginData
 
-      const user = await this.googleAuthService.registerAndLogin(idToken)
+      const user = await this.googleAuthService.verifyIdToken(idToken)
 
       const _user = await this.userCRUD.findOne(
         {
           id: user.uid,
         },
-        []
+        [
+          'admin_profile',
+          'employee_profile',
+          'influencer_profile',
+          'brand_profile',
+          'agency_profile',
+        ]
       )
 
       if (_user === null) throw new HttpException(404, 'User does not exists!!')
@@ -100,7 +107,10 @@ class AuthService implements IAuthService {
 
       const token = await this.googleAuthService.generateSessionToken(idToken)
 
-      return token
+      return {
+        token: token,
+        user: _user,
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

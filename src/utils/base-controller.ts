@@ -122,7 +122,7 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.NO_CONTENT,
         res,
         'Deleted Successfully!!',
-        null
+        { data: null }
       )
     } catch (e) {
       return errorHandler(e, res)

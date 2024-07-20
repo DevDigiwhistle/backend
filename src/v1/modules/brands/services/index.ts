@@ -1,3 +1,3 @@
 import { BrandProfileService } from './brand-profile-service'
-
-export { BrandProfileService }
+import { AgencyProfileService } from './agency-profile-service'
+export { BrandProfileService, AgencyProfileService }

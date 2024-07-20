@@ -1,8 +1,13 @@
 import { type ObjectLiteral } from 'typeorm'
-import { type Enum } from '../../../../constants'
 import { IBaseService, ICRUDBase } from '../../../../utils'
-import { authDTO, resetPassDTO, userDTO } from '../types'
-import { IBrandProfile } from '../../brands/interface'
+import {
+  authDTO,
+  loginDTO,
+  loginResponseDTO,
+  resetPassDTO,
+  userDTO,
+} from '../types'
+import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { IAdminProfile } from '../../admin/interface'
 import { IEmployeeProfile } from '../../employee/interface'
@@ -11,10 +16,11 @@ export interface IUser extends ObjectLiteral {
   id: string
   email: string
   role: IRole
-  brandProfile: IBrandProfile | null
-  influencerProfile: IInfluencerProfile | null
-  adminProfile: IAdminProfile | null
-  employeeProfile: IEmployeeProfile | null
+  brandProfile?: IBrandProfile | null
+  influencerProfile?: IInfluencerProfile | null
+  adminProfile?: IAdminProfile | null
+  employeeProfile?: IEmployeeProfile | null
+  agencyProfile?: IAgencyProfile | null
   isVerified: boolean
   roleId?: number
 }
@@ -34,14 +40,14 @@ export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}
 export interface IUserService extends IBaseService<IUser, IUserCRUD> {}
 
 export interface IAuthService {
-  signUp(signUpData: authDTO): Promise<string>
-  logIn(logInData: authDTO): Promise<string>
+  signUp(signUpData: authDTO): Promise<IUser>
+  logIn(logInData: loginDTO): Promise<loginResponseDTO>
   emailResetPasswordLink(email: string): Promise<void>
   resetPassword(resetPassData: resetPassDTO): Promise<void>
 }
 
 export interface IGoogleAuthService {
-  registerAndLogin(idToken: string): Promise<userDTO>
+  verifyIdToken(idToken: string): Promise<userDTO>
   generateResetLink(email: string): Promise<string>
   generateSessionToken(idToken: string): Promise<string>
   resetPassword(password: string, oobCode: string): Promise<void>

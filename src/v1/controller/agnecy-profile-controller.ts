@@ -3,27 +3,31 @@ import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
 import {
-  IBrandProfile,
-  IBrandProfileCRUD,
-  IBrandProfileService,
+  IAgencyProfile,
+  IAgencyProfileCRUD,
+  IAgencyProfileService,
 } from '../modules/brands/interface'
 import { Response } from 'express'
 
-interface IBrandProfileController
+interface IAgencyProfileController
   extends IBaseController<
-    IBrandProfile,
-    IBrandProfileCRUD,
-    IBrandProfileService
+    IAgencyProfile,
+    IAgencyProfileCRUD,
+    IAgencyProfileService
   > {
   getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
 }
 
-export class BrandProfileController
-  extends BaseController<IBrandProfile, IBrandProfileCRUD, IBrandProfileService>
-  implements IBrandProfileController
+export class AgencyProfileController
+  extends BaseController<
+    IAgencyProfile,
+    IAgencyProfileCRUD,
+    IAgencyProfileService
+  >
+  implements IAgencyProfileController
 {
-  constructor(brandProfileService: IBrandProfileService) {
-    super(brandProfileService)
+  constructor(agencyProfileService: IAgencyProfileService) {
+    super(agencyProfileService)
   }
 
   async getByUserIdController(

@@ -19,20 +19,16 @@ class GoogleAuthService implements IGoogleAuthService {
     this.axiosService = axiosService
   }
 
-  async registerAndLogin(idToken: string): Promise<userDTO> {
+  async verifyIdToken(idToken: string): Promise<userDTO> {
     try {
       const user = await firebase.auth().verifyIdToken(idToken)
 
       if (user?.email === undefined)
         throw new HttpException(404, 'Email Id Not Found!!')
 
-      if (user?.roleId === undefined)
-        throw new HttpException(404, 'Role Id Not Found!!')
-
       return {
         email: user.email,
         uid: user.uid,
-        roleId: user.roleId,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

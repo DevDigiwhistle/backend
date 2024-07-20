@@ -107,7 +107,7 @@ components:
           type: string
         websiteURL:
           type: string
-        userId:
+        user:
           type: string
 
       example:
@@ -116,7 +116,7 @@ components:
         pocLastName: Doe
         mobileNo: '1234567890'
         websiteURL: https://adaapt.ai
-        userId: '1'
+        user: '1'
 
     BrandProfile:
       type: object

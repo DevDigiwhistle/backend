@@ -33,7 +33,7 @@ export class AdminProfileController
     try {
       const userId = req.user.id
       const profile = await this.service.findOne({ userId: userId }, ['user'])
-      return responseHandler(200, res, 'Profile Found', profile)
+      return responseHandler(200, res, 'Profile Found', { data: profile })
     } catch (e) {
       return errorHandler(e, res)
     }

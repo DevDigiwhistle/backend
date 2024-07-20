@@ -8,7 +8,7 @@ import brandRouter from './brand.routes'
 import influencerRouter from './influencer.routes'
 import adminRouter from './admin.routes'
 import employeeRouter from './employee.routes'
-import { verifyToken } from '../middleware'
+import agencyRouter from './agency.routes'
 
 const apiRouter = Router()
 
@@ -20,5 +20,6 @@ apiRouter.use('/brand', brandRouter)
 apiRouter.use('/influencer', influencerRouter)
 apiRouter.use('/admin', adminRouter)
 apiRouter.use('/employee', employeeRouter)
+apiRouter.use('/agency', agencyRouter)
 
 export default apiRouter

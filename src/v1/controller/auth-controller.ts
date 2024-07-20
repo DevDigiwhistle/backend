@@ -23,13 +23,13 @@ class AuthController implements IAuthController {
 
   async signUpController(req: Request, res: Response): Promise<Response> {
     try {
-      const userId = await this.authService.signUp(req.body)
+      const user = await this.authService.signUp(req.body)
 
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
         'SignUp Successfully!!',
-        { userId: userId }
+        { data: user }
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -38,13 +38,13 @@ class AuthController implements IAuthController {
 
   async logInController(req: Request, res: Response): Promise<Response> {
     try {
-      const token = await this.authService.logIn(req.body)
+      const data = await this.authService.logIn(req.body)
 
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
         'Login Successfully!!',
-        { token: token }
+        { data: data }
       )
     } catch (e) {
       return errorHandler(e, res)

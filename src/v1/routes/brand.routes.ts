@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { brandProfileService } from '../modules/brands'
-import { BrandProfileController } from '../controller/brand-profile-controller'
+import { BrandProfileController } from '../controller'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
 import { BaseValidator } from '../../utils'

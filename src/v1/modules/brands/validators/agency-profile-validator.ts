@@ -1,4 +1,4 @@
-const addBrandProfileSchema = {
+const addAgencyProfileSchema = {
   type: 'object',
   properties: {
     name: { type: 'string', nullable: false },
@@ -12,7 +12,7 @@ const addBrandProfileSchema = {
   additionalProperties: false,
 }
 
-const updateBrandProfileSchema = {
+const updateAgencyProfileSchema = {
   type: 'object',
   properties: {
     name: { type: 'string', nullable: true },
@@ -24,4 +24,4 @@ const updateBrandProfileSchema = {
   additionalProperties: false,
 }
 
-export { addBrandProfileSchema, updateBrandProfileSchema }
+export { addAgencyProfileSchema, updateAgencyProfileSchema }
