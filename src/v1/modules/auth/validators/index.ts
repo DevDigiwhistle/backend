@@ -8,7 +8,7 @@ const authSchema = {
       type: 'string',
     },
   },
-  required: ['idToken', 'role'],
+  required: ['idToken'],
   additionalProperties: false,
 }
 

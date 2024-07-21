@@ -25,13 +25,13 @@ class AuthController implements IAuthController {
 
   async signUpController(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.authService.signUp(req.body)
+      const data = await this.authService.signUp(req.body)
 
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
         'SignUp Successfully!!',
-        { data: user }
+        data
       )
     } catch (e) {
       return errorHandler(e, res)
