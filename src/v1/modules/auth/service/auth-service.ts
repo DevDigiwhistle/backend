@@ -98,7 +98,9 @@ class AuthService implements IAuthService {
       const results = await this.userService.add({
         id: user.uid,
         email: user.email,
-        roleId: _role.id,
+        role: {
+          id: _role.id,
+        },
       })
 
       return results

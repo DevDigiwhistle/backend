@@ -46,7 +46,7 @@ class AuthController implements IAuthController {
         Enum.RESPONSE_CODES.OK,
         res,
         'Login Successfully!!',
-        { data: data }
+        data
       )
     } catch (e) {
       return errorHandler(e, res)
