@@ -12,7 +12,7 @@ import {
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { IAdminProfile } from '../../admin/interface'
-import { IEmployeeProfile } from '../../employee/interface'
+import { IEmployeeProfile } from '../../admin/interface'
 
 // models
 export interface IUser extends ObjectLiteral {
