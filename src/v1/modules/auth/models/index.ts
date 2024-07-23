@@ -7,15 +7,14 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm'
-import { Enum } from '../../../../constants'
 import { IRole, IVerification, type IUser } from '../interface'
 import 'reflect-metadata'
 import { AgencyProfile, BrandProfile } from '../../brands/models'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
-import { EmployeeProfile } from '../../employee/models'
-import { IEmployeeProfile } from '../../employee/interface'
+import { EmployeeProfile } from '../../admin/models'
+import { IEmployeeProfile } from '../../admin/interface'
 import { AdminProfile } from '../../admin/models'
 import { IAdminProfile } from '../../admin/interface'
 

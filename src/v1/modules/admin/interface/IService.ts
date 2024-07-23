@@ -1,6 +1,11 @@
 import { IBaseService } from '../../../../utils'
-import { IAdminProfileCRUD } from './ICRUD'
-import { IAdminProfile } from './IModels'
+import { IAdminProfileCRUD, IEmployeeProfileCRUD } from './ICRUD'
+import { IAdminProfile, IEmployeeProfile } from './IModels'
 
 export interface IAdminProfileService
   extends IBaseService<IAdminProfile, IAdminProfileCRUD> {}
+
+export interface IEmployeeProfileService
+  extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {
+  findByUserId(userId: string): Promise<IEmployeeProfile>
+}

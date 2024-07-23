@@ -25,7 +25,7 @@ export abstract class BaseService<
   C extends ICRUDBase<T>,
 > implements IBaseService<T, C>
 {
-  private readonly crudBase: C
+  protected readonly crudBase: C
 
   constructor(crudBase: C) {
     this.crudBase = crudBase

@@ -6,7 +6,7 @@ import {
   IEmployeeProfile,
   IEmployeeProfileCRUD,
   IEmployeeProfileService,
-} from '../modules/employee/interface'
+} from '../modules/admin/interface'
 import { Response } from 'express'
 
 interface IEmployeeProfileController

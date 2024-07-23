@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { employeeProfileService } from '../modules/employee'
+import { employeeProfileService } from '../modules/admin'
 import { EmployeeProfileController } from '../controller/employee-profile-controller'
 import { Enum } from '../../constants'
 import { authorizeUser, verifyToken } from '../middleware'
@@ -7,7 +7,7 @@ import { BaseValidator } from '../../utils'
 import {
   addEmployeeProfileSchema,
   updateEmployeeProfileSchema,
-} from '../modules/employee/validators'
+} from '../modules/admin/validators'
 
 const employeeRouter = Router()
 

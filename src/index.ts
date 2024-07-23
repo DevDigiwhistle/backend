@@ -36,7 +36,7 @@ app.listen(PORT, () => {
       console.log('Connected Successfully!!')
     })
     .catch((e) => {
-      console.log(e)
+      console.log(`Database error ${e}`)
     })
 })
 

@@ -21,7 +21,7 @@ class UserService
 
   public async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
     try {
-      return await this.findUserByMobileNo(mobileNo)
+      return await this.crudBase.findUserByMobileNo(mobileNo)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

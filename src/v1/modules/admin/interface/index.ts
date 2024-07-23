@@ -1,5 +1,12 @@
-import { IAdminProfile } from './IModels'
-import { IAdminProfileCRUD } from './ICRUD'
-import { IAdminProfileService } from './IService'
+import { IAdminProfile, IEmployeeProfile } from './IModels'
+import { IAdminProfileCRUD, IEmployeeProfileCRUD } from './ICRUD'
+import { IAdminProfileService, IEmployeeProfileService } from './IService'
 
-export { IAdminProfile, IAdminProfileCRUD, IAdminProfileService }
+export {
+  IAdminProfile,
+  IAdminProfileCRUD,
+  IAdminProfileService,
+  IEmployeeProfile,
+  IEmployeeProfileCRUD,
+  IEmployeeProfileService,
+}
