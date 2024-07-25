@@ -15,6 +15,7 @@ import {
   loginResponseDTO,
   mobileDTO,
   resetPassDTO,
+  userResponseDTO,
   verifyMobileDTO,
 } from '../types'
 import { IMailerService } from '../../../utils'
@@ -139,10 +140,18 @@ class AuthService implements IAuthService {
       const profile = _user[`${_user.role.name}Profile`]
       let isOnboardingDone = profile === null ? false : true
 
+      const _userResponse: userResponseDTO = {
+        id: _user.id,
+        email: _user.email,
+        isVerified: _user.isVerified,
+        profile: profile,
+        role: _user.role,
+      }
+
       return {
         token: token,
-        user: _user,
-        onboarded: isOnboardingDone,
+        user: _userResponse,
+        isOnboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -255,10 +264,18 @@ class AuthService implements IAuthService {
       const profile = user[`${user.role.name}Profile`]
       let isOnboardingDone = profile === null ? false : true
 
+      const _userResponse: userResponseDTO = {
+        id: user.id,
+        email: user.email,
+        isVerified: user.isVerified,
+        profile: profile,
+        role: user.role,
+      }
+
       return {
         token: token,
-        user: user,
-        onboarded: isOnboardingDone,
+        user: _userResponse,
+        isOnboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

@@ -1,4 +1,7 @@
-import { IUser } from '../interface'
+import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
+import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { IInfluencerProfile } from '../../influencer/interface'
+import { IRole, IUser } from '../interface'
 
 export type authDTO = {
   idToken: string
@@ -21,8 +24,8 @@ export type resetPassDTO = {
 
 export type loginResponseDTO = {
   token: string
-  user: IUser
-  onboarded: boolean
+  user: userResponseDTO
+  isOnboarded: boolean
 }
 
 export type mobileDTO = {
@@ -32,4 +35,17 @@ export type mobileDTO = {
 export type verifyMobileDTO = {
   mobileNo: string
   otp: string
+}
+
+export type userResponseDTO = {
+  id: string
+  email: string
+  role: IRole
+  isVerified: boolean
+  profile:
+    | IAdminProfile
+    | IEmployeeProfile
+    | IAgencyProfile
+    | IBrandProfile
+    | IInfluencerProfile
 }
