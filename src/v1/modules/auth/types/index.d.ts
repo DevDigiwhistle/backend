@@ -39,7 +39,7 @@ export type verifyMobileDTO = {
 export type userResponseDTO = {
   id: string
   email: string
-  role: IRole
+  role: string
   isVerified: boolean
   profile:
     | IAdminProfile

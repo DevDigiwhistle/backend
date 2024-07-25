@@ -145,7 +145,7 @@ class AuthService implements IAuthService {
         email: _user.email,
         isVerified: _user.isVerified,
         profile: profile,
-        role: _user.role,
+        role: _user.role.name,
         isOnBoarded: isOnboardingDone,
       }
 
@@ -269,7 +269,7 @@ class AuthService implements IAuthService {
         email: user.email,
         isVerified: user.isVerified,
         profile: profile,
-        role: user.role,
+        role: user.role.name,
         isOnBoarded: isOnboardingDone,
       }
 
