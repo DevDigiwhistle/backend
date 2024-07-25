@@ -74,12 +74,8 @@ paths:
                   message:
                     type: string
                   data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                      user:
-                        $ref: '#/components/schemas/user'
+                    $ref: '#/components/schemas/loginDTO'
+
         '400':
           description: Bad request
           content:
@@ -194,7 +190,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/mobileDTO'
+              $ref: '#/components/schemas/MobileDTO'
       responses:
         '200':
           description: otp sent to mobile no successfully!!
@@ -246,12 +242,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
+                  sstatus:
                     type: string
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/user'
+                    $ref: '#/components/schemas/loginDTO'
 
         '400':
           description: Bad request
@@ -357,3 +353,13 @@ components:
       required:
         - mobileNo
         - otp
+
+    loginDTO:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/user'
+        onboarded:
+          type: boolean

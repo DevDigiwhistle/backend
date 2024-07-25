@@ -22,6 +22,7 @@ export type resetPassDTO = {
 export type loginResponseDTO = {
   token: string
   user: IUser
+  onboarded: boolean
 }
 
 export type mobileDTO = {

@@ -134,11 +134,15 @@ class AuthService implements IAuthService {
       if (_user.isVerified === false)
         throw new HttpException(400, 'Waiting for Approval!!')
 
-      const token = await this.authTokenService.generateToken(_user.id)
+      const token = this.authTokenService.generateToken(_user.id)
+
+      const profile = _user[`${_user.role.name}Profile`]
+      let isOnboardingDone = profile === null ? false : true
 
       return {
         token: token,
         user: _user,
+        onboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -205,10 +209,8 @@ class AuthService implements IAuthService {
         })
       }
 
-      const otpMessage = `OTP for Login to Digiwhistle\nDear User,\n\n Your OTP is:** ${code}.\n\n it will expire in ** 10 mins`
-
       this.whatsappService
-        .sendMessage(mobileNo, otpMessage)
+        .sendMessage(mobileNo, code)
         .then(() => {
           console.log('message sent')
         })
@@ -248,11 +250,15 @@ class AuthService implements IAuthService {
 
       if (user === null) throw new HttpException(404, 'User does not exists!!')
 
-      const token = await this.authTokenService.generateToken(user.id)
+      const token = this.authTokenService.generateToken(user.id)
+
+      const profile = user[`${user.role.name}Profile`]
+      let isOnboardingDone = profile === null ? false : true
 
       return {
-        user: user,
         token: token,
+        user: user,
+        onboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

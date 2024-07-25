@@ -20,24 +20,28 @@ class WhatsappService implements IWhatsappService {
 
   async sendMessage(
     destination: string | string[],
-    message: string
+    code: string
   ): Promise<void> {
     try {
       const formData = querystring.stringify({
         channel: 'whatsapp',
-        source: process.env.WHATSAPP_SOURCE_NUMBER,
-        destination: destination,
-        message: JSON.stringify({
-          type: 'text',
-          text: message,
-        }),
-        'src.name': 'Digiwhistle',
+        source: '918920753781',
+        destination: `${destination}`,
+        'src.name': 'DigiWhistle',
+        template: `{"id":"aa89ed5c-abef-4090-b10d-dff3ac3529f4","params":[${code},${code}]}`,
       })
 
-      await this.axiosService.post(`${process.env.GUPSHUP_API}`, formData, {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        apikey: `${process.env.GUPSHUP_API_KEY}`,
-      })
+      const resp = await this.axiosService.post(
+        `${process.env.GUPSHUP_API}`,
+        formData,
+        {
+          'Cache-Control': 'no-cache',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          apikey: `${process.env.GUPSHUP_API_KEY}`,
+        }
+      )
+
+      console.log(resp)
     } catch (e) {
       console.log('error in whatsapp service: ', e)
     }
