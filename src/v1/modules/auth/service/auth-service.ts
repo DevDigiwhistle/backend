@@ -146,12 +146,12 @@ class AuthService implements IAuthService {
         isVerified: _user.isVerified,
         profile: profile,
         role: _user.role,
+        isOnBoarded: isOnboardingDone,
       }
 
       return {
         token: token,
         user: _userResponse,
-        isOnboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -270,12 +270,12 @@ class AuthService implements IAuthService {
         isVerified: user.isVerified,
         profile: profile,
         role: user.role,
+        isOnBoarded: isOnboardingDone,
       }
 
       return {
         token: token,
         user: _userResponse,
-        isOnboarded: isOnboardingDone,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

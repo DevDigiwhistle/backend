@@ -25,7 +25,6 @@ export type resetPassDTO = {
 export type loginResponseDTO = {
   token: string
   user: userResponseDTO
-  isOnboarded: boolean
 }
 
 export type mobileDTO = {
@@ -48,4 +47,5 @@ export type userResponseDTO = {
     | IAgencyProfile
     | IBrandProfile
     | IInfluencerProfile
+  isOnBoarded: boolean
 }
