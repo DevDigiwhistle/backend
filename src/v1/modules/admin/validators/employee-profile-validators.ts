@@ -3,7 +3,7 @@ const addEmployeeProfileSchema = {
   properties: {
     firstName: { type: 'string', nullable: false },
     lastName: { type: 'string', nullable: true },
-    mobileNo: { type: 'string', nullable: false },
+    mobileNo: { type: 'string', nullable: false, pattern: '^[1-9]\\d{1,14}$' },
     user: { type: 'string', nullable: false },
   },
   required: ['firstName', 'mobileNo', 'user'],
@@ -15,7 +15,7 @@ const updateEmployeeProfileSchema = {
   properties: {
     firstName: { type: 'string', nullable: false },
     lastName: { type: 'string', nullable: true },
-    mobileNo: { type: 'string', nullable: false },
+    mobileNo: { type: 'string', nullable: false, pattern: '^[1-9]\\d{1,14}$' },
   },
 
   additionalProperties: false,
