@@ -52,7 +52,7 @@ class GoogleAuthService implements IGoogleAuthService {
   async resetPassword(password: string, oobCode: string): Promise<void> {
     try {
       await this.axiosService.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${process.env.FB_API_KEY}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${process.env.FIREBASE_API_KEY}`,
         {
           oobCode: oobCode,
           newPassword: password,
@@ -60,7 +60,7 @@ class GoogleAuthService implements IGoogleAuthService {
         undefined
       )
     } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
+      throw new HttpException(e?.data?.error?.code, e?.data?.error?.message)
     }
   }
 }

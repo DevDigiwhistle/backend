@@ -50,14 +50,18 @@ export interface IUserCRUD extends ICRUDBase<IUser> {
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}
 
-export interface IVerificationCRUD extends ICRUDBase<IVerification> {}
+export interface IVerificationCRUD extends ICRUDBase<IVerification> {
+  createOrUpdate(data: Partial<IVerification>): Promise<void>
+}
 
 // service
 
 export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}
 
 export interface IVerificationService
-  extends IBaseService<IVerification, IVerificationCRUD> {}
+  extends IBaseService<IVerification, IVerificationCRUD> {
+  createOrUpdate(data: Partial<IVerification>): Promise<void>
+}
 
 export interface IUserService extends IBaseService<IUser, IUserCRUD> {
   findUserByMobileNo(mobileNo: string): Promise<IUser | null>

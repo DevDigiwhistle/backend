@@ -1,4 +1,4 @@
-import { BaseService } from '../../../../utils'
+import { BaseService, HttpException } from '../../../../utils'
 import { IVerification, IVerificationService } from '../interface'
 import { IVerificationCRUD } from '../interface'
 
@@ -19,6 +19,14 @@ class VerificationService
 
   private constructor(verificationCRUD: IVerificationCRUD) {
     super(verificationCRUD)
+  }
+
+  public async createOrUpdate(data: Partial<IVerification>): Promise<void> {
+    try {
+      await this.crudBase.createOrUpdate(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 export { VerificationService }

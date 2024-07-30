@@ -27,7 +27,7 @@ class AxiosService implements IAxiosService {
           resolve(res.data)
         })
         .catch((e) => {
-          reject(e)
+          reject(e.response)
         })
     })
   }

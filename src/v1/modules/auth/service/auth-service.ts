@@ -166,9 +166,14 @@ class AuthService implements IAuthService {
 
   async emailResetPasswordLink(email: string): Promise<void> {
     try {
+      const user = await this.userService.findOne({ email: email }, [])
+
+      if (user === null) throw new HttpException(404, 'User Doest Not Exists!!')
+
       const link = await this.googleAuthService.generateResetLink(email)
+      const emailMessage = `<p>Dear User,</p><p> Follow this link to reset your password: ${link}</p><p>Regards,<br>Team Digiwhistle</p>`
       this.mailerService
-        .sendMail(email, 'Reset Password Link', link)
+        .sendMail(email, 'Reset Password Link', emailMessage)
         .then(() => {
           console.log('mail sent successfully!!')
         })
@@ -183,8 +188,8 @@ class AuthService implements IAuthService {
   async resetPassword(resetPassData: resetPassDTO): Promise<void> {
     try {
       await this.googleAuthService.resetPassword(
-        resetPassData.oobCode,
-        resetPassData.password
+        resetPassData.password,
+        resetPassData.oobCode
       )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -195,6 +200,10 @@ class AuthService implements IAuthService {
     try {
       const { mobileNo } = mobileData
 
+      const user = await this.userService.findUserByMobileNo(mobileNo)
+
+      if (user === null) throw new HttpException(404, 'User Does Not Exists!!')
+
       const code: string = OTPgenerator.generate(6, {
         digits: true,
         lowerCaseAlphabets: false,
@@ -202,27 +211,13 @@ class AuthService implements IAuthService {
         specialChars: false,
       })
 
-      const existingOTP = await this.verificationService.findOne(
-        {
-          mobileNo: mobileNo,
-        },
-        []
-      )
-
       const presentTime = new Date().getTime()
 
-      if (existingOTP !== null) {
-        await this.verificationService.update(
-          { mobileNo: mobileNo },
-          { otp: code }
-        )
-      } else {
-        await this.verificationService.add({
-          mobileNo: mobileNo,
-          otp: code,
-          expireIn: presentTime + 600000,
-        })
-      }
+      await this.verificationService.createOrUpdate({
+        mobileNo: mobileNo,
+        otp: code,
+        expireIn: presentTime + 600000,
+      })
 
       this.whatsappService
         .sendMessage(mobileNo, code)
@@ -269,6 +264,9 @@ class AuthService implements IAuthService {
 
       const profile = user[`${user.role.name}Profile`]
       let isOnboardingDone = profile === null ? false : true
+
+      if (user.isVerified === false && isOnboardingDone === true)
+        throw new HttpException(400, 'Waiting for Approval!!')
 
       const _userResponse: userResponseDTO = {
         id: user.id,
