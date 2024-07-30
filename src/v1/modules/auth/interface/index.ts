@@ -6,6 +6,7 @@ import {
   loginResponseDTO,
   mobileDTO,
   resetPassDTO,
+  signUpResponseDTO,
   userDTO,
   verifyMobileDTO,
 } from '../types'
@@ -63,7 +64,7 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
 }
 
 export interface IAuthService {
-  signUp(signUpData: authDTO): Promise<IUser>
+  signUp(signUpData: authDTO): Promise<signUpResponseDTO>
   logIn(logInData: loginDTO): Promise<loginResponseDTO>
   emailResetPasswordLink(email: string): Promise<void>
   resetPassword(resetPassData: resetPassDTO): Promise<void>

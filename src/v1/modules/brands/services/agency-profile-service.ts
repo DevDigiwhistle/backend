@@ -24,19 +24,6 @@ class AgencyProfileService
   private constructor(agencyProfileCRUD: IAgencyProfileCRUD) {
     super(agencyProfileCRUD)
   }
-
-  async findByUserId(userId: string): Promise<IAgencyProfile> {
-    try {
-      const data = await this.findOne({ userId: userId }, ['user'])
-
-      if (data === null)
-        throw new HttpException(404, 'Agency Profile does not exits!!')
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 
 export { AgencyProfileService }

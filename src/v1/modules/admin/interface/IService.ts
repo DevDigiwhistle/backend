@@ -6,6 +6,4 @@ export interface IAdminProfileService
   extends IBaseService<IAdminProfile, IAdminProfileCRUD> {}
 
 export interface IEmployeeProfileService
-  extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {
-  findByUserId(userId: string): Promise<IEmployeeProfile>
-}
+  extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {}

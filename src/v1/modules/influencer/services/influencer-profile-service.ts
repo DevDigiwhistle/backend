@@ -21,19 +21,6 @@ class InfluencerProfileService
   private constructor(influencerProfileCRUD: IInfluencerProfileCRUD) {
     super(influencerProfileCRUD)
   }
-
-  async findByUserId(userId: string): Promise<IInfluencerProfile> {
-    try {
-      const data = await this.findOne({ userId: userId }, ['user'])
-
-      if (data === null)
-        throw new HttpException(404, 'Influencer Profile does not exits!!')
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 
 export { InfluencerProfileService }

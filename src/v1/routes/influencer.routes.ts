@@ -33,7 +33,6 @@ influencerRouter.post(
 influencerRouter.get(
   '/profile',
   verifyToken,
-  authorizeUser([Enum.ROLES.INFLUENCER]),
   influencerProfileController.getByUserIdController.bind(
     influencerProfileController
   )
@@ -42,7 +41,7 @@ influencerRouter.get(
 influencerRouter.put(
   '/profile/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.INFLUENCER]),
+  authorizeUser([Enum.ROLES.INFLUENCER, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateInfluencerProfileValidator.validateInput.bind(
     updateInfluencerProfileValidator
   ),

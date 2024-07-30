@@ -21,19 +21,6 @@ class EmployeeProfileService
   private constructor(employeeProfileCRUD: IEmployeeProfileCRUD) {
     super(employeeProfileCRUD)
   }
-
-  async findByUserId(userId: string): Promise<IEmployeeProfile> {
-    try {
-      const data = await this.findOne({ userId: userId }, ['user'])
-
-      if (data === null)
-        throw new HttpException(404, 'Employee Profile does not exits!!')
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 
 export { EmployeeProfileService }

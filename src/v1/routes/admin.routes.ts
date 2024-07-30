@@ -29,7 +29,7 @@ adminRouter.get(
   adminProfileController.getByUserIdController.bind(adminProfileController)
 )
 
-adminRouter.put(
+adminRouter.patch(
   '/profile/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN]),

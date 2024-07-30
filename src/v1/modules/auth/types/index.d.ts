@@ -27,6 +27,13 @@ export type loginResponseDTO = {
   user: userResponseDTO
 }
 
+export type signUpResponseDTO = {
+  id: string
+  email: string
+  role: string
+  isVerified: boolean
+}
+
 export type mobileDTO = {
   mobileNo: string
 }

@@ -38,9 +38,11 @@ class GoogleAuthService implements IGoogleAuthService {
   async generateResetLink(email: string): Promise<string> {
     try {
       const link = await firebase.auth().generatePasswordResetLink(email)
-
       const linkParams = link.split('?')
-      const resetLink = `${process.env.FRONTEND_URL}/reset-password?oopCode=${linkParams[1]}`
+      const code = linkParams[1].split('&')
+      const oobCode = code[1].split('=')[1]
+
+      const resetLink = `${process.env.FRONTEND_URL}/reset-password?oobCode=${oobCode}`
       return resetLink
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

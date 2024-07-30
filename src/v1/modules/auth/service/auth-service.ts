@@ -15,6 +15,7 @@ import {
   loginResponseDTO,
   mobileDTO,
   resetPassDTO,
+  signUpResponseDTO,
   userResponseDTO,
   verifyMobileDTO,
 } from '../types'
@@ -72,7 +73,7 @@ class AuthService implements IAuthService {
     this.authTokenService = authTokenService
   }
 
-  async signUp(signUpData: authDTO): Promise<IUser> {
+  async signUp(signUpData: authDTO): Promise<signUpResponseDTO> {
     try {
       const { idToken, role } = signUpData
 
@@ -96,7 +97,7 @@ class AuthService implements IAuthService {
 
       if (_role === null) throw new HttpException(400, 'Invalid RoleId')
 
-      const results = await this.userService.add({
+      await this.userService.add({
         id: user.uid,
         email: user.email,
         role: {
@@ -104,7 +105,12 @@ class AuthService implements IAuthService {
         },
       })
 
-      return results
+      return {
+        id: user.uid,
+        email: user.email,
+        role: _role.name,
+        isVerified: false,
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

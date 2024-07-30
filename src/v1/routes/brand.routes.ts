@@ -24,14 +24,13 @@ brandRouter.post(
 brandRouter.get(
   '/profile',
   verifyToken,
-  authorizeUser([Enum.ROLES.BRAND]),
   brandProfileController.getByUserIdController.bind(brandProfileController)
 )
 
 brandRouter.put(
   '/profile/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.BRAND]),
+  authorizeUser([Enum.ROLES.AGENCY, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateBrandProfileValidator.validateInput.bind(updateBrandProfileValidator),
   brandProfileController.updateController.bind(brandProfileController)
 )

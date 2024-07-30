@@ -27,7 +27,16 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/User'
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      isVerified:
+                        type: boolean
         '400':
           description: Bad request
           content:
@@ -279,30 +288,17 @@ components:
           type: string
         isVerified:
           type: boolean
-
         role:
-          $ref: '#/components/schemas/Role'
-          nullable: true
-
-        brand_profile:
-          $ref: '#/components/schemas/BrandProfileInput'
-          nullable: true
-
-        agency_profile:
-          $ref: '#/components/schemas/AgencyProfileInput'
-          nullable: true
-
-        admin_profile:
-          $ref: '#/components/schemas/AdminProfileInput'
-          nullable: true
-
-        employee_profile:
-          $ref: '#/components/schemas/EmployeeProfileInput'
-          nullable: true
-
-        influencer_profile:
-          $ref: '#/components/schemas/InfluencerProfileInput'
-          nullable: true
+          type: string
+        isOnBoarded:
+          type: boolean
+        profile:
+          oneOf:
+            - $ref: '#/components/schemas/AdminProfileInput'
+            - $ref: '#/components/schemas/BrandProfileInput'
+            - $ref: '#/components/schemas/AgencyProfileInput'
+            - $ref: '#/components/schemas/EmployeeProfileInput'
+            - $ref: '#/components/schemas/InfluencerProfileInput'
 
     AuthDTO:
       type: object
@@ -361,5 +357,3 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/user'
-        isOnboarded:
-          type: boolean

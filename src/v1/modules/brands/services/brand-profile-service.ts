@@ -19,19 +19,6 @@ class BrandProfileService
   private constructor(brandProfileCRUD: IBrandProfileCRUD) {
     super(brandProfileCRUD)
   }
-
-  async findByUserId(userId: string): Promise<IBrandProfile> {
-    try {
-      const data = await this.findOne({ userId: userId }, ['user'])
-
-      if (data === null)
-        throw new HttpException(404, 'Brand Profile does not exits!!')
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 
 export { BrandProfileService }

@@ -19,19 +19,6 @@ class AdminProfileService
   private constructor(adminProfileCRUD: IAdminProfileCRUD) {
     super(adminProfileCRUD)
   }
-
-  async findByUserId(userId: string): Promise<IAdminProfile> {
-    try {
-      const data = await this.findOne({ userId: userId }, ['user'])
-
-      if (data === null)
-        throw new HttpException(404, 'Admin Profile does not exits!!')
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 
 export { AdminProfileService }

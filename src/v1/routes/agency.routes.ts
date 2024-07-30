@@ -28,14 +28,13 @@ agencyRouter.post(
 agencyRouter.get(
   '/profile',
   verifyToken,
-  authorizeUser([Enum.ROLES.AGENCY]),
   agencyProfileController.getByUserIdController.bind(AgencyProfileController)
 )
 
-agencyRouter.put(
+agencyRouter.patch(
   '/profile/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.AGENCY]),
+  authorizeUser([Enum.ROLES.AGENCY, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateAgencyProfileValidator.validateInput.bind(updateAgencyProfileValidator),
   agencyProfileController.updateController.bind(AgencyProfileController)
 )

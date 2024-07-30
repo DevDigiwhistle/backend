@@ -29,7 +29,7 @@ employeeRouter.post(
 employeeRouter.get(
   '/profile',
   verifyToken,
-  authorizeUser([Enum.ROLES.EMPLOYEE]),
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   employeeProfileController.getByUserIdController.bind(
     employeeProfileController
   )
@@ -38,7 +38,7 @@ employeeRouter.get(
 employeeRouter.put(
   '/profile/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.EMPLOYEE]),
+  authorizeUser([Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateEmployeeProfileValidator.validateInput.bind(
     updateEmployeeProfileSchema
   ),
