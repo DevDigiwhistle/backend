@@ -36,6 +36,6 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', nullable: true })
   linkedInURL?: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 }

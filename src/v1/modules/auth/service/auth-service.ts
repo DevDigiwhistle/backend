@@ -138,13 +138,13 @@ class AuthService implements IAuthService {
 
       if (_user === null) throw new HttpException(404, 'User does not exists!!')
 
-      if (_user.isVerified === false)
-        throw new HttpException(400, 'Waiting for Approval!!')
-
       const token = this.authTokenService.generateToken(_user.id)
 
       const profile = _user[`${_user.role.name}Profile`]
       let isOnboardingDone = profile === null ? false : true
+
+      if (_user.isVerified === false && isOnboardingDone === true)
+        throw new HttpException(400, 'Waiting for Approval!!')
 
       const _userResponse: userResponseDTO = {
         id: _user.id,

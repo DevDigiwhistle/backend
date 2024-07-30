@@ -30,7 +30,7 @@ export class BrandProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: false })
   websiteURL: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 }
 
@@ -55,6 +55,6 @@ export class AgencyProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: false })
   websiteURL: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 }

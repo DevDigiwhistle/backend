@@ -21,7 +21,7 @@ export class AdminProfile implements IAdminProfile {
   @Column({ type: 'varchar', nullable: true })
   lastName: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 
   @OneToOne(() => User, (user) => user.adminProfile)
@@ -40,7 +40,7 @@ export class EmployeeProfile implements IEmployeeProfile {
   @Column({ type: 'varchar', nullable: true })
   lastName: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 
   @OneToOne(() => User, (user) => user.employeeProfile)
