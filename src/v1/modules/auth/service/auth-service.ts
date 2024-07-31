@@ -88,14 +88,14 @@ class AuthService implements IAuthService {
 
       if (userExists !== null) {
         if (userExists.isVerified === false)
-          throw new HttpException(400, 'Waiting for Approval!!')
+          throw new HttpException(400, 'Waiting for Approval')
 
-        throw new HttpException(400, 'User Already Exists!!')
+        throw new HttpException(400, 'User Already Exists')
       }
 
       const _role = await this.roleService.findOne({ name: role }, [])
 
-      if (_role === null) throw new HttpException(400, 'Invalid RoleId')
+      if (_role === null) throw new HttpException(400, 'Invalid Role')
 
       await this.userService.add({
         id: user.uid,
@@ -136,7 +136,7 @@ class AuthService implements IAuthService {
         ]
       )
 
-      if (_user === null) throw new HttpException(404, 'User does not exists!!')
+      if (_user === null) throw new HttpException(404, 'user does not exist')
 
       const token = this.authTokenService.generateToken(_user.id)
 
@@ -144,7 +144,7 @@ class AuthService implements IAuthService {
       let isOnboardingDone = profile === null ? false : true
 
       if (_user.isVerified === false && isOnboardingDone === true)
-        throw new HttpException(400, 'Waiting for Approval!!')
+        throw new HttpException(400, 'Waiting for Approval')
 
       const _userResponse: userResponseDTO = {
         id: _user.id,
@@ -168,7 +168,7 @@ class AuthService implements IAuthService {
     try {
       const user = await this.userService.findOne({ email: email }, [])
 
-      if (user === null) throw new HttpException(404, 'User Doest Not Exists!!')
+      if (user === null) throw new HttpException(404, 'user does not exist')
 
       const link = await this.googleAuthService.generateResetLink(email)
       const emailMessage = `<p>Dear User,</p><p> Follow this link to reset your password: ${link}</p><p>Regards,<br>Team Digiwhistle</p>`
@@ -202,7 +202,7 @@ class AuthService implements IAuthService {
 
       const user = await this.userService.findUserByMobileNo(mobileNo)
 
-      if (user === null) throw new HttpException(404, 'User Does Not Exists!!')
+      if (user === null) throw new HttpException(404, 'user does not exists')
 
       const code: string = OTPgenerator.generate(6, {
         digits: true,
@@ -247,18 +247,16 @@ class AuthService implements IAuthService {
 
       const presentTime = new Date().getTime()
 
-      if (existingOTP === null)
-        throw new HttpException(404, 'OTP does not exists!!')
+      if (existingOTP === null) throw new HttpException(404, 'Invalid PhoneNo')
       else {
         if (existingOTP.expireIn < presentTime)
-          throw new HttpException(400, 'OTP has expired!!')
-        if (existingOTP.otp !== otp)
-          throw new HttpException(400, 'Invalid OTP!!')
+          throw new HttpException(400, 'OTP has expired')
+        if (existingOTP.otp !== otp) throw new HttpException(400, 'Invalid OTP')
       }
 
       const user = await this.userService.findUserByMobileNo(mobileNo)
 
-      if (user === null) throw new HttpException(404, 'User does not exists!!')
+      if (user === null) throw new HttpException(404, 'user does not exist')
 
       const token = this.authTokenService.generateToken(user.id)
 

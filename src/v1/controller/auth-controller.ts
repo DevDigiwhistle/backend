@@ -30,7 +30,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
-        'SignUp Successfully!!',
+        'Form Submitted Successfully',
         data
       )
     } catch (e) {
@@ -45,7 +45,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Login Successfully!!',
+        'LoggedIn Successfully',
         data
       )
     } catch (e) {
@@ -63,7 +63,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Email Sent Successfully!!',
+        'Email Sent Successfully',
         {}
       )
     } catch (e) {
@@ -81,7 +81,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Password updated Successfully!!',
+        'Password Updated Successfully',
         {}
       )
     } catch (e) {
@@ -96,7 +96,7 @@ class AuthController implements IAuthController {
     try {
       await this.authService.sendMobileOTP(req.body)
 
-      return responseHandler(200, res, 'Otp sent successfully!!', {})
+      return responseHandler(200, res, 'OTP sent successfully', {})
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -108,7 +108,7 @@ class AuthController implements IAuthController {
   ): Promise<Response> {
     try {
       const data = await this.authService.verifyMobileOTP(req.body)
-      return responseHandler(200, res, 'Otp verified successfully!!', data)
+      return responseHandler(200, res, 'OTP verified successfully', data)
     } catch (e) {
       return errorHandler(e, res)
     }

@@ -102,7 +102,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       await this.repository.update(query, data)
       const result = await this.findOne(query)
 
-      if (result === null) throw new HttpException(404, 'Not Found!!')
+      if (result === null) throw new HttpException(404, 'Not Found')
       return result
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

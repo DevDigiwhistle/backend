@@ -24,7 +24,7 @@ class GoogleAuthService implements IGoogleAuthService {
       const user = await firebase.auth().verifyIdToken(idToken)
 
       if (user?.email === undefined)
-        throw new HttpException(404, 'Email Id Not Found!!')
+        throw new HttpException(404, 'emailId not found')
 
       return {
         email: user.email,

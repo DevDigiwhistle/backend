@@ -40,7 +40,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
-        'Created Successfully!!',
+        'Created Successfully',
         createdDoc
       )
     } catch (e) {
@@ -54,7 +54,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Fetched Successfully!!',
+        'Fetched Successfully',
         data
       )
     } catch (e) {
@@ -73,7 +73,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Fetched Successfully!!',
+        'Fetched Successfully',
         data
       )
     } catch (e) {
@@ -99,7 +99,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'Updated Successfully!!',
+        'Updated Successfully',
         data
       )
     } catch (e) {
@@ -121,7 +121,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.NO_CONTENT,
         res,
-        'Deleted Successfully!!',
+        'Deleted Successfully',
         { data: null }
       )
     } catch (e) {
