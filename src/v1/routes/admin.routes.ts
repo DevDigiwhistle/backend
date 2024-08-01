@@ -9,10 +9,14 @@ import {
   updateAdminProfileSchema,
 } from '../modules/admin/validators'
 import { verifyToken } from '../middleware'
+import { userService } from '../modules/auth'
 
 const adminRouter = Router()
 
-const adminProfileController = new AdminProfileController(adminProfileService)
+const adminProfileController = new AdminProfileController(
+  adminProfileService,
+  userService
+)
 const addAdminProfileValidator = new BaseValidator(addAdminProfileSchema)
 const updateAdminProfileValidator = new BaseValidator(updateAdminProfileSchema)
 

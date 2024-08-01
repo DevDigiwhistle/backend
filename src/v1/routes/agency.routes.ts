@@ -8,11 +8,13 @@ import {
   addAgencyProfileSchema,
   updateAgencyProfileSchema,
 } from '../modules/brands/validators'
+import { userService } from '../modules/auth'
 
 const agencyRouter = Router()
 
 const agencyProfileController = new AgencyProfileController(
-  agencyProfileService
+  agencyProfileService,
+  userService
 )
 const addAgencyProfileValidator = new BaseValidator(addAgencyProfileSchema)
 const updateAgencyProfileValidator = new BaseValidator(

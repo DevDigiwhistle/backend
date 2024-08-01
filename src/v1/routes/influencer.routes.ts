@@ -8,11 +8,13 @@ import {
   addInfluencerProfileSchema,
   updateInfluencerProfileSchema,
 } from '../modules/influencer/validators'
+import { userService } from '../modules/auth'
 
 const influencerRouter = Router()
 
 const influencerProfileController = new InfluencerProfileController(
-  influencerProfileService
+  influencerProfileService,
+  userService
 )
 const addInfluencerProfileValidator = new BaseValidator(
   addInfluencerProfileSchema

@@ -8,11 +8,13 @@ import {
   addEmployeeProfileSchema,
   updateEmployeeProfileSchema,
 } from '../modules/admin/validators'
+import { userService } from '../modules/auth'
 
 const employeeRouter = Router()
 
 const employeeProfileController = new EmployeeProfileController(
-  employeeProfileService
+  employeeProfileService,
+  userService
 )
 const addEmployeeProfileValidator = new BaseValidator(addEmployeeProfileSchema)
 

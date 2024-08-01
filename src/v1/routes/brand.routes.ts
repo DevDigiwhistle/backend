@@ -8,10 +8,14 @@ import {
   addBrandProfileSchema,
   updateBrandProfileSchema,
 } from '../modules/brands/validators'
+import { userService } from '../modules/auth'
 
 const brandRouter = Router()
 
-const brandProfileController = new BrandProfileController(brandProfileService)
+const brandProfileController = new BrandProfileController(
+  brandProfileService,
+  userService
+)
 const addBrandProfileValidator = new BaseValidator(addBrandProfileSchema)
 const updateBrandProfileValidator = new BaseValidator(updateBrandProfileSchema)
 
