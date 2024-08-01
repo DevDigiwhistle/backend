@@ -30,7 +30,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
-        'Form Submitted Successfully',
+        'Request Submitted Successfully',
         data
       )
     } catch (e) {
@@ -45,7 +45,7 @@ class AuthController implements IAuthController {
       return responseHandler(
         Enum.RESPONSE_CODES.OK,
         res,
-        'LoggedIn Successfully',
+        'Log in Successfully',
         data
       )
     } catch (e) {

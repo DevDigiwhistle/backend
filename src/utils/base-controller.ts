@@ -40,7 +40,7 @@ export abstract class BaseController<
       return responseHandler(
         Enum.RESPONSE_CODES.CREATED,
         res,
-        'Created Successfully',
+        'Requested Submitted Successfully',
         createdDoc
       )
     } catch (e) {
