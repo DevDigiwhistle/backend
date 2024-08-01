@@ -46,6 +46,10 @@ export interface IVerification extends ObjectLiteral {
 
 export interface IUserCRUD extends ICRUDBase<IUser> {
   findUserByMobileNo(mobileNo: string): Promise<IUser | null>
+  findUserProfileByMobileNoOrUserId(
+    mobileNo: string,
+    userId: string
+  ): Promise<IUser | null>
 }
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}
@@ -65,6 +69,10 @@ export interface IVerificationService
 
 export interface IUserService extends IBaseService<IUser, IUserCRUD> {
   findUserByMobileNo(mobileNo: string): Promise<IUser | null>
+  findUserProfileByMobileNoOrUserId(
+    mobileNo: string,
+    userId: string
+  ): Promise<IUser | null>
 }
 
 export interface IAuthService {

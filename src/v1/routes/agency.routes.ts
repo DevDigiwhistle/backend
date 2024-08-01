@@ -22,13 +22,13 @@ const updateAgencyProfileValidator = new BaseValidator(
 agencyRouter.post(
   '/profile',
   addAgencyProfileValidator.validateInput.bind(addAgencyProfileValidator),
-  agencyProfileController.addController.bind(AgencyProfileController)
+  agencyProfileController.addController.bind(agencyProfileController)
 )
 
 agencyRouter.get(
   '/profile',
   verifyToken,
-  agencyProfileController.getByUserIdController.bind(AgencyProfileController)
+  agencyProfileController.getByUserIdController.bind(agencyProfileController)
 )
 
 agencyRouter.patch(
@@ -36,7 +36,7 @@ agencyRouter.patch(
   verifyToken,
   authorizeUser([Enum.ROLES.AGENCY, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateAgencyProfileValidator.validateInput.bind(updateAgencyProfileValidator),
-  agencyProfileController.updateController.bind(AgencyProfileController)
+  agencyProfileController.updateController.bind(agencyProfileController)
 )
 
 export default agencyRouter

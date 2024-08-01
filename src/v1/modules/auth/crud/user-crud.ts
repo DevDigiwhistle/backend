@@ -42,4 +42,34 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async findUserProfileByMobileNoOrUserId(
+    mobileNo: string,
+    userId: string
+  ): Promise<IUser | null> {
+    try {
+      const user = await this.repository.findOne({
+        relations: [
+          'adminProfile',
+          'employeeProfile',
+          'influencerProfile',
+          'brandProfile',
+          'agencyProfile',
+          'role',
+        ],
+        where: [
+          { adminProfile: { mobileNo: mobileNo } },
+          { employeeProfile: { mobileNo: mobileNo } },
+          { influencerProfile: { mobileNo: mobileNo } },
+          { brandProfile: { mobileNo: mobileNo } },
+          { agencyProfile: { mobileNo: mobileNo } },
+          { id: userId },
+        ],
+      })
+
+      return user
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }

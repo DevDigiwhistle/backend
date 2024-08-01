@@ -19,9 +19,23 @@ class UserService
     super(userCRUD)
   }
 
-  public async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
+  async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
     try {
       return await this.crudBase.findUserByMobileNo(mobileNo)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findUserProfileByMobileNoOrUserId(
+    mobileNo: string,
+    userId: string
+  ): Promise<IUser | null> {
+    try {
+      return await this.crudBase.findUserProfileByMobileNoOrUserId(
+        mobileNo,
+        userId
+      )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
