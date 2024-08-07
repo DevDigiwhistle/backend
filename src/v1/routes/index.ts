@@ -9,6 +9,7 @@ import influencerRouter from './influencer.routes'
 import adminRouter from './admin.routes'
 import employeeRouter from './employee.routes'
 import agencyRouter from './agency.routes'
+import userRouter from './user.routes'
 
 const apiRouter = Router()
 
@@ -21,5 +22,6 @@ apiRouter.use('/influencer', influencerRouter)
 apiRouter.use('/admin', adminRouter)
 apiRouter.use('/employee', employeeRouter)
 apiRouter.use('/agency', agencyRouter)
+apiRouter.use('/user', userRouter)
 
 export default apiRouter

@@ -19,6 +19,23 @@ class GoogleAuthService implements IGoogleAuthService {
     this.axiosService = axiosService
   }
 
+  async createUser(email: string): Promise<userDTO> {
+    try {
+      const user = await firebase.auth().createUser({
+        email: email,
+        password: 'digiwhistle@123',
+        emailVerified: true,
+      })
+
+      return {
+        email: email,
+        uid: user.uid,
+      }
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
   async verifyIdToken(idToken: string): Promise<userDTO> {
     try {
       const user = await firebase.auth().verifyIdToken(idToken)

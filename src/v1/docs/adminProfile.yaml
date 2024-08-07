@@ -52,7 +52,8 @@ paths:
       summary: Get admin profile by user ID
       tags:
         - AdminProfile
-
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Admin profile fetched successfully
@@ -92,8 +93,74 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
+  /v1/admin/profile/{id}:
+    patch:
+      summary: update a admin profile
+      tags:
+        - AdminProfile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the admin profile to update
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Admin profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminProfileUpdate'
+      responses:
+        '200':
+          description: Admin profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AdminProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
+    AdminProfileUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        profilePic:
+          type: string
+
     AdminProfileInput:
       type: object
       properties:
@@ -103,14 +170,10 @@ components:
           type: string
         mobileNo:
           type: string
+        profilePic:
+          type: string
         user:
           type: string
-
-      example:
-        firstName: John
-        lastName: Doe
-        mobileNo: '1234567890'
-        user: '1'
 
     AdminProfile:
       type: object
@@ -123,18 +186,10 @@ components:
           type: string
         mobileNo:
           type: string
+        profilePic:
+          type: string
         user:
           $ref: '#/components/schemas/User'
-
-      example:
-        id: '1'
-        firstName: John
-        lastName: Doe
-        mobileNo: '1234567890'
-        user:
-          id: '1'
-          username: johndoe
-          email: johndoe@example.com
 
     User:
       type: object
@@ -145,10 +200,5 @@ components:
           type: string
         isVerified:
           type: boolean
-        roleId:
-          type: string
-      example:
-        id: '1'
-        isVerified: false
-        email: johndoe@example.com
-        roleId: '1'
+        isPaused:
+          type: boolean

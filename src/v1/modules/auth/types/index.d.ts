@@ -48,11 +48,12 @@ export type userResponseDTO = {
   email: string
   role: string
   isVerified: boolean
+  isPaused: boolean
   profile:
     | IAdminProfile
     | IEmployeeProfile
     | IAgencyProfile
     | IBrandProfile
     | IInfluencerProfile
-  isOnBoarded: boolean
+  isOnBoarded?: boolean
 }

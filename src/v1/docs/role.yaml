@@ -34,7 +34,3 @@ components:
           type: number
         name:
           type: string
-
-      example:
-        id: 0
-        name: Admin

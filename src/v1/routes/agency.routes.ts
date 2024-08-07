@@ -33,6 +33,12 @@ agencyRouter.get(
   agencyProfileController.getByUserIdController.bind(agencyProfileController)
 )
 
+agencyRouter.get(
+  '/',
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  agencyProfileController.getAllAgencyController.bind(agencyProfileController)
+)
+
 agencyRouter.patch(
   '/profile/:id',
   verifyToken,

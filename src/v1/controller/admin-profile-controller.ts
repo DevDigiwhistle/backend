@@ -59,8 +59,33 @@ export class AdminProfileController
   ): Promise<Response> {
     try {
       const userId = req.user.id
-      const profile = await this.service.findOne({ userId: userId }, ['user'])
-      return responseHandler(200, res, 'Profile Found', { data: profile })
+      const profile = await this.service.findOne({
+        user: {
+          id: userId,
+        },
+      })
+
+      let user: any = req.user
+      delete user.role
+
+      return responseHandler(200, res, 'Profile Fetched!!', {
+        ...profile,
+        user: req.user,
+      })
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async updateController(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = req.params?.id
+
+      if (typeof id !== 'string') throw new HttpException(400, 'Missing Id!!')
+
+      const data = await this.service.update({ id: id }, req.body, ['user'])
+
+      return responseHandler(200, res, 'Updated Successfully', data)
     } catch (e) {
       return errorHandler(e, res)
     }

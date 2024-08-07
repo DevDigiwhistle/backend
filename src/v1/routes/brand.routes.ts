@@ -31,10 +31,16 @@ brandRouter.get(
   brandProfileController.getByUserIdController.bind(brandProfileController)
 )
 
+brandRouter.get(
+  '/',
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  brandProfileController.getAllBrandsController.bind(brandProfileController)
+)
+
 brandRouter.put(
   '/profile/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.AGENCY, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
+  authorizeUser([Enum.ROLES.BRAND, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateBrandProfileValidator.validateInput.bind(updateBrandProfileValidator),
   brandProfileController.updateController.bind(brandProfileController)
 )

@@ -44,22 +44,34 @@ export class User extends BaseEntity implements IUser {
   @Column({ default: false, type: 'boolean' })
   isVerified: boolean
 
-  @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user)
+  @Column({ default: false, type: 'boolean' })
+  isPaused: boolean
+
+  @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user, {
+    cascade: true,
+  })
   brandProfile: IBrandProfile
 
-  @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user)
+  @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user, {
+    cascade: true,
+  })
   agencyProfile: IAgencyProfile
 
   @OneToOne(
     () => InfluencerProfile,
-    (influencerProfile) => influencerProfile.user
+    (influencerProfile) => influencerProfile.user,
+    { cascade: true }
   )
   influencerProfile: IInfluencerProfile
 
-  @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user)
+  @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user, {
+    cascade: true,
+  })
   employeeProfile: IEmployeeProfile
 
-  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
+  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user, {
+    cascade: true,
+  })
   adminProfile: IAdminProfile
 }
 

@@ -288,6 +288,8 @@ components:
           type: string
         isVerified:
           type: boolean
+        isPaused:
+          type: boolean
         role:
           type: string
         isOnBoarded:

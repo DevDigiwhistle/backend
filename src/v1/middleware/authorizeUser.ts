@@ -4,10 +4,12 @@ import { IExtendedRequest } from '../interface'
 
 export const authorizeUser = (allowedUser: Enum.ROLES[]) => {
   return (req: IExtendedRequest, res: Response, next: NextFunction) => {
-    const roleId = req.user?.roleId
+    const roleId = req.user?.role?.id
 
     if (roleId === undefined || !allowedUser.includes(roleId)) {
-      res.send(403).json({ message: 'Access Denied!!', status: 'Unauthorized' })
+      res
+        .status(403)
+        .json({ message: 'Access Denied!!', status: 'Unauthorized' })
       return
     }
 

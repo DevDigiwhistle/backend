@@ -31,4 +31,7 @@ export class ContactUsForm implements IContactUsForm {
     nullable: false,
   })
   personType: Enum.PersonType
+
+  @Column({ type: 'boolean', default: false })
+  viewed: boolean
 }

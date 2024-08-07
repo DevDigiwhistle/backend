@@ -1,79 +1,18 @@
 tags:
-  name: Landing
-  description: Endpoints for Landing Page
+  name: User
+  description: Endpoints for user management
 
 paths:
-  /v1/contactUs:
-    post:
-      summary: Create a new contact us form
-      tags:
-        - Landing
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ContactUsForm'
-      responses:
-        '201':
-          description: The form was successfully created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ContactUsForm'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-
+  /v1/user:
     get:
-      summary: Get all contact us form queries
+      summary: Get current user profile
       tags:
-        - Landing
+        - User
       security:
         - bearerAuth: []
-      parameters:
-        - in: query
-          name: page
-          required: true
-          schema:
-            type: string
-
-        - in: query
-          name: limit
-          required: true
-          schema:
-            type: string
-
-        - in: query
-          name: brands
-          required: false
-          schema:
-            type: boolean
-
-        - in: query
-          name: influencer
-          schema:
-            type: boolean
-
       responses:
         '200':
-          description: The form was successfully created
+          description: User profile fetched successfully
           content:
             application/json:
               schema:
@@ -84,27 +23,21 @@ paths:
                   status:
                     type: string
                   data:
-                    type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ContactUsForm'
-                      currentPage:
-                        type: number
-                      totalPages:
-                        type: number
-                      totalCount:
-                        type: number
+                    $ref: '#/components/schemas/user'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-
-        '400':
-          description: Bad request
+        '404':
+          description: Admin profile not found
           content:
             application/json:
               schema:
@@ -116,23 +49,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/contactUs/{id}:
     delete:
-      summary: delete contact us form queries
+      summary: Delete a user
       tags:
-        - Landing
+        - User
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: userId
           required: true
           schema:
             type: string
-
       responses:
         '204':
-          description: The entry has been deleted
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -143,9 +80,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-
-        '400':
-          description: Bad request
+        '404':
+          description: Admin profile not found
           content:
             application/json:
               schema:
@@ -157,11 +93,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/contactUs/view:
+  /v1/user/approve:
     post:
-      summary: set viewed
+      summary: Approve a user
       tags:
-        - Landing
+        - User
       security:
         - bearerAuth: []
       requestBody:
@@ -171,12 +107,19 @@ paths:
             schema:
               type: object
               properties:
-                id:
+                userId:
                   type: string
-
+              required:
+                - userId
       responses:
         '200':
-          description: The form has been successfully updated
+          description: User approved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -187,9 +130,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-
-        '400':
-          description: Bad request
+        '404':
+          description: Admin profile not found
           content:
             application/json:
               schema:
@@ -201,36 +143,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-components:
-  schemas:
-    ContactUsForm:
-      type: object
-      required:
-        - name
-        - email
-        - personType
-      properties:
-        name:
-          type: string
-
-        email:
-          type: string
-          format: email
-
-        followersCount:
-          type: string
-          nullable: true
-        profileLink:
-          type: string
-          nullable: true
-        mobileNo:
-          type: string
-          nullable: true
-        message:
-          type: string
-          nullable: true
-        personType:
-          type: string
-          enum:
-            - Brand
-            - Influencer
+  /v1/user/pause:
+    post:
+      summary: Pause a user
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+              required:
+                - userId
+      responses:
+        '200':
+          description: User paused successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: Admin profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'

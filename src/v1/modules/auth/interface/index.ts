@@ -27,6 +27,7 @@ export interface IUser extends ObjectLiteral {
   agencyProfile?: IAgencyProfile | null
   isVerified: boolean
   roleId?: number
+  isPaused: boolean
 }
 
 export interface IRole extends ObjectLiteral {
@@ -85,6 +86,7 @@ export interface IAuthService {
 }
 
 export interface IGoogleAuthService {
+  createUser(email: string): Promise<userDTO>
   verifyIdToken(idToken: string): Promise<userDTO>
   generateResetLink(email: string): Promise<string>
   resetPassword(password: string, oobCode: string): Promise<void>

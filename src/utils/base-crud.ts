@@ -1,4 +1,5 @@
 import { AppDataSource } from '../config'
+import { PaginatedResponse } from './base-service'
 import HttpException from './http-exception'
 import {
   type DeepPartial,
@@ -6,6 +7,7 @@ import {
   type ObjectLiteral,
   type Repository,
   type FindOptionsWhere,
+  FindOptionsOrder,
 } from 'typeorm'
 
 export interface ICRUDBase<T extends ObjectLiteral> {
@@ -14,11 +16,22 @@ export interface ICRUDBase<T extends ObjectLiteral> {
     query: FindOptionsWhere<T> | undefined,
     relations: string[]
   ) => Promise<T[]>
+  findAllPaginated: (
+    page: number,
+    limit: number,
+    query: FindOptionsWhere<T> | undefined,
+    relations: string[],
+    order?: FindOptionsOrder<T>
+  ) => Promise<PaginatedResponse<T>>
   findOne: (
     query: FindOptionsWhere<T>,
     relations: string[]
   ) => Promise<T | null>
-  update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
+  update: (
+    query: FindOptionsWhere<T>,
+    data: Partial<T>,
+    relations?: string[]
+  ) => Promise<T>
   delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
 
@@ -89,7 +102,11 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
+  async update(
+    query: FindOptionsWhere<T>,
+    data: Partial<T>,
+    relations?: string[]
+  ): Promise<T> {
     try {
       if (
         query === undefined ||
@@ -100,7 +117,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       }
 
       await this.repository.update(query, data)
-      const result = await this.findOne(query)
+      const result = await this.findOne(query, relations)
 
       if (result === null) throw new HttpException(404, 'Not Found')
       return result
@@ -120,6 +137,51 @@ export abstract class CRUDBase<T extends ObjectLiteral>
       }
 
       await this.repository.delete(query)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findAllPaginated(
+    page: number = 1,
+    limit: number = 10,
+    query: FindOptionsWhere<T> | undefined,
+    relations: string[],
+    order?: FindOptionsOrder<T>
+  ): Promise<PaginatedResponse<T>> {
+    try {
+      if (
+        query === undefined ||
+        query === null ||
+        Object.keys(query).length === 0
+      ) {
+        const [results, total] = await this.repository.findAndCount({
+          skip: (page - 1) * limit,
+          take: limit,
+          relations: relations,
+          order: order,
+        })
+
+        return {
+          data: results,
+          totalPages: total / page,
+          totalCount: total,
+          currentPage: page,
+        }
+      } else {
+        const [results, total] = await this.repository.findAndCount({
+          skip: (page - 1) * limit,
+          take: limit,
+          relations: relations,
+          where: query,
+        })
+        return {
+          data: results,
+          totalPages: total / page,
+          totalCount: total,
+          currentPage: page,
+        }
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

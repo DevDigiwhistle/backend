@@ -1,3 +1,4 @@
+import { FindOptionsWhere } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
@@ -15,7 +16,9 @@ interface IInfluencerProfileController
     IInfluencerProfile,
     IInfluencerProfileCRUD,
     IInfluencerProfileService
-  > {}
+  > {
+  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
+}
 
 export class InfluencerProfileController
   extends BaseController<
@@ -62,9 +65,12 @@ export class InfluencerProfileController
     try {
       const userId = req.user.id
       const profile = await this.service.findOne({ userId: userId }, ['user'])
-      return responseHandler(200, res, 'Profile fetched Successfully!!', {
-        data: profile,
-      })
+      return responseHandler(
+        200,
+        res,
+        'Profile fetched Successfully!!',
+        profile
+      )
     } catch (e) {
       return errorHandler(e, res)
     }

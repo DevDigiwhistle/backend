@@ -2,9 +2,17 @@ import {
   type ObjectLiteral,
   type DeepPartial,
   type FindOptionsWhere,
+  FindOptionsOrder,
 } from 'typeorm'
 import { type ICRUDBase } from './base-crud'
 import HttpException from './http-exception'
+
+export type PaginatedResponse<T> = {
+  data: T[]
+  currentPage: number
+  totalPages: number
+  totalCount?: number
+}
 
 export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
   add: (data: DeepPartial<T>) => Promise<T>
@@ -12,11 +20,22 @@ export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
     query: FindOptionsWhere<T> | undefined,
     relations?: string[]
   ) => Promise<T[]>
+  findAllPaginated: (
+    page: number,
+    limit: number,
+    query: FindOptionsWhere<T> | undefined,
+    relations: string[],
+    order?: FindOptionsOrder<T>
+  ) => Promise<PaginatedResponse<T>>
   findOne: (
     query: FindOptionsWhere<T>,
     relations?: string[]
   ) => Promise<T | null>
-  update: (query: FindOptionsWhere<T>, data: Partial<T>) => Promise<T>
+  update: (
+    query: FindOptionsWhere<T>,
+    data: Partial<T>,
+    relations?: string[]
+  ) => Promise<T>
   delete: (query: FindOptionsWhere<T>) => Promise<void>
 }
 
@@ -64,9 +83,13 @@ export abstract class BaseService<
     }
   }
 
-  async update(query: FindOptionsWhere<T>, data: Partial<T>): Promise<T> {
+  async update(
+    query: FindOptionsWhere<T>,
+    data: Partial<T>,
+    relations?: string[]
+  ): Promise<T> {
     try {
-      const results = await this.crudBase.update(query, data)
+      const results = await this.crudBase.update(query, data, relations)
       return results
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -76,6 +99,26 @@ export abstract class BaseService<
   async delete(query: FindOptionsWhere<T>): Promise<void> {
     try {
       await this.crudBase.delete(query)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findAllPaginated(
+    page: number,
+    limit: number,
+    query: FindOptionsWhere<T> | undefined,
+    relations: string[],
+    order?: FindOptionsOrder<T>
+  ): Promise<PaginatedResponse<T>> {
+    try {
+      return await this.crudBase.findAllPaginated(
+        page,
+        limit,
+        query,
+        relations,
+        order
+      )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

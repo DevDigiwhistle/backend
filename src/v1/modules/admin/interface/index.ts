@@ -1,6 +1,16 @@
 import { IAdminProfile, IEmployeeProfile } from './IModels'
-import { IAdminProfileCRUD, IEmployeeProfileCRUD } from './ICRUD'
-import { IAdminProfileService, IEmployeeProfileService } from './IService'
+import {
+  IAdminProfileCRUD,
+  IEmployeeProfileCRUD,
+  IAdminCRUD,
+  IEmployeeCRUD,
+} from './ICRUD'
+import {
+  IAdminProfileService,
+  IEmployeeProfileService,
+  IAdminService,
+  IEmployeeService,
+} from './IService'
 
 export {
   IAdminProfile,
@@ -9,4 +19,8 @@ export {
   IEmployeeProfile,
   IEmployeeProfileCRUD,
   IEmployeeProfileService,
+  IEmployeeCRUD,
+  IAdminCRUD,
+  IAdminService,
+  IEmployeeService,
 }

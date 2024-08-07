@@ -1,8 +1,6 @@
-import { JSONSchemaType } from 'ajv'
-import { IContactUsForm } from '../interface'
 import { Enum } from '../../../../constants'
 
-const contactUsFormSchema: JSONSchemaType<IContactUsForm> = {
+const contactUsFormSchema = {
   type: 'object',
   properties: {
     name: { type: 'string', minLength: 1 },

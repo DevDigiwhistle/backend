@@ -114,16 +114,6 @@ components:
         user:
           type: string
 
-      example:
-        firstName: John
-        lastName: Doe
-        mobileNo: '1234567890'
-        twitterURL: https://adaapt.ai
-        instagramURL: https://adaapt.ai
-        youtubeURL: https://adaapt.ai
-        linkedInURL: https://adaapt.ai
-        user: '1'
-
     InfluencerProfile:
       type: object
       properties:
@@ -145,17 +135,3 @@ components:
           type: string
         user:
           $ref: '#/components/schemas/User'
-
-      example:
-        id: '1'
-        firstName: John
-        lastName: Doe
-        mobileNo: '1234567890'
-        twitterURL: https://adaapt.ai
-        instagramURL: https://adaapt.ai
-        youtubeURL: https://adaapt.ai
-        linkedInURL: https://adaapt.ai
-        user:
-          id: '1'
-          username: johndoe
-          email: johndoe@example.com

@@ -152,6 +152,7 @@ class AuthService implements IAuthService {
         isVerified: _user.isVerified,
         profile: profile,
         role: _user.role.name,
+        isPaused: _user.isPaused,
         isOnBoarded: isOnboardingDone,
       }
 
@@ -270,6 +271,7 @@ class AuthService implements IAuthService {
         id: user.id,
         email: user.email,
         isVerified: user.isVerified,
+        isPaused: user.isPaused,
         profile: profile,
         role: user.role.name,
         isOnBoarded: isOnboardingDone,

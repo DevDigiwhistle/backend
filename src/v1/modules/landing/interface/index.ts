@@ -3,6 +3,7 @@ import { ICRUDBase } from '../../../../utils'
 import { IBaseService } from '../../../../utils'
 
 export interface IContactUsForm {
+  id: number
   name: string
   email: string
   followersCount?: string | null
@@ -10,6 +11,7 @@ export interface IContactUsForm {
   mobileNo?: string | null
   message?: string | null
   personType: Enum.PersonType
+  viewed: boolean
 }
 
 export interface IContactUsFormCRUD extends ICRUDBase<IContactUsForm> {}

@@ -24,6 +24,9 @@ export class AdminProfile implements IAdminProfile {
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 
+  @Column({ type: 'varchar', default: null, nullable: true })
+  profilePic: string
+
   @OneToOne(() => User, (user) => user.adminProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
@@ -42,6 +45,12 @@ export class EmployeeProfile implements IEmployeeProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  profilePic: string
+
+  @Column({ type: 'varchar', nullable: false })
+  designation: string
 
   @OneToOne(() => User, (user) => user.employeeProfile)
   @JoinColumn({ name: 'userId' })

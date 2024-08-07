@@ -5,6 +5,7 @@ const addAdminProfileSchema = {
     lastName: { type: 'string', nullable: true },
     mobileNo: { type: 'string', nullable: false },
     user: { type: 'string', nullable: false },
+    profilePic: { type: 'string', nullable: true },
   },
   required: ['firstName', 'mobileNo', 'user'],
   additionalProperties: false,
@@ -16,6 +17,7 @@ const updateAdminProfileSchema = {
     firstName: { type: 'string', nullable: true },
     lastName: { type: 'string', nullable: true },
     mobileNo: { type: 'string', nullable: true },
+    profilePic: { type: 'string', nullable: true },
   },
   additionalProperties: false,
 }

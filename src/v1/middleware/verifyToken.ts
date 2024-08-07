@@ -9,10 +9,12 @@ export const verifyToken = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers.authorization
+    let token = req.headers.authorization
 
     if (token === null || token === undefined)
       throw new HttpException(401, 'Authorization Token Not Found!!')
+
+    token = token.split(' ')[1]
 
     const uid = authTokenService.decodeToken(token)
     const user = await userService.findOne({ id: uid }, ['role'])
@@ -22,7 +24,7 @@ export const verifyToken = async (
     req.user = user
     next()
   } catch (e) {
-    res.send(401).json({
+    res.status(401).json({
       message: e?.message ?? 'You are not authorized!!',
       status: 'Authentication Failed!!',
     })

@@ -86,7 +86,7 @@ export abstract class BaseController<
       const id = req.params?.id
       let data: T
 
-      if (typeof id !== 'string') {
+      if (typeof id === 'string') {
         const query: FindOptionsWhere<T> = { id } as any
         data = await this.service.update(query, req.body as Partial<T>)
       } else {

@@ -7,7 +7,7 @@ export interface IAdminProfile extends ObjectLiteral {
   lastName: string
   mobileNo: string
   user: IUser
-  userId?: string
+  profilePic: string
 }
 
 export interface IEmployeeProfile extends ObjectLiteral {
@@ -16,5 +16,6 @@ export interface IEmployeeProfile extends ObjectLiteral {
   lastName: string
   mobileNo: string
   user: IUser
-  userId?: string
+  profilePic: string
+  designation: string
 }
