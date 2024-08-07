@@ -35,6 +35,7 @@ agencyRouter.get(
 
 agencyRouter.get(
   '/',
+  verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   agencyProfileController.getAllAgencyController.bind(agencyProfileController)
 )

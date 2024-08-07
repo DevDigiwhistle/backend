@@ -33,6 +33,8 @@ contactUsRouter.post(
 
 contactUsRouter.delete(
   '/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   contactUsController.deleteController.bind(contactUsController)
 )
 

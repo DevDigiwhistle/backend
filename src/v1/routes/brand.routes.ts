@@ -33,6 +33,7 @@ brandRouter.get(
 
 brandRouter.get(
   '/',
+  verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   brandProfileController.getAllBrandsController.bind(brandProfileController)
 )
