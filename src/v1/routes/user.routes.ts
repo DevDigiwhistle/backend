@@ -23,6 +23,13 @@ userRouter.post(
   userController.pauseUser.bind(userController)
 )
 
+userRouter.post(
+  '/reject',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  userController.rejectUser.bind(userController)
+)
+
 userRouter.delete(
   '/',
   verifyToken,

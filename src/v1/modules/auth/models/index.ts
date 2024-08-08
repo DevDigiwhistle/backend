@@ -47,6 +47,9 @@ export class User extends BaseEntity implements IUser {
   @Column({ default: false, type: 'boolean' })
   isPaused: boolean
 
+  @Column({ default: null, type: 'boolean' })
+  isApproved: boolean
+
   @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user, {
     cascade: true,
   })

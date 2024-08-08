@@ -33,6 +33,11 @@ paths:
           schema:
             type: boolean
 
+        - in: query
+          name: name
+          schema:
+            type: string
+
       responses:
         '200':
           description: The data fetched successfully

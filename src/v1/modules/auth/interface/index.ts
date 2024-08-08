@@ -26,8 +26,8 @@ export interface IUser extends ObjectLiteral {
   employeeProfile?: IEmployeeProfile | null
   agencyProfile?: IAgencyProfile | null
   isVerified: boolean
-  roleId?: number
   isPaused: boolean
+  isApproved: boolean
 }
 
 export interface IRole extends ObjectLiteral {

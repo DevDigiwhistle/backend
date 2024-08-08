@@ -59,7 +59,7 @@ class UserController implements IUserController {
 
       await this.userService.update(
         { id: userId },
-        { isVerified: true, isPaused: false }
+        { isVerified: true, isPaused: false, isApproved: true }
       )
 
       return responseHandler(200, res, 'Approved User', {})
@@ -79,6 +79,25 @@ class UserController implements IUserController {
       await this.userService.update(
         { id: userId },
         { isPaused: true, isVerified: false }
+      )
+
+      return responseHandler(200, res, 'Paused User', {})
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async rejectUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const { userId } = req.body
+
+      if (typeof userId !== 'string') {
+        throw new HttpException(400, 'Invalid UserId')
+      }
+
+      await this.userService.update(
+        { id: userId },
+        { isVerified: false, isPaused: false, isApproved: false }
       )
 
       return responseHandler(200, res, 'Paused User', {})

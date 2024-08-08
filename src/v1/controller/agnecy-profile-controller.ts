@@ -1,4 +1,4 @@
-import { FindOptionsWhere } from 'typeorm'
+import { FindOptionsWhere, Like } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
@@ -79,18 +79,24 @@ export class AgencyProfileController
 
   async getAllAgencyController(req: Request, res: Response): Promise<Response> {
     try {
-      const { page, limit, approved, rejected } = req.query
+      const { page, limit, approved, rejected, name } = req.query
 
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
       let query: FindOptionsWhere<IAgencyProfile> = {}
 
+      if (typeof name !== 'string') {
+        query = {
+          name: Like(`%${name}%`),
+        }
+      }
+
       if (typeof approved === 'string') {
         if (approved === 'true') {
           query = {
             user: {
-              isVerified: true,
+              isApproved: true,
             },
           }
         }
@@ -100,7 +106,7 @@ export class AgencyProfileController
         if (rejected === 'true') {
           query = {
             user: {
-              isVerified: false,
+              isApproved: false,
             },
           }
         }
