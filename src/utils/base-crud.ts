@@ -13,26 +13,26 @@ import {
 export interface ICRUDBase<T extends ObjectLiteral> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
-    query: FindOptionsWhere<T> | undefined,
-    relations: string[]
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    relations?: string[]
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
     limit: number,
-    query: FindOptionsWhere<T> | undefined,
-    relations: string[],
+    query?: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<PaginatedResponse<T>>
   findOne: (
-    query: FindOptionsWhere<T>,
-    relations: string[]
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    relations?: string[]
   ) => Promise<T | null>
   update: (
     query: FindOptionsWhere<T>,
     data: Partial<T>,
     relations?: string[]
   ) => Promise<T>
-  delete: (query: FindOptionsWhere<T>) => Promise<void>
+  delete: (query: FindOptionsWhere<T> | FindOptionsWhere<T>[]) => Promise<void>
 }
 
 export abstract class CRUDBase<T extends ObjectLiteral>
@@ -55,7 +55,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   }
 
   async findAll(
-    query: FindOptionsWhere<T> | undefined,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
     relations: string[] = []
   ): Promise<T[]> {
     try {
@@ -79,15 +79,11 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   }
 
   async findOne(
-    query: FindOptionsWhere<T>,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations: string[] = []
   ): Promise<T | null> {
     try {
-      if (
-        query === undefined ||
-        query === null ||
-        Object.keys(query).length === 0
-      ) {
+      if (query === undefined || query === null) {
         throw new HttpException(400, 'Missing parameter')
       }
 
@@ -145,7 +141,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
   async findAllPaginated(
     page: number = 1,
     limit: number = 10,
-    query: FindOptionsWhere<T> | undefined,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
     relations: string[],
     order?: FindOptionsOrder<T>
   ): Promise<PaginatedResponse<T>> {

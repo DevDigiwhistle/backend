@@ -17,18 +17,18 @@ export type PaginatedResponse<T> = {
 export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
-    query: FindOptionsWhere<T> | undefined,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
     relations?: string[]
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
     limit: number,
-    query: FindOptionsWhere<T> | undefined,
-    relations: string[],
+    query?: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<PaginatedResponse<T>>
   findOne: (
-    query: FindOptionsWhere<T>,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations?: string[]
   ) => Promise<T | null>
   update: (
@@ -60,7 +60,7 @@ export abstract class BaseService<
   }
 
   async findAll(
-    query: FindOptionsWhere<T> | undefined,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
     relations: string[] = []
   ): Promise<T[]> {
     try {
@@ -71,7 +71,7 @@ export abstract class BaseService<
   }
 
   async findOne(
-    query: FindOptionsWhere<T>,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
     relations: string[] = []
   ): Promise<T | null> {
     try {
@@ -107,7 +107,7 @@ export abstract class BaseService<
   async findAllPaginated(
     page: number,
     limit: number,
-    query: FindOptionsWhere<T> | undefined,
+    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
     relations: string[],
     order?: FindOptionsOrder<T>
   ): Promise<PaginatedResponse<T>> {

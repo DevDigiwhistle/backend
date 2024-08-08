@@ -63,7 +63,11 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
           { influencerProfile: { mobileNo: mobileNo } },
           { brandProfile: { mobileNo: mobileNo } },
           { agencyProfile: { mobileNo: mobileNo } },
-          { userId: userId },
+          { adminProfile: { user: { id: userId } } },
+          { employeeProfile: { user: { id: userId } } },
+          { influencerProfile: { user: { id: userId } } },
+          { brandProfile: { user: { id: userId } } },
+          { agencyProfile: { user: { id: userId } } },
         ],
       })
 

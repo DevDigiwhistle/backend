@@ -31,7 +31,7 @@ class AdminService implements IAdminService {
     try {
       const { uid } = await this.googleAuthService.createUser(data.email)
 
-      const _role = await this.roleService.findOne({ name: data.role })
+      const _role = await this.roleService.findOne({ name: data.role }, [])
 
       if (_role === null) throw new HttpException(400, 'Invalid Role')
 

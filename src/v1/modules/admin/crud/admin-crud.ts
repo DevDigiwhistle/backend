@@ -1,8 +1,9 @@
 import { IAdminCRUD } from '../interface/ICRUD'
-import { AddAdmin, AddEmployee } from '../types'
+import { AddAdmin } from '../types'
 import { AppDataSource } from '../../../../config'
 import { User } from '../../auth/models'
 import { AdminProfile } from '../models'
+import { HttpException } from '../../../../utils'
 
 class AdminCRUD implements IAdminCRUD {
   async addAdmin(data: AddAdmin): Promise<void> {
@@ -16,6 +17,7 @@ class AdminCRUD implements IAdminCRUD {
       user.id = data.userId
       user.email = data.email
       user.role.id = data.roleId
+      user.isVerified = true
       await userRepository.save(user)
 
       const adminProfileRepository =
@@ -30,6 +32,7 @@ class AdminCRUD implements IAdminCRUD {
       await queryRunner.commitTransaction()
     } catch (e) {
       await queryRunner.rollbackTransaction()
+      throw new HttpException(e?.errorCode, e?.message)
     } finally {
       await queryRunner.release()
     }

@@ -16,6 +16,7 @@ class EmployeeCRUD implements IEmployeeCRUD {
       user.id = data.userId
       user.email = data.email
       user.role.id = data.roleId
+      user.isVerified = true
       await userRepository.save(user)
 
       const employeeProfileRepository =
