@@ -160,7 +160,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
 
         return {
           data: results,
-          totalPages: total / page,
+          totalPages: Math.ceil(total / limit),
           totalCount: total,
           currentPage: page,
         }
@@ -173,7 +173,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
         })
         return {
           data: results,
-          totalPages: total / page,
+          totalPages: Math.ceil(total / limit),
           totalCount: total,
           currentPage: page,
         }
