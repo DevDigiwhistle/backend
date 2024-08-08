@@ -4,6 +4,8 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { User } from '../../auth/models'
 import { IUser } from '../../auth/interface'
@@ -32,6 +34,12 @@ export class BrandProfile implements IBrandProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }
 
 @Entity()
@@ -57,4 +65,10 @@ export class AgencyProfile implements IBrandProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }

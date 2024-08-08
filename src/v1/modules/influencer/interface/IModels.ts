@@ -12,4 +12,6 @@ export interface IInfluencerProfile extends ObjectLiteral {
   instagramURL?: string
   linkedInURL?: string
   mobileNo: string
+  createdAt?: Date
+  updatedAt?: Date
 }

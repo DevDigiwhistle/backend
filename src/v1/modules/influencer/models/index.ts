@@ -4,6 +4,8 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { IUser } from '../../auth/interface'
 import { IInfluencerProfile } from '../interface'
@@ -38,4 +40,10 @@ export class InfluencerProfile implements IInfluencerProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }

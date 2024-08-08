@@ -84,31 +84,31 @@ export class AgencyProfileController
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let query: FindOptionsWhere<IAgencyProfile> = {}
+      let query: FindOptionsWhere<IAgencyProfile>[] = []
 
-      if (typeof name !== 'string') {
-        query = {
+      if (typeof name === 'string') {
+        query.push({
           name: Like(`%${name}%`),
-        }
+        })
       }
 
       if (typeof approved === 'string') {
         if (approved === 'true') {
-          query = {
+          query.push({
             user: {
               isApproved: true,
             },
-          }
+          })
         }
       }
 
       if (typeof rejected === 'string') {
         if (rejected === 'true') {
-          query = {
+          query.push({
             user: {
               isApproved: false,
             },
-          }
+          })
         }
       }
 

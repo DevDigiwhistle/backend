@@ -10,6 +10,8 @@ export interface IBrandProfile extends ObjectLiteral {
   websiteURL: string
   user: IUser
   mobileNo: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface IAgencyProfile extends ObjectLiteral {
@@ -21,4 +23,6 @@ export interface IAgencyProfile extends ObjectLiteral {
   websiteURL: string
   user: IUser
   mobileNo: string
+  createdAt?: Date
+  updatedAt?: Date
 }

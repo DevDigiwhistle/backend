@@ -4,6 +4,8 @@ import {
   Column,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { IUser } from '../../auth/interface'
 import { IAdminProfile } from '../interface'
@@ -30,6 +32,12 @@ export class AdminProfile implements IAdminProfile {
   @OneToOne(() => User, (user) => user.adminProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }
 
 @Entity()
@@ -55,4 +63,10 @@ export class EmployeeProfile implements IEmployeeProfile {
   @OneToOne(() => User, (user) => user.employeeProfile)
   @JoinColumn({ name: 'userId' })
   user: IUser
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
 }

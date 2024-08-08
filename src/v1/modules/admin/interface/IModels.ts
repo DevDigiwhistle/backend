@@ -8,6 +8,8 @@ export interface IAdminProfile extends ObjectLiteral {
   mobileNo: string
   user: IUser
   profilePic: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface IEmployeeProfile extends ObjectLiteral {
@@ -18,4 +20,6 @@ export interface IEmployeeProfile extends ObjectLiteral {
   user: IUser
   profilePic: string
   designation: string
+  createdAt?: Date
+  updatedAt?: Date
 }
