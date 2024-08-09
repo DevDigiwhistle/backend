@@ -30,6 +30,13 @@ userRouter.post(
   userController.rejectUser.bind(userController)
 )
 
+userRouter.post(
+  '/revertAction',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  userController.revertAction.bind(userController)
+)
+
 userRouter.delete(
   '/',
   verifyToken,

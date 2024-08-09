@@ -9,6 +9,8 @@ interface IUserController {
   getUser(req: Request, res: Response): Promise<Response>
   approveUser(req: Request, res: Response): Promise<Response>
   pauseUser(req: Request, res: Response): Promise<Response>
+  rejectUser(req: Request, res: Response): Promise<Response>
+  revertAction(req: Request, res: Response): Promise<Response>
   deleteUser(req: Request, res: Response): Promise<Response>
 }
 
@@ -87,6 +89,25 @@ class UserController implements IUserController {
     }
   }
 
+  async revertAction(req: Request, res: Response): Promise<Response> {
+    try {
+      const { userId } = req.body
+
+      if (typeof userId !== 'string') {
+        throw new HttpException(400, 'Invalid UserId')
+      }
+
+      await this.userService.update(
+        { id: userId },
+        { isVerified: false, isPaused: false, isApproved: null }
+      )
+
+      return responseHandler(200, res, 'Paused User', {})
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
   async rejectUser(req: Request, res: Response): Promise<Response> {
     try {
       const { userId } = req.body
@@ -100,7 +121,7 @@ class UserController implements IUserController {
         { isVerified: false, isPaused: false, isApproved: false }
       )
 
-      return responseHandler(200, res, 'Paused User', {})
+      return responseHandler(200, res, 'Reverted Action', {})
     } catch (e) {
       return errorHandler(e, res)
     }

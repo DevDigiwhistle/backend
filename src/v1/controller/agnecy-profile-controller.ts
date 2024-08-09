@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Like } from 'typeorm'
+import { FindOptionsWhere, ILike, Like } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
@@ -88,7 +88,7 @@ export class AgencyProfileController
 
       if (typeof name === 'string') {
         query.push({
-          name: Like(`%${name}%`),
+          name: ILike(`%${name}%`),
         })
       }
 

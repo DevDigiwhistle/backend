@@ -84,6 +84,7 @@ class AdminController {
           lastName: profile.lastName,
           profilePic: profile.profilePic,
           profileId: profile.id,
+          role: item.role.name,
         }
       })
 

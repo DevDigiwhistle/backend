@@ -27,7 +27,7 @@ export interface IUser extends ObjectLiteral {
   agencyProfile?: IAgencyProfile | null
   isVerified: boolean
   isPaused: boolean
-  isApproved: boolean
+  isApproved: boolean | null
 }
 
 export interface IRole extends ObjectLiteral {

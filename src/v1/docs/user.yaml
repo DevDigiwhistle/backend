@@ -37,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Admin profile not found
+          description: user not found
           content:
             application/json:
               schema:
@@ -81,7 +81,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Admin profile not found
+          description: user not found
           content:
             application/json:
               schema:
@@ -131,7 +131,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Admin profile not found
+          description: user not found
           content:
             application/json:
               schema:
@@ -181,7 +181,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Admin profile not found
+          description: user not found
           content:
             application/json:
               schema:
@@ -231,7 +231,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
         '404':
-          description: Admin profile not found
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+  /v1/user/revertAction:
+    post:
+      summary: Set User to pending
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+              required:
+                - userId
+      responses:
+        '200':
+          description: Action reverted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: user not found
           content:
             application/json:
               schema:
