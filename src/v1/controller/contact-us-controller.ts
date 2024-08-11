@@ -1,4 +1,4 @@
-import { FindOptionsWhere } from 'typeorm'
+import { FindOptionsWhere, ILike } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
 import {
@@ -29,23 +29,29 @@ export class ContactUsController
 
   async getAllPaginated(req: Request, res: Response): Promise<Response> {
     try {
-      const { brands, influencer, page, limit } = req.query
+      const { brands, influencer, page, limit, name } = req.query
 
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let query: FindOptionsWhere<IContactUsForm> = {}
+      let query: FindOptionsWhere<IContactUsForm>[] = []
 
       if (brands === 'true') {
-        query = {
+        query.push({
           personType: Enum.PersonType.BRAND,
-        }
+        })
       }
 
       if (influencer === 'true') {
-        query = {
+        query.push({
           personType: Enum.PersonType.INFLUENCER,
-        }
+        })
+      }
+
+      if (typeof name === 'string') {
+        query.push({
+          name: ILike(`%${name}%`),
+        })
       }
 
       const data = await this.service.findAllPaginated(
@@ -53,7 +59,7 @@ export class ContactUsController
         parseInt(limit),
         query,
         [],
-        { id: 'ASC' }
+        { id: 'DESC' }
       )
 
       return responseHandler(200, res, 'Fetched Successfully', data)
@@ -66,9 +72,9 @@ export class ContactUsController
     try {
       const { id } = req.body
 
-      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
+      if (typeof id !== 'number') throw new HttpException(400, 'Invalid Id')
 
-      await this.service.update({ id: parseInt(id) }, { viewed: true })
+      await this.service.update({ id: id }, { viewed: true })
 
       return responseHandler(200, res, 'Updated Successfully', {})
     } catch (e) {

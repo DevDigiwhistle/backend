@@ -1,22 +1,24 @@
 tags:
-  name: Landing
-  description: Endpoints for Landing Page
+  - name: Remarks
+    description: Endpoints for managing user remarks
 
 paths:
-  /v1/contactUs:
+  /v1/remarks:
     post:
-      summary: Create a new contact us form
+      summary: Create a new remark
       tags:
-        - Landing
+        - Remarks
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContactUsForm'
+              $ref: '#/components/schemas/Remarks'
       responses:
         '201':
-          description: The form was successfully created
+          description: The remark has been successfully created
           content:
             application/json:
               schema:
@@ -27,9 +29,15 @@ paths:
                   status:
                     type: string
                   data:
-                    $ref: '#/components/schemas/ContactUsForm'
+                    $ref: '#/components/schemas/Remarks'
         '400':
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -42,43 +50,21 @@ paths:
                 $ref: '#/components/schemas/messageModel'
 
     get:
-      summary: Get all contact us form queries
+      summary: Get all remarks by user ID
       tags:
-        - Landing
+        - Remarks
       security:
         - bearerAuth: []
       parameters:
         - in: query
-          name: page
+          name: userId
           required: true
           schema:
             type: string
-
-        - in: query
-          name: limit
-          required: true
-          schema:
-            type: string
-
-        - in: query
-          name: brands
-          required: false
-          schema:
-            type: boolean
-
-        - in: query
-          name: influencer
-          schema:
-            type: boolean
-
-        - in: query
-          name: name
-          schema:
-            type: string
-
+          description: The ID of the user to retrieve remarks for
       responses:
         '200':
-          description: The form was successfully created
+          description: A list of remarks
           content:
             application/json:
               schema:
@@ -89,25 +75,15 @@ paths:
                   status:
                     type: string
                   data:
-                    type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ContactUsForm'
-                      currentPage:
-                        type: number
-                      totalPages:
-                        type: number
-                      totalCount:
-                        type: number
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RemarksDTO'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-
         '400':
           description: Bad request
           content:
@@ -121,11 +97,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/contactUs/{id}:
-    delete:
-      summary: delete contact us form queries
+  /v1/remarks/{id}:
+    put:
+      summary: Update an existing remark
       tags:
-        - Landing
+        - Remarks
       security:
         - bearerAuth: []
       parameters:
@@ -134,41 +110,8 @@ paths:
           required: true
           schema:
             type: string
-
-      responses:
-        '204':
-          description: The entry has been deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-
-  /v1/contactUs/view:
-    post:
-      summary: set viewed
-      tags:
-        - Landing
-      security:
-        - bearerAuth: []
+            format: uuid
+          description: The ID of the remark to update
       requestBody:
         required: true
         content:
@@ -176,23 +119,21 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: number
-
+                message:
+                  type: string
       responses:
         '200':
-          description: The form has been successfully updated
+          description: The remark was successfully updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/messageModel'
+                $ref: '#/components/schemas/Remarks'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-
         '400':
           description: Bad request
           content:
@@ -208,34 +149,31 @@ paths:
 
 components:
   schemas:
-    ContactUsForm:
+    Remarks:
       type: object
       required:
-        - name
-        - email
-        - personType
+        - message
+        - userId
+      properties:
+        message:
+          type: string
+          description: The content of the remark
+        userId:
+          type: string
+          format: uuid
+
+    RemarksDTO:
+      type: object
       properties:
         name:
           type: string
-
-        email:
+        profilePic:
           type: string
-          format: email
-
-        followersCount:
-          type: string
-          nullable: true
-        profileLink:
-          type: string
-          nullable: true
-        mobileNo:
-          type: string
-          nullable: true
         message:
           type: string
-          nullable: true
-        personType:
+        createdAt:
           type: string
-          enum:
-            - Brand
-            - Influencer
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time

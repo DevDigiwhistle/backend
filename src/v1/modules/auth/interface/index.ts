@@ -2,6 +2,7 @@ import { type ObjectLiteral } from 'typeorm'
 import { IBaseService, ICRUDBase } from '../../../../utils'
 import {
   authDTO,
+  IAdminAndEmployeeDTO,
   loginDTO,
   loginResponseDTO,
   mobileDTO,
@@ -14,6 +15,7 @@ import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { IAdminProfile } from '../../admin/interface'
 import { IEmployeeProfile } from '../../admin/interface'
+import { PaginatedResponse } from '../../../../utils/base-service'
 
 // models
 export interface IUser extends ObjectLiteral {
@@ -74,6 +76,11 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     mobileNo: string,
     userId: string
   ): Promise<IUser | null>
+  findAllAdminAndEmployees(
+    page: number,
+    limit: number,
+    name?: string
+  ): Promise<PaginatedResponse<IAdminAndEmployeeDTO>>
 }
 
 export interface IAuthService {
@@ -87,6 +94,7 @@ export interface IAuthService {
 
 export interface IGoogleAuthService {
   createUser(email: string): Promise<userDTO>
+  deleteUser(uid: string): Promise<void>
   verifyIdToken(idToken: string): Promise<userDTO>
   generateResetLink(email: string): Promise<string>
   resetPassword(password: string, oobCode: string): Promise<void>

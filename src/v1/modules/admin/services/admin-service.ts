@@ -14,8 +14,26 @@ class AdminService implements IAdminService {
   private readonly googleAuthService: IGoogleAuthService
   private readonly roleService: IRoleService
   private readonly adminCRUD: IAdminCRUD
+  private static instance: IAdminService | null = null
 
-  constructor(
+  static getInstance = (
+    mailerService: IMailerService,
+    googleAuthService: IGoogleAuthService,
+    roleService: IRoleService,
+    adminCRUD: IAdminCRUD
+  ) => {
+    if (AdminService.instance === null) {
+      AdminService.instance = new AdminService(
+        mailerService,
+        googleAuthService,
+        roleService,
+        adminCRUD
+      )
+    }
+    return AdminService.instance
+  }
+
+  private constructor(
     mailerService: IMailerService,
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,

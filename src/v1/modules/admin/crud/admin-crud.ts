@@ -6,6 +6,17 @@ import { AdminProfile } from '../models'
 import { HttpException } from '../../../../utils'
 
 class AdminCRUD implements IAdminCRUD {
+  private static instance: IAdminCRUD | null = null
+
+  static getInstance = () => {
+    if (AdminCRUD.instance === null) {
+      AdminCRUD.instance = new AdminCRUD()
+    }
+    return AdminCRUD.instance
+  }
+
+  private constructor() {}
+
   async addAdmin(data: AddAdmin): Promise<void> {
     const queryRunner = AppDataSource.createQueryRunner()
     await queryRunner.connect()
@@ -13,21 +24,26 @@ class AdminCRUD implements IAdminCRUD {
       await queryRunner.startTransaction()
 
       const userRepository = queryRunner.manager.getRepository(User)
-      const user = new User()
-      user.id = data.userId
-      user.email = data.email
-      user.role.id = data.roleId
-      user.isVerified = true
-      await userRepository.save(user)
+      await userRepository.save({
+        email: data.email,
+        id: data.userId,
+        role: {
+          id: 1,
+        },
+        isVerified: true,
+      })
 
       const adminProfileRepository =
         queryRunner.manager.getRepository(AdminProfile)
-      const adminProfile = new AdminProfile()
-      adminProfile.firstName = data.firstName
-      adminProfile.lastName = data.lastName
-      adminProfile.mobileNo = data.mobileNo
-      adminProfile.user.id = data.userId
-      await adminProfileRepository.save(adminProfile)
+
+      await adminProfileRepository.save({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        mobileNo: data.mobileNo,
+        user: {
+          id: data.userId,
+        },
+      })
 
       await queryRunner.commitTransaction()
     } catch (e) {

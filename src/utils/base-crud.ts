@@ -14,7 +14,8 @@ export interface ICRUDBase<T extends ObjectLiteral> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
     query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
-    relations?: string[]
+    relations?: string[],
+    order?: FindOptionsOrder<T>
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
@@ -56,7 +57,8 @@ export abstract class CRUDBase<T extends ObjectLiteral>
 
   async findAll(
     query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
-    relations: string[] = []
+    relations: string[] = [],
+    order?: FindOptionsOrder<T>
   ): Promise<T[]> {
     try {
       if (
@@ -64,12 +66,13 @@ export abstract class CRUDBase<T extends ObjectLiteral>
         query === null ||
         Object.keys(query).length === 0
       ) {
-        const data = await this.repository.find({ relations })
+        const data = await this.repository.find({ relations, order })
         return data
       } else {
         const data = await this.repository.find({
           where: query,
           relations,
+          order,
         })
         return data
       }
@@ -170,6 +173,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
           take: limit,
           relations: relations,
           where: query,
+          order: order,
         })
         return {
           data: results,

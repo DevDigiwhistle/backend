@@ -13,8 +13,8 @@ import { AgencyProfile, BrandProfile } from '../../brands/models'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
-import { EmployeeProfile } from '../../admin/models'
-import { IEmployeeProfile } from '../../admin/interface'
+import { EmployeeProfile, Remarks } from '../../admin/models'
+import { IEmployeeProfile, IRemarks } from '../../admin/interface'
 import { AdminProfile } from '../../admin/models'
 import { IAdminProfile } from '../../admin/interface'
 
@@ -51,31 +51,34 @@ export class User extends BaseEntity implements IUser {
   isApproved: boolean
 
   @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   brandProfile: IBrandProfile
 
   @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   agencyProfile: IAgencyProfile
 
   @OneToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.user,
-    { cascade: true }
+    { onDelete: 'CASCADE' }
   )
   influencerProfile: IInfluencerProfile
 
   @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   employeeProfile: IEmployeeProfile
 
   @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   adminProfile: IAdminProfile
+
+  @OneToMany(() => Remarks, (remarks) => remarks.remarker)
+  remarks: IRemarks[]
 }
 
 @Entity()

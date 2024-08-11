@@ -15,6 +15,7 @@ export type AddEmployee = {
   email: string
   roleId: number
   userId: string
+  designation: string
 }
 
 export type AddAdmin = {
@@ -24,4 +25,12 @@ export type AddAdmin = {
   email: string
   roleId: number
   userId: string
+}
+
+export type remarksDTO = {
+  name: string
+  profilePic: string | null
+  message: string
+  createdAt: Date
+  updatedAt: Date
 }

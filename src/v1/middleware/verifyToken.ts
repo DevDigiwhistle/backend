@@ -24,6 +24,7 @@ export const verifyToken = async (
     req.user = user
     next()
   } catch (e) {
+    console.log(e)
     res.status(401).json({
       message: e?.message ?? 'You are not authorized!!',
       status: 'Authentication Failed!!',

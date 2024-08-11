@@ -1,10 +1,15 @@
 import { Router } from 'express'
-import { adminProfileService } from '../modules/admin'
-import { AdminProfileController } from '../controller'
+import {
+  adminProfileService,
+  adminService,
+  employeeService,
+} from '../modules/admin'
+import { AdminController, AdminProfileController } from '../controller'
 import { authorizeUser } from '../middleware'
 import { Enum } from '../../constants'
 import { BaseValidator } from '../../utils'
 import {
+  addAdminOrEmployeeSchema,
   addAdminProfileSchema,
   updateAdminProfileSchema,
 } from '../modules/admin/validators'
@@ -17,8 +22,32 @@ const adminProfileController = new AdminProfileController(
   adminProfileService,
   userService
 )
+
+const adminController = new AdminController(
+  adminService,
+  employeeService,
+  userService
+)
+
 const addAdminProfileValidator = new BaseValidator(addAdminProfileSchema)
 const updateAdminProfileValidator = new BaseValidator(updateAdminProfileSchema)
+
+const addEmployeeOrAdminValidator = new BaseValidator(addAdminOrEmployeeSchema)
+
+adminRouter.post(
+  '/add',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN]),
+  addEmployeeOrAdminValidator.validateInput.bind(addEmployeeOrAdminValidator),
+  adminController.addAdminOrEmployeeController.bind(adminController)
+)
+
+adminRouter.get(
+  '/all',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN]),
+  adminController.getAllAdminAndEmployees.bind(adminController)
+)
 
 adminRouter.post(
   '/profile',

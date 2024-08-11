@@ -10,7 +10,26 @@ class EmployeeService implements IEmployeeService {
   private readonly roleService: IRoleService
   private readonly employeeCRUD: IEmployeeCRUD
 
-  constructor(
+  private static instance: IEmployeeService | null = null
+
+  static getInstance = (
+    mailerService: IMailerService,
+    googleAuthService: IGoogleAuthService,
+    roleService: IRoleService,
+    employeeCRUD: IEmployeeCRUD
+  ) => {
+    if (EmployeeService.instance === null) {
+      EmployeeService.instance = new EmployeeService(
+        mailerService,
+        googleAuthService,
+        roleService,
+        employeeCRUD
+      )
+    }
+    return EmployeeService.instance
+  }
+
+  private constructor(
     mailerService: IMailerService,
     googleAuthService: IGoogleAuthService,
     roleService: IRoleService,
@@ -23,9 +42,13 @@ class EmployeeService implements IEmployeeService {
   }
 
   async addEmployee(data: AddAdminOrEmployeeInput): Promise<void> {
-    try {
-      const { uid } = await this.googleAuthService.createUser(data.email)
+    const { uid } = await this.googleAuthService
+      .createUser(data.email)
+      .catch((err) => {
+        throw new HttpException(500, 'Internal Server Error')
+      })
 
+    try {
       const _role = await this.roleService.findOne({ name: data.role }, [])
 
       if (_role === null) throw new HttpException(400, 'Invalid Role')
@@ -37,6 +60,7 @@ class EmployeeService implements IEmployeeService {
         roleId: _role.id,
         userId: uid,
         email: data.email,
+        designation: data.designation,
       })
 
       this.mailerService.sendMail(
@@ -45,6 +69,7 @@ class EmployeeService implements IEmployeeService {
         ''
       )
     } catch (e) {
+      await this.googleAuthService.deleteUser(uid)
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }

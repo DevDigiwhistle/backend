@@ -1,7 +1,6 @@
 import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
-import { IRole, IUser } from '../interface'
 
 export type authDTO = {
   idToken: string
@@ -56,4 +55,18 @@ export type userResponseDTO = {
     | IBrandProfile
     | IInfluencerProfile
   isOnBoarded?: boolean
+}
+
+export interface IAdminAndEmployeeDTO {
+  userId: string
+  email: string
+  mobileNo: string
+  designation: string
+  isPaused: boolean
+  isApproved: boolean | null
+  firstName: string
+  lastName: string
+  profilePic: string
+  profileId: string
+  role: string
 }

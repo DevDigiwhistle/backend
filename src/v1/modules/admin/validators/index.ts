@@ -7,6 +7,7 @@ import {
   updateEmployeeProfileSchema,
 } from './employee-profile-validators'
 import { addAdminOrEmployeeSchema } from './admin-validator'
+import { addRemarksSchema, updateRemarksSchema } from './remarks-validator'
 
 export {
   addAdminProfileSchema,
@@ -14,4 +15,6 @@ export {
   addEmployeeProfileSchema,
   updateEmployeeProfileSchema,
   addAdminOrEmployeeSchema,
+  addRemarksSchema,
+  updateRemarksSchema,
 }

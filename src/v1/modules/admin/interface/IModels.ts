@@ -23,3 +23,12 @@ export interface IEmployeeProfile extends ObjectLiteral {
   createdAt?: Date
   updatedAt?: Date
 }
+
+export interface IRemarks extends ObjectLiteral {
+  id: string
+  message: string
+  userId: string
+  remarker: IUser
+  createdAt: Date
+  updatedAt: Date
+}

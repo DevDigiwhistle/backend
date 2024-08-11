@@ -6,9 +6,10 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm'
 import { IUser } from '../../auth/interface'
-import { IAdminProfile } from '../interface'
+import { IAdminProfile, IRemarks } from '../interface'
 import { User } from '../../auth/models'
 import { IEmployeeProfile } from '../../admin/interface'
 
@@ -68,5 +69,29 @@ export class EmployeeProfile implements IEmployeeProfile {
   createdAt: Date
 
   @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
+}
+
+@Entity()
+export class Remarks implements IRemarks {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column({ type: 'text', nullable: false })
+  message: string
+
+  @Column({ type: 'varchar', nullable: false })
+  userId: string
+
+  @ManyToOne(() => User, (user) => user.remarks, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
+  remarker: User
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
   updatedAt: Date
 }

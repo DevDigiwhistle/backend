@@ -3,8 +3,20 @@ import { AddEmployee } from '../types'
 import { AppDataSource } from '../../../../config'
 import { User } from '../../auth/models'
 import { EmployeeProfile } from '../models'
+import { HttpException } from '../../../../utils'
 
 class EmployeeCRUD implements IEmployeeCRUD {
+  private static instance: IEmployeeCRUD | null = null
+
+  static getInstance = () => {
+    if (EmployeeCRUD.instance === null) {
+      EmployeeCRUD.instance = new EmployeeCRUD()
+    }
+    return EmployeeCRUD.instance
+  }
+
+  private constructor() {}
+
   async addEmployee(data: AddEmployee): Promise<void> {
     const queryRunner = AppDataSource.createQueryRunner()
     await queryRunner.connect()
@@ -12,25 +24,33 @@ class EmployeeCRUD implements IEmployeeCRUD {
       await queryRunner.startTransaction()
 
       const userRepository = queryRunner.manager.getRepository(User)
-      const user = new User()
-      user.id = data.userId
-      user.email = data.email
-      user.role.id = data.roleId
-      user.isVerified = true
-      await userRepository.save(user)
+
+      await userRepository.save({
+        email: data.email,
+        id: data.userId,
+        role: {
+          id: 2,
+        },
+        isVerified: true,
+      })
 
       const employeeProfileRepository =
         queryRunner.manager.getRepository(EmployeeProfile)
-      const employeeProfile = new EmployeeProfile()
-      employeeProfile.firstName = data.firstName
-      employeeProfile.lastName = data.lastName
-      employeeProfile.mobileNo = data.mobileNo
-      employeeProfile.user.id = data.userId
-      await employeeProfileRepository.save(employeeProfile)
+
+      await employeeProfileRepository.save({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        mobileNo: data.mobileNo,
+        user: {
+          id: data.userId,
+        },
+        designation: data.designation,
+      })
 
       await queryRunner.commitTransaction()
     } catch (e) {
       await queryRunner.rollbackTransaction()
+      throw new HttpException(500, e)
     } finally {
       await queryRunner.release()
     }

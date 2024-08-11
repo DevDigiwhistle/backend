@@ -18,7 +18,8 @@ export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
     query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
-    relations?: string[]
+    relations?: string[],
+    order?: FindOptionsOrder<T>
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
@@ -61,10 +62,11 @@ export abstract class BaseService<
 
   async findAll(
     query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
-    relations: string[] = []
+    relations: string[] = [],
+    order?: FindOptionsOrder<T>
   ): Promise<T[]> {
     try {
-      return await this.crudBase.findAll(query, relations)
+      return await this.crudBase.findAll(query, relations, order)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

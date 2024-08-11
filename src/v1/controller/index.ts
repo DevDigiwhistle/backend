@@ -6,6 +6,8 @@ import { EmployeeProfileController } from './employee-profile-controller'
 import { InfluencerProfileController } from './influencer-profile-controller'
 import { RoleController } from './role-controller'
 import { BrandProfileController } from './brand-profile-controller'
+import { AdminController } from './admin-controller'
+import { RemarksController } from './remarks-controller'
 
 export {
   ContactUsController,
@@ -15,5 +17,7 @@ export {
   AgencyProfileController,
   InfluencerProfileController,
   RoleController,
+  AdminController,
   BrandProfileController,
+  RemarksController,
 }

@@ -9,7 +9,7 @@ const addAdminOrEmployeeSchema = {
     designation: { type: 'string' },
     profilePic: { type: 'string', format: 'uri', nullable: true },
   },
-  required: ['firstName', 'lastName', 'mobileNo', 'email', 'role'],
+  required: ['firstName', 'mobileNo', 'email', 'role'],
   additionalProperties: false,
 }
 

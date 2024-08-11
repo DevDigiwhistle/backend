@@ -2,7 +2,11 @@ import { DataSource } from 'typeorm'
 import { User, Role, Verification } from '../v1/modules/auth/models'
 import { ContactUsForm } from '../v1/modules/landing/models'
 import { BrandProfile, AgencyProfile } from '../v1/modules/brands/models'
-import { AdminProfile, EmployeeProfile } from '../v1/modules/admin/models'
+import {
+  AdminProfile,
+  EmployeeProfile,
+  Remarks,
+} from '../v1/modules/admin/models'
 import { InfluencerProfile } from '../v1/modules/influencer/models'
 
 export const AppDataSource = new DataSource({
@@ -24,6 +28,7 @@ export const AppDataSource = new DataSource({
     AgencyProfile,
     InfluencerProfile,
     Verification,
+    Remarks,
   ],
   ssl: { rejectUnauthorized: false },
 })
