@@ -57,6 +57,18 @@ export type userResponseDTO = {
   isOnBoarded?: boolean
 }
 
+// export type userProfileDTO = {
+//   userId: string
+//   email: string
+//   role: string
+//   isVerified: boolean
+//   isPaused: boolean
+//   isApproved: boolean
+//   name: string
+//   mobileNo: string
+//   profilePic: string | null
+// }
+
 export interface IAdminAndEmployeeDTO {
   userId: string
   email: string

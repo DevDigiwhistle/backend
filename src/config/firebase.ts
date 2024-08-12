@@ -9,11 +9,11 @@ interface FirebaseConfig {
 const firebaseConfig: FirebaseConfig = {
   projectId: process.env.FIREBASE_PROJECT_ID ?? '',
   clientEmail: process.env.FIREBASE_CLIENT_EMAIL ?? '',
-  privateKey: process.env.PRIVATE_KEY ?? '',
+  privateKey: process.env.PRIVATE_KEY ?? ''
 }
 
 firebase.initializeApp({
-  credential: firebase.credential.cert(firebaseConfig),
+  credential: firebase.credential.cert(firebaseConfig)
 })
 
 export default firebase

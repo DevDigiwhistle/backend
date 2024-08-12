@@ -1,5 +1,5 @@
 import { AppDataSource } from '../config'
-import { PaginatedResponse } from './base-service'
+import { type PaginatedResponse } from './base-service'
 import HttpException from './http-exception'
 import {
   type DeepPartial,
@@ -7,25 +7,25 @@ import {
   type ObjectLiteral,
   type Repository,
   type FindOptionsWhere,
-  FindOptionsOrder,
+  type FindOptionsOrder
 } from 'typeorm'
 
 export interface ICRUDBase<T extends ObjectLiteral> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
     limit: number,
-    query?: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query?: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<PaginatedResponse<T>>
   findOne: (
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>,
     relations?: string[]
   ) => Promise<T | null>
   update: (
@@ -33,19 +33,18 @@ export interface ICRUDBase<T extends ObjectLiteral> {
     data: Partial<T>,
     relations?: string[]
   ) => Promise<T>
-  delete: (query: FindOptionsWhere<T> | FindOptionsWhere<T>[]) => Promise<void>
+  delete: (query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>) => Promise<void>
 }
 
 export abstract class CRUDBase<T extends ObjectLiteral>
-  implements ICRUDBase<T>
-{
+implements ICRUDBase<T> {
   protected readonly repository: Repository<T>
 
-  constructor(entity: EntityTarget<T>) {
+  constructor (entity: EntityTarget<T>) {
     this.repository = AppDataSource.getRepository(entity)
   }
 
-  async add(data: DeepPartial<T>): Promise<T> {
+  async add (data: DeepPartial<T>): Promise<T> {
     try {
       const entity = this.repository.create(data)
       const resp = await this.repository.save(entity)
@@ -55,8 +54,8 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async findAll(
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+  async findAll (
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations: string[] = [],
     order?: FindOptionsOrder<T>
   ): Promise<T[]> {
@@ -72,7 +71,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
         const data = await this.repository.find({
           where: query,
           relations,
-          order,
+          order
         })
         return data
       }
@@ -81,8 +80,8 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async findOne(
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+  async findOne (
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>,
     relations: string[] = []
   ): Promise<T | null> {
     try {
@@ -92,7 +91,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
 
       const data = await this.repository.findOne({
         where: query,
-        relations,
+        relations
       })
 
       return data
@@ -101,7 +100,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async update(
+  async update (
     query: FindOptionsWhere<T>,
     data: Partial<T>,
     relations?: string[]
@@ -125,7 +124,7 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async delete(query: FindOptionsWhere<T>): Promise<void> {
+  async delete (query: FindOptionsWhere<T>): Promise<void> {
     try {
       if (
         query === undefined ||
@@ -141,10 +140,10 @@ export abstract class CRUDBase<T extends ObjectLiteral>
     }
   }
 
-  async findAllPaginated(
+  async findAllPaginated (
     page: number = 1,
     limit: number = 10,
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations: string[],
     order?: FindOptionsOrder<T>
   ): Promise<PaginatedResponse<T>> {
@@ -157,29 +156,29 @@ export abstract class CRUDBase<T extends ObjectLiteral>
         const [results, total] = await this.repository.findAndCount({
           skip: (page - 1) * limit,
           take: limit,
-          relations: relations,
-          order: order,
+          relations,
+          order
         })
 
         return {
           data: results,
           totalPages: Math.ceil(total / limit),
           totalCount: total,
-          currentPage: page,
+          currentPage: page
         }
       } else {
         const [results, total] = await this.repository.findAndCount({
           skip: (page - 1) * limit,
           take: limit,
-          relations: relations,
+          relations,
           where: query,
-          order: order,
+          order
         })
         return {
           data: results,
           totalPages: Math.ceil(total / limit),
           totalCount: total,
-          currentPage: page,
+          currentPage: page
         }
       }
     } catch (e) {

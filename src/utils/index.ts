@@ -14,5 +14,5 @@ export {
   BaseValidator,
   type IBaseService,
   BaseService,
-  type IBaseController,
+  type IBaseController
 }

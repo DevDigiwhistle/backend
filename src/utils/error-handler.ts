@@ -11,7 +11,7 @@ export const errorHandler = (e: any, res: Response): Response => {
   } else {
     return res.status(Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
       message: e?.message ?? 'Internal Server Error',
-      status: Enum.RESPONSE_STATES.ERROR,
+      status: Enum.RESPONSE_STATES.ERROR
     })
   }
 }

@@ -147,6 +147,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
+    delete:
+      summary: delete an existing remark
+      tags:
+        - Remarks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The ID of the remark to delete
+
+      responses:
+        '200':
+          description: The remark was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
     Remarks:

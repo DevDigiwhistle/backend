@@ -10,6 +10,6 @@ export const responseHandler = (
   return res.status(statusCode).json({
     message,
     status: Enum.RESPONSE_STATES.SUCCESS,
-    data,
+    data
   })
 }

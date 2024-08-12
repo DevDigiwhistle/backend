@@ -38,4 +38,11 @@ remarksRouter.get(
   remarksController.getRemarksByUserIdController.bind(remarksController)
 )
 
+remarksRouter.delete(
+  '/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  remarksController.deleteController.bind(remarksController)
+)
+
 export default remarksRouter

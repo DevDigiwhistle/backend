@@ -5,7 +5,7 @@ import { BrandProfile, AgencyProfile } from '../v1/modules/brands/models'
 import {
   AdminProfile,
   EmployeeProfile,
-  Remarks,
+  Remarks
 } from '../v1/modules/admin/models'
 import { InfluencerProfile } from '../v1/modules/influencer/models'
 
@@ -28,7 +28,7 @@ export const AppDataSource = new DataSource({
     AgencyProfile,
     InfluencerProfile,
     Verification,
-    Remarks,
+    Remarks
   ],
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: false }
 })

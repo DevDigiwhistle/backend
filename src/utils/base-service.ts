@@ -2,34 +2,35 @@ import {
   type ObjectLiteral,
   type DeepPartial,
   type FindOptionsWhere,
-  FindOptionsOrder,
+  type FindOptionsOrder
 } from 'typeorm'
 import { type ICRUDBase } from './base-crud'
 import HttpException from './http-exception'
 
-export type PaginatedResponse<T> = {
+export interface PaginatedResponse<T> {
   data: T[]
   currentPage: number
   totalPages: number
   totalCount?: number
 }
 
+// @typescript-eslint/no-unused-vars
 export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
   add: (data: DeepPartial<T>) => Promise<T>
   findAll: (
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<T[]>
   findAllPaginated: (
     page: number,
     limit: number,
-    query?: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query?: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations?: string[],
     order?: FindOptionsOrder<T>
   ) => Promise<PaginatedResponse<T>>
   findOne: (
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>,
     relations?: string[]
   ) => Promise<T | null>
   update: (
@@ -43,15 +44,14 @@ export interface IBaseService<T extends ObjectLiteral, C extends ICRUDBase<T>> {
 export abstract class BaseService<
   T extends ObjectLiteral,
   C extends ICRUDBase<T>,
-> implements IBaseService<T, C>
-{
+> implements IBaseService<T, C> {
   protected readonly crudBase: C
 
-  constructor(crudBase: C) {
+  constructor (crudBase: C) {
     this.crudBase = crudBase
   }
 
-  async add(data: DeepPartial<T>): Promise<T> {
+  async add (data: DeepPartial<T>): Promise<T> {
     try {
       const results = await this.crudBase.add(data)
       return results
@@ -60,8 +60,8 @@ export abstract class BaseService<
     }
   }
 
-  async findAll(
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+  async findAll (
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations: string[] = [],
     order?: FindOptionsOrder<T>
   ): Promise<T[]> {
@@ -72,8 +72,8 @@ export abstract class BaseService<
     }
   }
 
-  async findOne(
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+  async findOne (
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>,
     relations: string[] = []
   ): Promise<T | null> {
     try {
@@ -85,7 +85,7 @@ export abstract class BaseService<
     }
   }
 
-  async update(
+  async update (
     query: FindOptionsWhere<T>,
     data: Partial<T>,
     relations?: string[]
@@ -98,7 +98,7 @@ export abstract class BaseService<
     }
   }
 
-  async delete(query: FindOptionsWhere<T>): Promise<void> {
+  async delete (query: FindOptionsWhere<T>): Promise<void> {
     try {
       await this.crudBase.delete(query)
     } catch (e) {
@@ -106,10 +106,10 @@ export abstract class BaseService<
     }
   }
 
-  async findAllPaginated(
+  async findAllPaginated (
     page: number,
     limit: number,
-    query: FindOptionsWhere<T> | FindOptionsWhere<T>[] | undefined,
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations: string[],
     order?: FindOptionsOrder<T>
   ): Promise<PaginatedResponse<T>> {
