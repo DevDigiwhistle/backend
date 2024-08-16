@@ -2,6 +2,7 @@ import { CRUDBase, HttpException } from '../../../../utils'
 import { type IUser } from '../interface'
 import { IUserCRUD } from '../interface'
 import { EntityTarget } from 'typeorm'
+import { userStatsDTO } from '../types'
 
 export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
   private static instance: IUserCRUD | null = null
@@ -72,6 +73,23 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
       })
 
       return user
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findOverallUserStats(): Promise<userStatsDTO> {
+    try {
+      const result = await this.repository
+        .createQueryBuilder('user')
+        .select([
+          'SUM(CASE WHEN user.isApproved IS NULL THEN 1 ELSE 0 END) AS Pending',
+          'SUM(CASE WHEN user.isApproved = true THEN 1 ELSE 0 END) AS Approved',
+          'SUM(CASE WHEN user.isApproved = false THEN 1 ELSE 0 END) AS Rejected',
+        ])
+        .getRawOne()
+
+      return result
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

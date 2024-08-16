@@ -8,6 +8,7 @@ import {
   IInfluencerProfile,
   IInfluencerProfileCRUD,
   IInfluencerProfileService,
+  IInfluencerStatsService,
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 
@@ -29,13 +30,15 @@ export class InfluencerProfileController
   implements IInfluencerProfileController
 {
   private readonly userService: IUserService
-
+  private readonly influencerStatsService: IInfluencerStatsService
   constructor(
     influencerProfileService: IInfluencerProfileService,
-    userService: IUserService
+    userService: IUserService,
+    influencerStatsService: IInfluencerStatsService
   ) {
     super(influencerProfileService)
     this.userService = userService
+    this.influencerStatsService = influencerStatsService
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -52,6 +55,17 @@ export class InfluencerProfileController
         )
 
       const data = await this.service.add(req.body)
+
+      const { instagramURL, youtubeURL, linkedInURL, twitterURL } = data
+
+      // this.influencerStatsService.fetchAllStatsAndSave(
+      //   data.id,
+      //   instagramURL,
+      //   youtubeURL,
+      //   twitterURL,
+      //   linkedInURL
+      // )
+
       return responseHandler(201, res, 'Request Submitted Successfully', data)
     } catch (e) {
       return errorHandler(e, res)

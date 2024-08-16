@@ -4,7 +4,7 @@ import { PaginatedResponse } from '../../../../utils/base-service'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
 import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
-import { IAdminAndEmployeeDTO } from '../types'
+import { IAdminAndEmployeeDTO, userStatsDTO } from '../types'
 
 class UserService
   extends BaseService<IUser, IUserCRUD>
@@ -122,6 +122,14 @@ class UserService
         totalPages: data.totalPages,
         totalCount: data.totalCount,
       }
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findOverallUserStats(): Promise<userStatsDTO> {
+    try {
+      return await this.crudBase.findOverallUserStats()
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

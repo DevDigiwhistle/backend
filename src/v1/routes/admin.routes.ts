@@ -43,6 +43,13 @@ adminRouter.post(
 )
 
 adminRouter.get(
+  '/stats',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN]),
+  adminController.findStatsController.bind(adminController)
+)
+
+adminRouter.get(
   '/all',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN]),

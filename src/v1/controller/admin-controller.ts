@@ -60,6 +60,36 @@ class AdminController {
       return errorHandler(e, res)
     }
   }
+
+  async findStatsController(req: Request, res: Response): Promise<Response> {
+    try {
+      const data = await this.userService.findOverallUserStats()
+
+      const _data = [
+        {
+          label: 'Approved',
+          value: parseInt(data.approved),
+          subValue: '',
+          iconName: '',
+        },
+        {
+          label: 'Rejected',
+          value: parseInt(data.rejected),
+          subValue: '',
+          iconName: '',
+        },
+        {
+          label: 'Pending',
+          value: parseInt(data.pending),
+          subValue: '',
+          iconName: '',
+        },
+      ]
+      return responseHandler(200, res, 'Fetched Successfully', _data)
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
 }
 
 export { AdminController }

@@ -19,4 +19,5 @@ export interface IEmployeeService {
 
 export interface IRemarksService extends IBaseService<IRemarks, IRemarksCRUD> {
   findAllRemarksByUserId(userId: string): Promise<remarksDTO[]>
+  clearAllRemarksByUserId(userId: string): Promise<void>
 }

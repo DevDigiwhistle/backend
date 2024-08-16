@@ -11,10 +11,10 @@ import {
   AdminService,
   EmployeeProfileService,
   RemarksService,
+  EmployeeService,
 } from './services'
 import { MailerService } from '../../utils'
 import { googleAuthService, roleService } from '../auth'
-import { EmployeeService } from './services/employee-service'
 
 const mailerService = MailerService.getInstance()
 

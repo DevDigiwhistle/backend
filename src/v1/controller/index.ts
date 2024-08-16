@@ -8,6 +8,7 @@ import { RoleController } from './role-controller'
 import { BrandProfileController } from './brand-profile-controller'
 import { AdminController } from './admin-controller'
 import { RemarksController } from './remarks-controller'
+import { InfluencerController } from './influencer-controller'
 
 export {
   ContactUsController,
@@ -20,4 +21,5 @@ export {
   AdminController,
   BrandProfileController,
   RemarksController,
+  InfluencerController,
 }

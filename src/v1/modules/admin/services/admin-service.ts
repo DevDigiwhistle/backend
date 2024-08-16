@@ -1,11 +1,6 @@
-import { Transaction } from 'typeorm'
 import { HttpException } from '../../../../utils'
 import { IMailerService } from '../../../utils'
-import {
-  IGoogleAuthService,
-  IRoleService,
-  IUserService,
-} from '../../auth/interface'
+import { IGoogleAuthService, IRoleService } from '../../auth/interface'
 import { IAdminService, IAdminCRUD } from '../interface'
 import { AddAdminOrEmployeeInput } from '../types'
 

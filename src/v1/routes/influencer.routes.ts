@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { influencerProfileService } from '../modules/influencer'
+import {
+  influencerProfileService,
+  influencerService,
+  influencerStatsService,
+} from '../modules/influencer'
 import { InfluencerProfileController } from '../controller/influencer-profile-controller'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
@@ -7,21 +11,50 @@ import { BaseValidator } from '../../utils'
 import {
   addInfluencerProfileSchema,
   updateInfluencerProfileSchema,
+  inviteInfluencerSchema,
+  addInfluencerSchema,
 } from '../modules/influencer/validators'
 import { userService } from '../modules/auth'
+import { InfluencerController } from '../controller'
 
 const influencerRouter = Router()
 
 const influencerProfileController = new InfluencerProfileController(
   influencerProfileService,
-  userService
+  userService,
+  influencerStatsService
 )
+
+const influencerController = new InfluencerController(
+  influencerService,
+  influencerStatsService
+)
+
 const addInfluencerProfileValidator = new BaseValidator(
   addInfluencerProfileSchema
 )
 
 const updateInfluencerProfileValidator = new BaseValidator(
   updateInfluencerProfileSchema
+)
+
+const addInfluencerValidator = new BaseValidator(addInfluencerSchema)
+const inviteInfluencerValidator = new BaseValidator(inviteInfluencerSchema)
+
+influencerRouter.post(
+  '/',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  addInfluencerValidator.validateInput.bind(addInfluencerValidator),
+  influencerController.addInfluencerController.bind(influencerController)
+)
+
+influencerRouter.post(
+  '/invite',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  inviteInfluencerValidator.validateInput.bind(inviteInfluencerValidator),
+  influencerController.inviteInfluencerController.bind(influencerController)
 )
 
 influencerRouter.post(

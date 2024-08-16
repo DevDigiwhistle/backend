@@ -1,11 +1,53 @@
-import { InfluencerProfile } from './models'
-import { InfluencerProfileCRUD } from './crud'
-import { InfluencerProfileService } from './services'
+import {
+  InfluencerProfile,
+  InstagramProfileStats,
+  TwitterProfileStats,
+  YoutubeProfileStats,
+} from './models'
+import {
+  InfluencerProfileCRUD,
+  InfluencerCRUD,
+  InstagramProfileStatsCRUD,
+  YoutubeProfileStatsCRUD,
+  TwitterProfileStatsCRUD,
+} from './crud'
+import {
+  InfluencerProfileService,
+  InfluencerService,
+  InfluencerStatsService,
+  InstagramProfileStatsService,
+  InstagramService,
+  TwitterProfileStatsService,
+  TwitterService,
+  YoutubeProfileStatsService,
+  YoutubeService,
+} from './services'
+import { AxiosService, MailerService } from '../../utils'
+import { googleAuthService } from '../auth'
 
-const influencerProfileCRUD =
-  InfluencerProfileCRUD.getInstance(InfluencerProfile)
 const influencerProfileService = InfluencerProfileService.getInstance(
-  influencerProfileCRUD
+  InfluencerProfileCRUD.getInstance(InfluencerProfile)
 )
 
-export { influencerProfileService }
+const influencerService = InfluencerService.getInstance(
+  MailerService.getInstance(),
+  googleAuthService,
+  InfluencerCRUD.getInstance()
+)
+
+const influencerStatsService = InfluencerStatsService.getInstance(
+  InstagramService.getInstance(AxiosService.getInstance()),
+  YoutubeService.getInstance(AxiosService.getInstance()),
+  TwitterService.getInstance(AxiosService.getInstance()),
+  InstagramProfileStatsService.getInstance(
+    InstagramProfileStatsCRUD.getInstance(InstagramProfileStats)
+  ),
+  YoutubeProfileStatsService.getInstance(
+    YoutubeProfileStatsCRUD.getInstance(YoutubeProfileStats)
+  ),
+  TwitterProfileStatsService.getInstance(
+    TwitterProfileStatsCRUD.getInstance(TwitterProfileStats)
+  )
+)
+
+export { influencerProfileService, influencerService, influencerStatsService }

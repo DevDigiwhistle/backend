@@ -1,0 +1,128 @@
+tags:
+  name: Influencer
+  description: Endpoints for influencer
+
+paths:
+  /v1/influencer:
+    post:
+      summary: Add a new Influencer
+      tags:
+        - Influencer
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Influencer data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfluencerInput'
+      responses:
+        '200':
+          description: Influencer created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+  /v1/influencer/invite:
+    post:
+      summary: invite influencer
+      tags:
+        - Influencer
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Invite Influencer data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteInfluencerInput'
+      responses:
+        '200':
+          description: Influencer created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    InfluencerInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        twitterURL:
+          type: string
+        linkedInURL:
+          type: string
+        instagramURL:
+          type: string
+        youtubeURL:
+          type: string
+        email:
+          type: string
+
+    InviteInfluencerInput:
+      type: object
+      properties:
+        message:
+          type: string
+        subject:
+          type: string
+        emails:
+          type: array
+          items:
+            type: string

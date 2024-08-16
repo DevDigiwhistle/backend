@@ -54,6 +54,21 @@ class RemarksController
       return errorHandler(e, res)
     }
   }
+
+  async deleteController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params
+      const { userId } = req.query
+
+      if (typeof id === 'string') await this.service.delete({ id })
+      else if (typeof userId === 'string')
+        await this.service.clearAllRemarksByUserId(userId)
+
+      return responseHandler(200, res, 'Deleted Successfully', {})
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
 }
 
 export { RemarksController }

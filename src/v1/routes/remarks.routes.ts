@@ -39,6 +39,13 @@ remarksRouter.get(
 )
 
 remarksRouter.delete(
+  '/',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  remarksController.deleteController.bind(remarksController)
+)
+
+remarksRouter.delete(
   '/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

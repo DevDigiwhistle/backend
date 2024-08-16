@@ -82,3 +82,8 @@ export interface IAdminAndEmployeeDTO {
   profileId: string
   role: string
 }
+export type userStatsDTO = {
+  approved: string
+  pending: string
+  rejected: string
+}

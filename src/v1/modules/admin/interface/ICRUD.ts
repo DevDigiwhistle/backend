@@ -1,9 +1,7 @@
-import { FindOptionsOrder } from 'typeorm'
 import { ICRUDBase } from '../../../../utils'
 import { AddAdmin, AddEmployee } from '../types'
 import { IAdminProfile, IRemarks } from './IModels'
 import { IEmployeeProfile } from './IModels'
-import { PaginatedResponse } from '../../../../utils/base-service'
 
 export interface IAdminProfileCRUD extends ICRUDBase<IAdminProfile> {}
 

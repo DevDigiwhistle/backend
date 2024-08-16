@@ -2,7 +2,6 @@ import { IRemarks, IRemarksCRUD } from '../interface'
 import { IRemarksService } from '../interface'
 import { BaseService, HttpException, IBaseService } from '../../../../utils'
 import { remarksDTO } from '../types'
-import { Enum } from '../../../../constants'
 
 class RemarksService
   extends BaseService<IRemarks, IRemarksCRUD>
@@ -38,6 +37,7 @@ class RemarksService
             : item.remarker.adminProfile
         if (profile === undefined || profile === null) return
         return {
+          id: item.id,
           name: profile.firstName + ' ' + profile.lastName,
           profilePic: profile.profilePic,
           message: item.message,
@@ -48,6 +48,14 @@ class RemarksService
 
       const filteredData = _data.filter((item) => item !== undefined)
       return filteredData as remarksDTO[]
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async clearAllRemarksByUserId(userId: string): Promise<void> {
+    try {
+      await this.crudBase.delete({ userId: userId })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

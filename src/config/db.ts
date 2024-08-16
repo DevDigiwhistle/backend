@@ -5,9 +5,14 @@ import { BrandProfile, AgencyProfile } from '../v1/modules/brands/models'
 import {
   AdminProfile,
   EmployeeProfile,
-  Remarks
+  Remarks,
 } from '../v1/modules/admin/models'
-import { InfluencerProfile } from '../v1/modules/influencer/models'
+import {
+  InfluencerProfile,
+  YoutubeProfileStats,
+  TwitterProfileStats,
+  InstagramProfileStats,
+} from '../v1/modules/influencer/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -28,7 +33,10 @@ export const AppDataSource = new DataSource({
     AgencyProfile,
     InfluencerProfile,
     Verification,
-    Remarks
+    Remarks,
+    YoutubeProfileStats,
+    InstagramProfileStats,
+    TwitterProfileStats,
   ],
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
 })

@@ -1,7 +1,11 @@
 import nodemailer from 'nodemailer'
 
 interface IMailerService {
-  sendMail(to: string, subject: string, message: string): Promise<void>
+  sendMail(
+    to: string | string[],
+    subject: string,
+    message: string
+  ): Promise<void>
 }
 
 class MailerService implements IMailerService {

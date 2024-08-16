@@ -9,6 +9,7 @@ import {
   resetPassDTO,
   signUpResponseDTO,
   userDTO,
+  userStatsDTO,
   verifyMobileDTO,
 } from '../types'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
@@ -53,6 +54,7 @@ export interface IUserCRUD extends ICRUDBase<IUser> {
     mobileNo: string,
     userId: string
   ): Promise<IUser | null>
+  findOverallUserStats(): Promise<userStatsDTO>
 }
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}
@@ -81,6 +83,7 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     limit: number,
     name?: string
   ): Promise<PaginatedResponse<IAdminAndEmployeeDTO>>
+  findOverallUserStats(): Promise<userStatsDTO>
 }
 
 export interface IAuthService {
