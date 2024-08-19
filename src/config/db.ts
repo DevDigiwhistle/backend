@@ -22,7 +22,6 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   synchronize: process.env.ENV !== 'production',
-  logging: process.env.ENV !== 'production',
   entities: [
     User,
     ContactUsForm,

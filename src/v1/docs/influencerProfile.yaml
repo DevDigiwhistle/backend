@@ -92,6 +92,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
+  /v1/influencer/profile/{id}:
+    patch:
+      summary: update influencer profile by Id
+      tags:
+        - InfluencerProfile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the influencer profile to update
+      requestBody:
+        description: Influencer profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInfluencerProfileInput'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Influencer profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/InfluencerProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: Influencer profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
     InfluencerProfileInput:
@@ -133,5 +193,41 @@ components:
           type: string
         youtubeURL:
           type: string
+        pay:
+          type: number
+        hideFrom:
+          type: string
+          enum:
+            - Brand
+            - Agency
+        exclusive:
+          type: boolean
         user:
           $ref: '#/components/schemas/User'
+
+    UpdateInfluencerProfileInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        mobileNo:
+          type: string
+        twitterURL:
+          type: string
+        linkedInURL:
+          type: string
+        instagramURL:
+          type: string
+        youtubeURL:
+          type: string
+        pay:
+          type: number
+        hideFrom:
+          type: string
+          enum:
+            - Brand
+            - Agency
+        exclusive:
+          type: boolean

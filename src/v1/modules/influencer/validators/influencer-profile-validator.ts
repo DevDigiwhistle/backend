@@ -1,3 +1,5 @@
+import { Enum } from '../../../../constants'
+
 const addInfluencerProfileSchema = {
   type: 'object',
   properties: {
@@ -24,6 +26,13 @@ const updateInfluencerProfileSchema = {
     instagramURL: { type: 'string', nullable: true },
     youtubeURL: { type: 'string', nullable: true },
     linkedInURL: { type: 'string', nullable: true },
+    exclusive: { type: 'boolean', nullable: true },
+    hideFrom: {
+      type: 'string',
+      nullable: true,
+      enum: [Enum.HideFrom.BRAND, Enum.HideFrom.Influencer],
+    },
+    pay: { type: 'number', nullable: true },
   },
   additionalProperties: false,
 }

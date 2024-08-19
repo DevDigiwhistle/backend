@@ -34,3 +34,8 @@ export enum PersonType {
   INFLUENCER = 'Influencer',
   BRAND = 'Brand',
 }
+
+export enum HideFrom {
+  BRAND = 'Brand',
+  Influencer = 'Influencer',
+}

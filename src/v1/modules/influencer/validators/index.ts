@@ -5,7 +5,7 @@ import {
 import {
   addInfluencerSchema,
   inviteInfluencerSchema,
-} from './influencer-service-validators'
+} from './influencer-validators'
 
 export {
   addInfluencerProfileSchema,

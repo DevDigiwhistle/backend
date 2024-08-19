@@ -1,4 +1,5 @@
-import { BaseService } from '../../../../utils'
+import { DeepPartial } from 'typeorm'
+import { BaseService, HttpException } from '../../../../utils'
 import {
   ITwitterProfileStats,
   ITwitterProfileStatsCRUD,
@@ -22,6 +23,14 @@ class TwitterProfileStatsService
 
   private constructor(twitterProfileStatsCRUD: ITwitterProfileStatsCRUD) {
     super(twitterProfileStatsCRUD)
+  }
+
+  async addOrUpdate(data: DeepPartial<ITwitterProfileStats>): Promise<void> {
+    try {
+      await this.crudBase.addOrUpdate(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 

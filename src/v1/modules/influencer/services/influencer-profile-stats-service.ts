@@ -55,6 +55,78 @@ class InfluencerStatsService implements IInfluencerStatsService {
     this.twitterProfileStatsService = twitterProfileStatsService
   }
 
+  private async fetchInstagramStatsAndSave(
+    profileId: string,
+    instagramURL: string
+  ): Promise<void> {
+    try {
+      const instagramProfileStats =
+        await this.instagramService.getInstagramProfileStats(instagramURL)
+
+      await this.instagramProfileStatsService.addOrUpdate({
+        ...instagramProfileStats,
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+    } catch (e) {
+      await this.instagramProfileStatsService.addOrUpdate({
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  private async fetchYoutubeStatsAndSave(
+    profileId: string,
+    youtubeURL: string
+  ): Promise<void> {
+    try {
+      const youtubeProfileStats =
+        await this.youtubeService.getYoutubeProfileStats(youtubeURL)
+
+      await this.youtubeProfileStatsService.addOrUpdate({
+        ...youtubeProfileStats,
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+    } catch (e) {
+      await this.youtubeProfileStatsService.addOrUpdate({
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  private async fetchTwitterStatsAndSave(
+    profileId: string,
+    twitterURL: string
+  ): Promise<void> {
+    try {
+      const twitterProfileStats =
+        await this.twitterService.getTwitterProfileStats(twitterURL)
+
+      await this.twitterProfileStatsService.addOrUpdate({
+        ...twitterProfileStats,
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+    } catch (e) {
+      await this.twitterProfileStatsService.addOrUpdate({
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
   async fetchAllStatsAndSave(
     profileId: string,
     instagramURL: string | null | undefined,
@@ -63,43 +135,23 @@ class InfluencerStatsService implements IInfluencerStatsService {
     linkedInURL: string | null | undefined
   ): Promise<void> {
     try {
-      if (instagramURL !== null && instagramURL !== undefined) {
-        const instagramProfileStats =
-          await this.instagramService.getInstagramProfileStats(instagramURL)
+      const promises: Promise<void>[] = []
 
-        await this.instagramProfileStatsService.add({
-          ...instagramProfileStats,
-          influencerProfile: {
-            id: profileId,
-          },
-        })
+      if (instagramURL !== null && instagramURL !== undefined) {
+        promises.push(this.fetchInstagramStatsAndSave(profileId, instagramURL))
       }
 
       if (youtubeURL !== null && youtubeURL !== undefined) {
-        const youtubeProfileStats =
-          await this.youtubeService.getYoutubeProfileStats(youtubeURL)
-
-        await this.youtubeProfileStatsService.add({
-          ...youtubeProfileStats,
-          influencerProfile: {
-            id: profileId,
-          },
-        })
+        promises.push(this.fetchYoutubeStatsAndSave(profileId, youtubeURL))
       }
 
       if (twitterURL !== null && twitterURL !== undefined) {
-        const twitterProfileStats =
-          await this.twitterService.getTwitterProfileStats(twitterURL)
-
-        await this.twitterProfileStatsService.add({
-          ...twitterProfileStats,
-          influencerProfile: {
-            id: profileId,
-          },
-        })
+        promises.push(this.fetchTwitterStatsAndSave(profileId, twitterURL))
       }
+
+      await Promise.allSettled([...promises])
     } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
+      console.log(e)
     }
   }
 }

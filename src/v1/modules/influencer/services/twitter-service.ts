@@ -54,9 +54,13 @@ class TwitterService implements ITwitterService {
       return {
         followers: follower_count,
         tweets: number_of_tweets,
-        views: Math.ceil(views / mediaData.results.length),
-        replyCount: Math.ceil(replyCount / mediaData.results.length),
-        retweets: Math.ceil(retweetCount / mediaData.results.length),
+        views: Math.ceil(views / Math.max(1, mediaData.results.length)),
+        replyCount: Math.ceil(
+          replyCount / Math.max(1, mediaData.results.length)
+        ),
+        retweets: Math.ceil(
+          retweetCount / Math.max(1, mediaData.results.length)
+        ),
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.errorMessage)

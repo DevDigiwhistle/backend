@@ -49,6 +49,22 @@ influencerRouter.post(
   influencerController.addInfluencerController.bind(influencerController)
 )
 
+influencerRouter.get(
+  '/',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  influencerController.getAllInfluencerController.bind(influencerController)
+)
+
+influencerRouter.get(
+  '/request',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  influencerController.getAllInfluencerRequestsController.bind(
+    influencerController
+  )
+)
+
 influencerRouter.post(
   '/invite',
   verifyToken,
@@ -73,7 +89,7 @@ influencerRouter.get(
   )
 )
 
-influencerRouter.put(
+influencerRouter.patch(
   '/profile/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.INFLUENCER, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),

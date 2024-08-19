@@ -37,7 +37,7 @@ employeeRouter.get(
   )
 )
 
-employeeRouter.put(
+employeeRouter.patch(
   '/profile/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),

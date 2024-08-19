@@ -1,4 +1,6 @@
+import { DeepPartial } from 'typeorm'
 import { IBaseService } from '../../../../utils'
+import { PaginatedResponse } from '../../../../utils/base-service'
 import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
@@ -26,17 +28,43 @@ export interface IInfluencerProfileService
   extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {}
 
 export interface IYoutubeProfileStatsService
-  extends IBaseService<IYoutubeProfileStats, IYoutubeProfileStatsCRUD> {}
+  extends IBaseService<IYoutubeProfileStats, IYoutubeProfileStatsCRUD> {
+  addOrUpdate(data: DeepPartial<IYoutubeProfileStats>): Promise<void>
+}
 
 export interface IInstagramProfileStatsService
-  extends IBaseService<IInstagramProfileStats, IInstagramProfileStatsCRUD> {}
+  extends IBaseService<IInstagramProfileStats, IInstagramProfileStatsCRUD> {
+  addOrUpdate(data: DeepPartial<IInstagramProfileStats>): Promise<void>
+}
 
 export interface ITwitterProfileStatsService
-  extends IBaseService<ITwitterProfileStats, ITwitterProfileStatsCRUD> {}
+  extends IBaseService<ITwitterProfileStats, ITwitterProfileStatsCRUD> {
+  addOrUpdate(data: DeepPartial<ITwitterProfileStats>): Promise<void>
+}
 
 export interface IInfluencerService {
   addInfluencer(data: IAddInfluencerInput): Promise<IInfluencerProfile>
   inviteInfluencer(data: IInviteInfluencerInput): Promise<void>
+  getAllInfluencer(
+    page: number,
+    limit: number,
+    platform: string,
+    type: string | undefined,
+    niche: string | undefined,
+    followers: string | undefined,
+    name: string | undefined,
+    sortEr: string | undefined
+  ): Promise<PaginatedResponse<IInfluencerProfile>>
+  refreshAllInfluencer(
+    page: number,
+    limit: number,
+    platform: string
+  ): Promise<void>
+  getAllInfluencerRequests(
+    page: number,
+    limit: number,
+    platform: string
+  ): Promise<PaginatedResponse<IInfluencerProfile>>
 }
 
 export interface IInstagramService {

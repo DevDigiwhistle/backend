@@ -15,6 +15,7 @@ import {
   IYoutubeProfileStats,
 } from '../interface'
 import { User } from '../../auth/models'
+import { Enum } from '../../../../constants'
 
 @Entity()
 export class InfluencerProfile implements IInfluencerProfile {
@@ -27,7 +28,22 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', nullable: true })
   lastName: string
 
-  @OneToOne(() => User, (user) => user.influencerProfile)
+  @Column({ type: 'boolean', default: false })
+  exclusive: boolean
+
+  @Column({ type: 'enum', enum: Enum.HideFrom, default: null })
+  hideFrom: Enum.HideFrom
+
+  @Column({ type: 'int', default: null })
+  pay: number
+
+  @Column({ type: 'varchar', default: null })
+  niche: string
+
+  @Column({ type: 'varchar', default: null })
+  profilePic: string
+
+  @OneToOne(() => User, (user) => user.influencerProfile, { eager: true })
   @JoinColumn({ name: 'userId' })
   user: IUser
 
@@ -62,8 +78,7 @@ export class InfluencerProfile implements IInfluencerProfile {
 
   @OneToOne(
     () => TwitterProfileStats,
-    (twitterStats) => twitterStats.influencerProfile,
-    { nullable: true }
+    (twitterStats) => twitterStats.influencerProfile
   )
   twitterStats: ITwitterProfileStats
 
@@ -79,13 +94,13 @@ export class YoutubeProfileStats implements IYoutubeProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   views: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   videos: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   subscribers: number
 
   @OneToOne(
@@ -107,22 +122,22 @@ export class InstagramProfileStats implements IInstagramProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   likes: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   comments: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   followers: number
 
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'decimal', default: 0 })
   engagementRate: number
 
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'decimal', default: 0 })
   percentageFakeFollowers: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   views: number
 
   @OneToOne(
@@ -144,25 +159,26 @@ export class TwitterProfileStats implements ITwitterProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   followers: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   tweets: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   views: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   replyCount: number
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 0 })
   retweets: number
 
   @OneToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.twitterStats
   )
+  @JoinColumn({ name: 'profileId' })
   influencerProfile: InfluencerProfile
 
   @CreateDateColumn({ type: 'timestamp' })

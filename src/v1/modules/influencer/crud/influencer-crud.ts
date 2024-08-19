@@ -4,6 +4,7 @@ import { AppDataSource } from '../../../../config'
 import { User } from '../../auth/models'
 import { InfluencerProfile } from '../models'
 import { HttpException } from '../../../../utils'
+import { FindOptionsOrder, FindOptionsWhere } from 'typeorm'
 
 class InfluencerCRUD implements IInfluencerCRUD {
   private static instance: IInfluencerCRUD | null = null

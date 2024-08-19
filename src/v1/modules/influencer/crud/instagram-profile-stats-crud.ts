@@ -1,5 +1,5 @@
-import { EntityTarget } from 'typeorm'
-import { CRUDBase } from '../../../../utils'
+import { DeepPartial, EntityTarget } from 'typeorm'
+import { CRUDBase, HttpException } from '../../../../utils'
 import {
   IInstagramProfileStats,
   IInstagramProfileStatsCRUD,
@@ -26,6 +26,21 @@ class InstagramProfileStatsCRUD
     InstagramProfileStats: EntityTarget<IInstagramProfileStats>
   ) {
     super(InstagramProfileStats)
+  }
+
+  async addOrUpdate(data: DeepPartial<IInstagramProfileStats>): Promise<void> {
+    try {
+      const _data = await this.findOne({
+        influencerProfile: {
+          id: data.influencerProfile?.id,
+        },
+      })
+
+      if (_data === null) await this.add(data)
+      else await this.update({ id: _data.id }, data as IInstagramProfileStats)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 

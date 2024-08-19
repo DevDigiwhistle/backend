@@ -1,4 +1,5 @@
-import { BaseService } from '../../../../utils'
+import { DeepPartial } from 'typeorm'
+import { BaseService, HttpException } from '../../../../utils'
 import {
   IYoutubeProfileStats,
   IYoutubeProfileStatsCRUD,
@@ -22,6 +23,14 @@ class YoutubeProfileStatsService
 
   private constructor(youtubeProfileStatsCRUD: IYoutubeProfileStatsCRUD) {
     super(youtubeProfileStatsCRUD)
+  }
+
+  async addOrUpdate(data: DeepPartial<IYoutubeProfileStats>): Promise<void> {
+    try {
+      await this.crudBase.addOrUpdate(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 

@@ -1,12 +1,17 @@
 import { type ObjectLiteral } from 'typeorm'
 import { IUser } from '../../auth/interface'
+import { Enum } from '../../../../constants'
 
 export interface IInfluencerProfile extends ObjectLiteral {
   id: string
   firstName: string
   lastName: string
-  userId?: string
+  exclusive: boolean
+  hideFrom: Enum.HideFrom
+  pay: number
   user: IUser
+  profilePic: string | null
+  niche: string | null
   twitterURL?: string | null
   youtubeURL?: string | null
   instagramURL?: string | null

@@ -29,12 +29,6 @@ const influencerProfileService = InfluencerProfileService.getInstance(
   InfluencerProfileCRUD.getInstance(InfluencerProfile)
 )
 
-const influencerService = InfluencerService.getInstance(
-  MailerService.getInstance(),
-  googleAuthService,
-  InfluencerCRUD.getInstance()
-)
-
 const influencerStatsService = InfluencerStatsService.getInstance(
   InstagramService.getInstance(AxiosService.getInstance()),
   YoutubeService.getInstance(AxiosService.getInstance()),
@@ -48,6 +42,16 @@ const influencerStatsService = InfluencerStatsService.getInstance(
   TwitterProfileStatsService.getInstance(
     TwitterProfileStatsCRUD.getInstance(TwitterProfileStats)
   )
+)
+
+const influencerService = InfluencerService.getInstance(
+  MailerService.getInstance(),
+  googleAuthService,
+  InfluencerCRUD.getInstance(),
+  InfluencerProfileService.getInstance(
+    InfluencerProfileCRUD.getInstance(InfluencerProfile)
+  ),
+  influencerStatsService
 )
 
 export { influencerProfileService, influencerService, influencerStatsService }
