@@ -7,14 +7,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { IUser } from '../../auth/interface'
+import { IUser } from '../../user/interface'
 import {
   IInfluencerProfile,
   IInstagramProfileStats,
   ITwitterProfileStats,
   IYoutubeProfileStats,
 } from '../interface'
-import { User } from '../../auth/models'
+import { User } from '../../user/models'
 import { Enum } from '../../../../constants'
 
 @Entity()

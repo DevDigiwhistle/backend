@@ -1,4 +1,6 @@
+import { FindOptionsWhere, ILike } from 'typeorm'
 import { BaseService, HttpException } from '../../../../utils'
+import { PaginatedResponse } from '../../../../utils/base-service'
 import {
   IAgencyProfile,
   IAgencyProfileCRUD,
@@ -23,6 +25,54 @@ class AgencyProfileService
 
   private constructor(agencyProfileCRUD: IAgencyProfileCRUD) {
     super(agencyProfileCRUD)
+  }
+
+  async getAllAgencies(
+    page: number,
+    limit: number,
+    approved?: string,
+    rejected?: string,
+    name?: string
+  ): Promise<PaginatedResponse<IAgencyProfile>> {
+    try {
+      let query: FindOptionsWhere<IAgencyProfile>[] = []
+      let nameQuery: FindOptionsWhere<IAgencyProfile> = {}
+
+      if (typeof name === 'string') {
+        nameQuery = {
+          name: ILike(`%${name}%`),
+        }
+      }
+
+      if (typeof approved === 'string') {
+        if (approved === 'true') {
+          query.push({
+            ...nameQuery,
+            user: {
+              isApproved: true,
+            },
+          })
+        }
+      }
+
+      if (typeof rejected === 'string') {
+        if (rejected === 'true') {
+          query.push({
+            ...nameQuery,
+            user: {
+              isApproved: false,
+            },
+          })
+        }
+      }
+
+      const data = await this.findAllPaginated(page, limit, query, ['user'], {
+        id: 'ASC',
+      })
+      return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 

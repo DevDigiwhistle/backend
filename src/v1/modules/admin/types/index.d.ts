@@ -28,6 +28,7 @@ export type AddAdmin = {
 }
 
 export type remarksDTO = {
+  id: string
   name: string
   profilePic: string | null
   message: string

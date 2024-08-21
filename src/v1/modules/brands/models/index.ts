@@ -7,8 +7,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { User } from '../../auth/models'
-import { IUser } from '../../auth/interface'
+import { User } from '../../user/models'
+import { IUser } from '../../user/interface'
 import { IBrandProfile } from '../interface'
 
 @Entity()

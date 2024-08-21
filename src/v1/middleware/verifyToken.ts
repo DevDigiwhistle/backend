@@ -1,5 +1,6 @@
 import { HttpException } from '../../utils'
-import { authTokenService, userService } from '../modules/auth'
+import { authTokenService } from '../modules/auth'
+import { userService } from '../modules/user'
 import { NextFunction, Response } from 'express'
 import { IExtendedRequest } from '../interface'
 

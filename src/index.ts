@@ -5,6 +5,8 @@ dotenv.config({ debug: true })
 import express, { type Request, type Response } from 'express'
 import { AppDataSource } from './config'
 import apiRouter from './v1/routes'
+import { InstagramService } from './v1/modules/influencer/services'
+import { AxiosService } from './v1/utils'
 
 const app = express()
 app.use(
@@ -20,8 +22,8 @@ app.use(express.urlencoded({ extended: true }))
 
 const PORT = process.env.PORT || 8000
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello world')
+app.get('/', async (req: Request, res: Response) => {
+  res.send('Hello world!!')
 })
 
 app.use('/v1', apiRouter)

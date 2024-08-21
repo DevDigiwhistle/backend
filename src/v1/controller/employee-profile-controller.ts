@@ -8,7 +8,7 @@ import {
   IEmployeeProfileService,
 } from '../modules/admin/interface'
 import { Request, Response } from 'express'
-import { IUserService } from '../modules/auth/interface'
+import { IUserService } from '../modules/user/interface'
 
 interface IEmployeeProfileController
   extends IBaseController<

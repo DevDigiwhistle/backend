@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { UserController } from '../controller/user-controller'
-import { userService } from '../modules/auth'
+import { userService } from '../modules/user'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
 

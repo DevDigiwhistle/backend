@@ -1,6 +1,6 @@
 import { errorHandler, HttpException } from '../../utils'
 import { IExtendedRequest } from '../interface'
-import { IUserService } from '../modules/auth/interface'
+import { IUserService } from '../modules/user/interface'
 import { Request, Response } from 'express'
 import { userResponseDTO } from '../modules/auth/types'
 import { responseHandler } from '../../utils/response-handler'

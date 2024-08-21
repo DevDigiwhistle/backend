@@ -14,7 +14,8 @@ import {
   EmployeeService,
 } from './services'
 import { MailerService } from '../../utils'
-import { googleAuthService, roleService } from '../auth'
+import { googleAuthService } from '../auth'
+import { roleService } from '../user'
 
 const mailerService = MailerService.getInstance()
 

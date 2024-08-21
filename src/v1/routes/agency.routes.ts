@@ -8,7 +8,7 @@ import {
   addAgencyProfileSchema,
   updateAgencyProfileSchema,
 } from '../modules/brands/validators'
-import { userService } from '../modules/auth'
+import { userService } from '../modules/user'
 
 const agencyRouter = Router()
 

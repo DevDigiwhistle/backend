@@ -1,7 +1,7 @@
 import { IEmployeeCRUD } from '../interface/ICRUD'
 import { AddEmployee } from '../types'
 import { AppDataSource } from '../../../../config'
-import { User } from '../../auth/models'
+import { User } from '../../user/models'
 import { EmployeeProfile } from '../models'
 import { HttpException } from '../../../../utils'
 

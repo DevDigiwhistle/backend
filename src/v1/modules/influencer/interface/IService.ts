@@ -53,7 +53,9 @@ export interface IInfluencerService {
     niche: string | undefined,
     followers: string | undefined,
     name: string | undefined,
-    sortEr: string | undefined
+    sortEr: string | undefined,
+    approved: string | undefined,
+    rejected: string | undefined
   ): Promise<PaginatedResponse<IInfluencerProfile>>
   refreshAllInfluencer(
     page: number,

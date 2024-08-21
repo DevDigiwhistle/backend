@@ -1,7 +1,7 @@
 import { IAdminCRUD } from '../interface/ICRUD'
 import { AddAdmin } from '../types'
 import { AppDataSource } from '../../../../config'
-import { User } from '../../auth/models'
+import { User } from '../../user/models'
 import { AdminProfile } from '../models'
 import { HttpException } from '../../../../utils'
 

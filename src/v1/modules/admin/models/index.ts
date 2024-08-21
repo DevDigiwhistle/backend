@@ -8,9 +8,9 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm'
-import { IUser } from '../../auth/interface'
+import { IUser } from '../../user/interface'
 import { IAdminProfile, IRemarks } from '../interface'
-import { User } from '../../auth/models'
+import { User } from '../../user/models'
 import { IEmployeeProfile } from '../../admin/interface'
 
 @Entity()

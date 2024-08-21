@@ -1,6 +1,7 @@
 import { HttpException } from '../../../../utils'
 import { IMailerService } from '../../../utils'
-import { IGoogleAuthService, IRoleService } from '../../auth/interface'
+import { IGoogleAuthService } from '../../auth/interface'
+import { IRoleService } from '../../user/interface'
 import { IAdminService, IAdminCRUD } from '../interface'
 import { AddAdminOrEmployeeInput } from '../types'
 

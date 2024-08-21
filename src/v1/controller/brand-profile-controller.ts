@@ -3,7 +3,7 @@ import { BaseController, errorHandler, HttpException } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
-import { IUserService } from '../modules/auth/interface'
+import { IUserService } from '../modules/user/interface'
 import {
   IBrandProfile,
   IBrandProfileCRUD,
@@ -80,40 +80,12 @@ export class BrandProfileController
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let query: FindOptionsWhere<IBrandProfile>[] = []
-
-      if (typeof name === 'string') {
-        query.push({
-          name: ILike(`%${name}%`),
-        })
-      }
-
-      if (typeof approved === 'string') {
-        if (approved === 'true') {
-          query.push({
-            user: {
-              isApproved: true,
-            },
-          })
-        }
-      }
-
-      if (typeof rejected === 'string') {
-        if (rejected === 'true') {
-          query.push({
-            user: {
-              isApproved: false,
-            },
-          })
-        }
-      }
-
-      const data = await this.service.findAllPaginated(
+      const data = await this.service.getAllBrands(
         parseInt(page),
         parseInt(limit),
-        query,
-        ['user'],
-        { id: 'ASC' }
+        approved as string,
+        rejected as string,
+        name as string
       )
 
       return responseHandler(200, res, 'Fetched Successfully', data)

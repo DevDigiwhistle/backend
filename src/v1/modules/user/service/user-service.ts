@@ -134,5 +134,16 @@ class UserService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async findUserByMobileNoAndEmail(
+    mobileNo: string,
+    email: string
+  ): Promise<IUser | null> {
+    try {
+      return await this.crudBase.findUserByMobileNoAndEmail(mobileNo, email)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 export { UserService }

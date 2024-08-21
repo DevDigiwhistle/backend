@@ -1,5 +1,5 @@
 import { type ObjectLiteral } from 'typeorm'
-import { IUser } from '../../auth/interface'
+import { IUser } from '../../user/interface'
 
 export interface IBrandProfile extends ObjectLiteral {
   id: string

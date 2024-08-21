@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm'
-import { User, Role, Verification } from '../v1/modules/auth/models'
+import { Verification } from '../v1/modules/auth/models'
 import { ContactUsForm } from '../v1/modules/landing/models'
 import { BrandProfile, AgencyProfile } from '../v1/modules/brands/models'
 import {
@@ -13,6 +13,7 @@ import {
   TwitterProfileStats,
   InstagramProfileStats,
 } from '../v1/modules/influencer/models'
+import { User, Role } from '../v1/modules/user/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

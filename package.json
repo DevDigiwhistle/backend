@@ -45,15 +45,13 @@
     "express": "^4.18.2",
     "firebase-admin": "^12.2.0",
     "gupshup-whatsapp-api": "^1.0.2",
-    "instagram-graph-api": "^6.1.1",
-    "k-convert": "^1.0.6",
+    "log4js": "^6.9.1",
     "millify": "^6.1.0",
     "nodemailer": "^6.9.14",
     "otp-generator": "^4.0.1",
     "pg": "^8.11.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "ts-node": "^10.9.2",
     "typeorm": "^0.3.19"
   }
 }

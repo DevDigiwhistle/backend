@@ -8,7 +8,7 @@ import {
   addEmployeeProfileSchema,
   updateEmployeeProfileSchema,
 } from '../modules/admin/validators'
-import { userService } from '../modules/auth'
+import { userService } from '../modules/user'
 
 const employeeRouter = Router()
 

@@ -8,7 +8,7 @@ import {
   IAdminProfileService,
 } from '../modules/admin/interface'
 import { Request, Response } from 'express'
-import { IUserService } from '../modules/auth/interface'
+import { IUserService } from '../modules/user/interface'
 
 interface IAdminProfileController
   extends IBaseController<

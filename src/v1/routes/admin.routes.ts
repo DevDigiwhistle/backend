@@ -14,7 +14,7 @@ import {
   updateAdminProfileSchema,
 } from '../modules/admin/validators'
 import { verifyToken } from '../middleware'
-import { userService } from '../modules/auth'
+import { userService } from '../modules/user'
 
 const adminRouter = Router()
 

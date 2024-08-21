@@ -92,6 +92,18 @@ paths:
             type: string
             enum: [true]
           description: sort based on Engagement Rate
+        - name: approved
+          in: query
+          schema:
+            type: string
+            enum: [true]
+
+        - name: rejected
+          in: query
+          schema:
+            type: name
+            enum: [true]
+
         - name: page
           in: query
           required: true
@@ -304,6 +316,11 @@ components:
                 type: string
               profileUrl:
                 type: string
+              isApproved:
+                type: boolean
+              requestDate:
+                type: string
+                format: date-time
 
         totalPages:
           type: integer
@@ -354,6 +371,11 @@ components:
                 type: number
               profileUrl:
                 type: string
+              isApproved:
+                type: boolean
+              requestDate:
+                type: string
+                format: date-time
         totalPages:
           type: integer
         totalCount:
@@ -401,6 +423,11 @@ components:
                 type: string
               profileUrl:
                 type: string
+              isApproved:
+                type: boolean
+              requestDate:
+                type: string
+                format: date-time
         totalPages:
           type: integer
         totalCount:

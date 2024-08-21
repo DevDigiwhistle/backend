@@ -32,6 +32,7 @@ class InstagramService implements IInstagramService {
       )
 
       const _data = data.data
+
       const {
         avgLikes,
         avgComments,
@@ -50,7 +51,8 @@ class InstagramService implements IInstagramService {
         views: avgViews,
       }
     } catch (e) {
-      throw new HttpException(e?.errorCode, e?.errorMessage)
+      console.log(e)
+      throw new HttpException(e?.errorCode, e?.response?.statusText)
     }
   }
 
@@ -74,7 +76,7 @@ class InstagramService implements IInstagramService {
         views,
       }
     } catch (e) {
-      throw new HttpException(e?.errorCode, e?.errorMessage)
+      throw new HttpException(e?.errorCode, e?.response?.statusText)
     }
   }
 }

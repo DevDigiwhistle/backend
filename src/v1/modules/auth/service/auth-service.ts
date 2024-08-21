@@ -1,10 +1,7 @@
 import { HttpException } from '../../../../utils'
 import {
   IAuthService,
-  IRoleService,
-  type IUserService,
   IGoogleAuthService,
-  IUser,
   IWhatsappService,
   IVerificationService,
   IAuthTokenService,
@@ -21,6 +18,7 @@ import {
 } from '../types'
 import { IMailerService } from '../../../utils'
 import OTPgenerator from 'otp-generator'
+import { IUserService, IRoleService } from '../../user/interface'
 
 class AuthService implements IAuthService {
   private readonly userService: IUserService

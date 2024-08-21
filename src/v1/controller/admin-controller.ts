@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { errorHandler, HttpException } from '../../utils'
 import { IAdminService, IEmployeeService } from '../modules/admin/interface'
 import { responseHandler } from '../../utils/response-handler'
-import { IUserService } from '../modules/auth/interface'
+import { IUserService } from '../modules/user/interface'
 
 class AdminController {
   private readonly adminService: IAdminService
@@ -25,6 +25,17 @@ class AdminController {
   ): Promise<Response> {
     try {
       const data = req.body
+
+      const { email, mobileNo } = req.body
+
+      const user = await this.userService.findUserByMobileNoAndEmail(
+        mobileNo,
+        email
+      )
+
+      if (user === null)
+        throw new HttpException(409, 'User already exist with same details')
+
       if (data.role === 'admin') await this.adminService.addAdmin(req.body)
 
       if (data.role === 'employee')

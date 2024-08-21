@@ -1,6 +1,6 @@
 import { BaseController } from '../../utils'
 import { IBaseController } from '../../utils/base-controller'
-import { IRole, IRoleCRUD, IRoleService } from '../modules/auth/interface'
+import { IRole, IRoleCRUD, IRoleService } from '../modules/user/interface'
 
 interface IRoleController
   extends IBaseController<IRole, IRoleCRUD, IRoleService> {}

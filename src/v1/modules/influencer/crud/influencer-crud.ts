@@ -1,7 +1,7 @@
 import { IInfluencerCRUD, IInfluencerProfile } from '../interface'
 import { IAddInfluencer } from '../types'
 import { AppDataSource } from '../../../../config'
-import { User } from '../../auth/models'
+import { User } from '../../user/models'
 import { InfluencerProfile } from '../models'
 import { HttpException } from '../../../../utils'
 import { FindOptionsOrder, FindOptionsWhere } from 'typeorm'

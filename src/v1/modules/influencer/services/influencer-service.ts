@@ -11,7 +11,7 @@ import {
 } from 'typeorm'
 import { HttpException } from '../../../../utils'
 import { IMailerService } from '../../../utils'
-import { IGoogleAuthService, IRoleService } from '../../auth/interface'
+import { IGoogleAuthService } from '../../auth/interface'
 import {
   IInfluencerService,
   IInfluencerCRUD,
@@ -159,14 +159,13 @@ class InfluencerService implements IInfluencerService {
     niche: string | undefined,
     followers: string | undefined,
     name: string | undefined,
-    sortEr: string | undefined
+    sortEr: string | undefined,
+    approved: string | undefined,
+    rejected: string | undefined
   ): Promise<PaginatedResponse<IInfluencerProfile>> {
     try {
-      let query: FindOptionsWhere<IInfluencerProfile> = {
-        user: {
-          isApproved: true,
-        },
-      }
+      let orQuery: FindOptionsWhere<IInfluencerProfile>[] = []
+      let query: FindOptionsWhere<IInfluencerProfile> = {}
 
       const relation: string[] = ['user']
       let order: FindOptionsOrder<IInfluencerProfile> = {
@@ -179,6 +178,22 @@ class InfluencerService implements IInfluencerService {
             engagementRate: 'DESC',
           },
         }
+      }
+
+      if (approved === 'true') {
+        orQuery.push({
+          user: {
+            isApproved: true,
+          },
+        })
+      }
+
+      if (rejected === 'true') {
+        orQuery.push({
+          user: {
+            isApproved: false,
+          },
+        })
       }
 
       if (type === 'exclusive') {
@@ -347,10 +362,21 @@ class InfluencerService implements IInfluencerService {
         relation.push('twitterStats')
       }
 
+      let combinedQuery:
+        | FindOptionsWhere<IInfluencerProfile>[]
+        | FindOptionsWhere<IInfluencerProfile> = query
+
+      if (orQuery.length > 0) {
+        orQuery.map((item) => {
+          return { item, ...query }
+        })
+        combinedQuery = orQuery
+      }
+
       const data = await this.influencerProfileService.findAllPaginated(
         page,
         limit,
-        query,
+        combinedQuery,
         relation,
         order
       )

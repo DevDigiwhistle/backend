@@ -8,17 +8,20 @@ import {
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 import millify from 'millify'
+import { IUserService } from '../modules/user/interface'
 
 class InfluencerController {
   private readonly influencerService: IInfluencerService
   private readonly influencerStatsService: IInfluencerStatsService
-
+  private readonly userService: IUserService
   constructor(
     influencerService: IInfluencerService,
-    influencerStatsService: IInfluencerStatsService
+    influencerStatsService: IInfluencerStatsService,
+    userService: IUserService
   ) {
     this.influencerService = influencerService
     this.influencerStatsService = influencerStatsService
+    this.userService = userService
   }
 
   private influencerResponseDTO(
@@ -47,6 +50,8 @@ class InfluencerController {
           subscribers: millify(item?.youtubeStats?.subscribers as number),
           videos: millify(item?.youtubeStats?.videos as number),
           profileUrl: item.youtubeURL,
+          requestDate: item.createdAt,
+          isApproved: item.user.isApproved,
         }
       })
     }
@@ -78,6 +83,8 @@ class InfluencerController {
           percentageFakeFollowers:
             (item?.instagramStats?.percentageFakeFollowers as number) * 100,
           profileUrl: item.instagramURL,
+          requestDate: item.createdAt,
+          isApproved: item.user.isApproved,
         }
       })
     }
@@ -104,6 +111,8 @@ class InfluencerController {
           replyCount: millify(item?.twitterStats?.replyCount as number),
           retweets: millify(item?.twitterStats?.retweets as number),
           profileUrl: item.twitterURL,
+          requestDate: item.createdAt,
+          isApproved: item.user.isApproved,
         }
       })
     }
@@ -207,6 +216,16 @@ class InfluencerController {
     res: Response
   ): Promise<Response> {
     try {
+      const { email, mobileNo } = req.body
+
+      const user = await this.userService.findUserByMobileNoAndEmail(
+        mobileNo,
+        email
+      )
+
+      if (user === null)
+        throw new HttpException(409, 'User already exists with same details')
+
       const data = await this.influencerService.addInfluencer(req.body)
 
       const { instagramURL, youtubeURL, linkedInURL, twitterURL } = data
@@ -252,6 +271,8 @@ class InfluencerController {
         name,
         sortEr,
         refresh,
+        approved,
+        rejected,
       } = req.query
 
       if (typeof page !== 'string' || typeof limit !== 'string')
@@ -276,7 +297,9 @@ class InfluencerController {
         niche as string,
         followers as string,
         name as string,
-        sortEr as string
+        sortEr as string,
+        approved as string,
+        rejected as string
       )
 
       const _data = this.influencerResponseDTO(platform, data)

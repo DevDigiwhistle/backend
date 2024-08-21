@@ -14,7 +14,7 @@ import {
   inviteInfluencerSchema,
   addInfluencerSchema,
 } from '../modules/influencer/validators'
-import { userService } from '../modules/auth'
+import { userService } from '../modules/user'
 import { InfluencerController } from '../controller'
 
 const influencerRouter = Router()
@@ -27,7 +27,8 @@ const influencerProfileController = new InfluencerProfileController(
 
 const influencerController = new InfluencerController(
   influencerService,
-  influencerStatsService
+  influencerStatsService,
+  userService
 )
 
 const addInfluencerProfileValidator = new BaseValidator(
