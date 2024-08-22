@@ -102,7 +102,7 @@ class UserController implements IUserController {
         { isVerified: false, isPaused: false, isApproved: null }
       )
 
-      return responseHandler(200, res, 'Paused User', {})
+      return responseHandler(200, res, 'Reverted Action', {})
     } catch (e) {
       return errorHandler(e, res)
     }
