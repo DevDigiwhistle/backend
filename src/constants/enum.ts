@@ -39,3 +39,13 @@ export enum HideFrom {
   BRAND = 'Brand',
   Influencer = 'Influencer',
 }
+
+export enum CampaignStatus {
+  PENDING = 'Pending',
+  COMPLETED = 'Completed',
+}
+
+export enum CampaignParticipantStatus {
+  LIVE = 'Live',
+  NOT_LIVE = 'Not Live',
+}

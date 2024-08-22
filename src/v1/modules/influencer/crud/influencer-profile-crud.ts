@@ -1,5 +1,5 @@
-import { EntityTarget } from 'typeorm'
-import { CRUDBase } from '../../../../utils'
+import { EntityTarget, ILike } from 'typeorm'
+import { CRUDBase, HttpException } from '../../../../utils'
 import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
 
 class InfluencerProfileCRUD

@@ -59,3 +59,8 @@ export type TwitterPostStats = {
   replyCount: number
   retweets: number
 }
+
+export type InfluencerByEmailDTO = {
+  email: string
+  profile: string
+}

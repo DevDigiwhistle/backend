@@ -4,6 +4,7 @@ import { PaginatedResponse } from '../../../../utils/base-service'
 import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
+  InfluencerByEmailDTO,
   InstagramPostStats,
   InstagramProfileStats,
   TwitterPostStats,
@@ -25,7 +26,9 @@ import {
 } from './IModels'
 
 export interface IInfluencerProfileService
-  extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {}
+  extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {
+  findInfluencerByEmail(email: string): Promise<InfluencerByEmailDTO[]>
+}
 
 export interface IYoutubeProfileStatsService
   extends IBaseService<IYoutubeProfileStats, IYoutubeProfileStatsCRUD> {
