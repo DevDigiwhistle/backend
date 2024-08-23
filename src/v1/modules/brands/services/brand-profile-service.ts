@@ -61,6 +61,10 @@ class BrandProfileService
         }
       }
 
+      if (query.length === 0) {
+        query.push(nameQuery)
+      }
+
       const data = await this.findAllPaginated(page, limit, query, ['user'], {
         id: 'ASC',
       })

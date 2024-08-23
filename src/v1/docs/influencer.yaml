@@ -101,8 +101,13 @@ paths:
         - name: rejected
           in: query
           schema:
-            type: name
+            type: string
             enum: [true]
+
+        - name: name
+          in: query
+          schema:
+            type: string
 
         - name: page
           in: query

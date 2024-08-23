@@ -210,7 +210,7 @@ class InfluencerService implements IInfluencerService {
       if (typeof name === 'string') {
         query = {
           ...query,
-          firstName: ILike(`${name}`),
+          firstName: ILike(`%${name}%`),
         }
       }
 
@@ -367,10 +367,9 @@ class InfluencerService implements IInfluencerService {
         | FindOptionsWhere<IInfluencerProfile> = query
 
       if (orQuery.length > 0) {
-        orQuery.map((item) => {
-          return { item, ...query }
+        combinedQuery = orQuery.map((item) => {
+          return { ...item, ...query }
         })
-        combinedQuery = orQuery
       }
 
       const data = await this.influencerProfileService.findAllPaginated(

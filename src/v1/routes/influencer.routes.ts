@@ -90,6 +90,15 @@ influencerRouter.get(
   )
 )
 
+influencerRouter.get(
+  '/profile/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.INFLUENCER, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
+  influencerProfileController.getByIdController.bind(
+    influencerProfileController
+  )
+)
+
 influencerRouter.patch(
   '/profile/:id',
   verifyToken,
