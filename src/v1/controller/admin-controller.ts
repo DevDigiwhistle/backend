@@ -78,19 +78,19 @@ class AdminController {
 
       const _data = [
         {
-          label: 'Approved',
+          label: 'Accepted Requests',
           value: parseInt(data.approved),
           subValue: '',
           iconName: 'FaceSmileIcon',
         },
         {
-          label: 'Pending',
+          label: 'Pending Requests',
           value: parseInt(data.pending),
           subValue: '',
           iconName: 'ExclamationCircleIcon',
         },
         {
-          label: 'Rejected',
+          label: 'Declined Requests',
           value: parseInt(data.rejected),
           subValue: '',
           iconName: 'FaceFrownIcon',
