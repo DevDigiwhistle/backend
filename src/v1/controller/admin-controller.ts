@@ -81,19 +81,19 @@ class AdminController {
           label: 'Approved',
           value: parseInt(data.approved),
           subValue: '',
-          iconName: '',
-        },
-        {
-          label: 'Rejected',
-          value: parseInt(data.rejected),
-          subValue: '',
-          iconName: '',
+          iconName: 'FaceSmileIcon',
         },
         {
           label: 'Pending',
           value: parseInt(data.pending),
           subValue: '',
-          iconName: '',
+          iconName: 'ExclamationCircleIcon',
+        },
+        {
+          label: 'Rejected',
+          value: parseInt(data.rejected),
+          subValue: '',
+          iconName: 'FaceFrownIcon',
         },
       ]
       return responseHandler(200, res, 'Fetched Successfully', _data)
