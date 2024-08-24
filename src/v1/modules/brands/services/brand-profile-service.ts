@@ -61,7 +61,7 @@ class BrandProfileService
         }
       }
 
-      if (query.length === 0) {
+      if (query.length === 0 && Object.keys(nameQuery).length !== 0) {
         query.push(nameQuery)
       }
 

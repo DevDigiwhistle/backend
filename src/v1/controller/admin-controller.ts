@@ -1,8 +1,15 @@
 import { Request, Response } from 'express'
 import { errorHandler, HttpException } from '../../utils'
-import { IAdminService, IEmployeeService } from '../modules/admin/interface'
+import {
+  IAdminProfile,
+  IAdminService,
+  IEmployeeProfile,
+  IEmployeeService,
+} from '../modules/admin/interface'
 import { responseHandler } from '../../utils/response-handler'
-import { IUserService } from '../modules/user/interface'
+import { IUser, IUserService } from '../modules/user/interface'
+import { PaginatedResponse } from '../../utils/base-service'
+import { IAdminAndEmployeeDTO } from '../modules/user/types'
 
 class AdminController {
   private readonly adminService: IAdminService
@@ -17,6 +24,36 @@ class AdminController {
     this.adminService = adminService
     this.employeeService = employeeService
     this.userService = userService
+  }
+
+  private adminAndEmployeeDTO(
+    data: PaginatedResponse<IUser>
+  ): PaginatedResponse<IAdminAndEmployeeDTO> {
+    const _data = data.data.map((item) => {
+      const profile: IEmployeeProfile | IAdminProfile =
+        item[`${item.role.name}Profile`]
+
+      return {
+        userId: item.id,
+        email: item.email,
+        mobileNo: profile.mobileNo,
+        designation: item.role.name === 'admin' ? 'admin' : profile.designation,
+        isPaused: item.isPaused,
+        isApproved: item.isApproved,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        profilePic: profile.profilePic,
+        profileId: profile.id,
+        role: item.role.name,
+      }
+    })
+
+    return {
+      data: _data,
+      currentPage: data.currentPage,
+      totalPages: data.totalPages,
+      totalCount: data.totalCount,
+    }
   }
 
   async addAdminOrEmployeeController(
@@ -66,7 +103,9 @@ class AdminController {
         name
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      const _data = this.adminAndEmployeeDTO(data)
+
+      return responseHandler(200, res, 'Fetched Successfully', _data)
     } catch (e) {
       return errorHandler(e, res)
     }

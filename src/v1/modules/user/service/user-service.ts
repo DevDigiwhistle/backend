@@ -49,7 +49,7 @@ class UserService
     page: number,
     limit: number,
     name?: string
-  ): Promise<PaginatedResponse<IAdminAndEmployeeDTO>> {
+  ): Promise<PaginatedResponse<IUser>> {
     try {
       let query: FindOptionsWhere<IUser>[] = []
 
@@ -96,32 +96,7 @@ class UserService
         ['adminProfile', 'employeeProfile', 'role']
       )
 
-      const _data = data.data.map((item) => {
-        const profile: IEmployeeProfile | IAdminProfile =
-          item[`${item.role.name}Profile`]
-
-        return {
-          userId: item.id,
-          email: item.email,
-          mobileNo: profile.mobileNo,
-          designation:
-            item.role.name === 'admin' ? 'admin' : profile.designation,
-          isPaused: item.isPaused,
-          isApproved: item.isApproved,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          profilePic: profile.profilePic,
-          profileId: profile.id,
-          role: item.role.name,
-        }
-      })
-
-      return {
-        data: _data,
-        currentPage: page,
-        totalPages: data.totalPages,
-        totalCount: data.totalCount,
-      }
+      return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

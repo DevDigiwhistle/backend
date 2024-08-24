@@ -51,7 +51,7 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     page: number,
     limit: number,
     name?: string
-  ): Promise<PaginatedResponse<IAdminAndEmployeeDTO>>
+  ): Promise<PaginatedResponse<IUser>>
   findOverallUserStats(): Promise<userStatsDTO>
   findUserByMobileNoAndEmail(
     mobileNo: string,
