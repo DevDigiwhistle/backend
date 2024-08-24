@@ -15,7 +15,6 @@ import {
   IYoutubeProfileStats,
 } from '../interface'
 import { User } from '../../user/models'
-import { Enum } from '../../../../constants'
 
 @Entity()
 export class InfluencerProfile implements IInfluencerProfile {
@@ -31,8 +30,8 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'boolean', default: false })
   exclusive: boolean
 
-  @Column({ type: 'enum', enum: Enum.HideFrom, default: null })
-  hideFrom: Enum.HideFrom
+  @Column({ type: 'varchar', default: null })
+  hideFrom: string
 
   @Column({ type: 'int', default: null })
   pay: number

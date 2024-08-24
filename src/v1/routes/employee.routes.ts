@@ -42,7 +42,7 @@ employeeRouter.patch(
   verifyToken,
   authorizeUser([Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
   updateEmployeeProfileValidator.validateInput.bind(
-    updateEmployeeProfileSchema
+    updateEmployeeProfileValidator
   ),
   employeeProfileController.updateController.bind(employeeProfileController)
 )

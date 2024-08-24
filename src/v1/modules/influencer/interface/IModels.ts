@@ -7,7 +7,7 @@ export interface IInfluencerProfile extends ObjectLiteral {
   firstName: string
   lastName: string
   exclusive: boolean
-  hideFrom: Enum.HideFrom
+  hideFrom: string
   pay: number
   user: IUser
   profilePic: string | null

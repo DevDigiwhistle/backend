@@ -30,7 +30,7 @@ const updateInfluencerProfileSchema = {
     hideFrom: {
       type: 'string',
       nullable: true,
-      enum: [Enum.HideFrom.BRAND, Enum.HideFrom.Influencer],
+      enum: [Enum.HideFrom.BRAND, Enum.HideFrom.AGENCY],
     },
     pay: { type: 'number', nullable: true },
   },

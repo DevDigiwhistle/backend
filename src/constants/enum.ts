@@ -36,8 +36,8 @@ export enum PersonType {
 }
 
 export enum HideFrom {
-  BRAND = 'Brand',
-  Influencer = 'Influencer',
+  BRAND = 'brand',
+  AGENCY = 'agency',
 }
 
 export enum CampaignStatus {

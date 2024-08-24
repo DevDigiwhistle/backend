@@ -71,7 +71,7 @@ class AgencyProfileService
       }
 
       const data = await this.findAllPaginated(page, limit, query, ['user'], {
-        id: 'ASC',
+        createdAt: 'DESC',
       })
       return data
     } catch (e) {
