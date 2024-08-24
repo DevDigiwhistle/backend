@@ -223,7 +223,7 @@ class InfluencerController {
         email
       )
 
-      if (user === null)
+      if (user !== null)
         throw new HttpException(409, 'User already exists with same details')
 
       const data = await this.influencerService.addInfluencer(req.body)
