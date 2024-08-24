@@ -58,11 +58,16 @@ class AdminService implements IAdminService {
         email: data.email,
       })
 
-      this.mailerService.sendMail(
-        data.email,
-        'You are invited to Join Digiwhistle',
-        ''
-      )
+      this.mailerService
+        .sendMail(
+          data.email,
+          'You are invited to Join Digiwhistle',
+          `<p>You are invited to Join your team, please login at the following link:</p><p>${process.env.FRONTEND_URL}/login</p><p> Your credentials are:</p><p>email: ${data.email}<br>password: 'digiwhistle@123'</p>`
+        )
+        .then()
+        .catch((e) => {
+          console.log(e)
+        })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }

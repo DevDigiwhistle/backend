@@ -3,8 +3,9 @@ import { UserController } from '../controller/user-controller'
 import { userService } from '../modules/user'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
+import { googleAuthService } from '../modules/auth'
 
-const userController = new UserController(userService)
+const userController = new UserController(userService, googleAuthService)
 const userRouter = Router()
 
 userRouter.get('/', verifyToken, userController.getUser.bind(userController))

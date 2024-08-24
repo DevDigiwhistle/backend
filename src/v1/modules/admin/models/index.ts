@@ -30,7 +30,10 @@ export class AdminProfile implements IAdminProfile {
   @Column({ type: 'varchar', default: null, nullable: true })
   profilePic: string
 
-  @OneToOne(() => User, (user) => user.adminProfile, { eager: true })
+  @OneToOne(() => User, (user) => user.adminProfile, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: IUser
 
@@ -61,7 +64,10 @@ export class EmployeeProfile implements IEmployeeProfile {
   @Column({ type: 'varchar', nullable: false })
   designation: string
 
-  @OneToOne(() => User, (user) => user.employeeProfile, { eager: true })
+  @OneToOne(() => User, (user) => user.employeeProfile, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: IUser
 

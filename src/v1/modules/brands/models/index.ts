@@ -25,7 +25,9 @@ export class BrandProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: true })
   pocLastName: string
 
-  @OneToOne(() => User, (user) => user.brandProfile)
+  @OneToOne(() => User, (user) => user.brandProfile, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: IUser
 
@@ -56,7 +58,9 @@ export class AgencyProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: true })
   pocLastName: string
 
-  @OneToOne(() => User, (user) => user.agencyProfile)
+  @OneToOne(() => User, (user) => user.agencyProfile, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: IUser
 

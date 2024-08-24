@@ -43,7 +43,10 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', default: null })
   profilePic: string
 
-  @OneToOne(() => User, (user) => user.influencerProfile, { eager: true })
+  @OneToOne(() => User, (user) => user.influencerProfile, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: IUser
 

@@ -62,7 +62,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        '200':
           description: User deleted successfully
           content:
             application/json:

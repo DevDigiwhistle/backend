@@ -51,31 +51,22 @@ export class User extends BaseEntity implements IUser {
   @Column({ default: null, type: 'boolean' })
   isApproved: boolean
 
-  @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => BrandProfile, (brandProfile) => brandProfile.user)
   brandProfile: IBrandProfile
 
-  @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => AgencyProfile, (agencyProfile) => agencyProfile.user)
   agencyProfile: IAgencyProfile
 
   @OneToOne(
     () => InfluencerProfile,
-    (influencerProfile) => influencerProfile.user,
-    { onDelete: 'CASCADE' }
+    (influencerProfile) => influencerProfile.user
   )
   influencerProfile: IInfluencerProfile
 
-  @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => EmployeeProfile, (employeeProfile) => employeeProfile.user)
   employeeProfile: IEmployeeProfile
 
-  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
   adminProfile: IAdminProfile
 
   @OneToMany(() => Remarks, (remarks) => remarks.remarker)

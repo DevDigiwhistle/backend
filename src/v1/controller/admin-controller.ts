@@ -33,7 +33,7 @@ class AdminController {
         email
       )
 
-      if (user === null)
+      if (user !== null)
         throw new HttpException(409, 'User already exist with same details')
 
       if (data.role === 'admin') await this.adminService.addAdmin(req.body)

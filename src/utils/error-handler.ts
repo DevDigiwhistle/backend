@@ -4,8 +4,9 @@ import { Enum } from '../constants'
 import AppLogger from './app-logger'
 
 export const errorHandler = (e: any, res: Response): Response => {
-  const appLogger = AppLogger.getInstance()
-  appLogger.error(e)
+  // const appLogger = AppLogger.getInstance()
+  // appLogger.error(e)
+  console.log(e)
 
   if (e instanceof HttpException) {
     return res

@@ -4,6 +4,7 @@ import { IUserService } from '../modules/user/interface'
 import { Request, Response } from 'express'
 import { userResponseDTO } from '../modules/auth/types'
 import { responseHandler } from '../../utils/response-handler'
+import { IGoogleAuthService } from '../modules/auth/interface'
 
 interface IUserController {
   getUser(req: Request, res: Response): Promise<Response>
@@ -16,9 +17,14 @@ interface IUserController {
 
 class UserController implements IUserController {
   private readonly userService: IUserService
+  private readonly googleAuthService: IGoogleAuthService
 
-  constructor(userService: IUserService) {
+  constructor(
+    userService: IUserService,
+    googleAuthService: IGoogleAuthService
+  ) {
     this.userService = userService
+    this.googleAuthService = googleAuthService
   }
 
   async getUser(req: IExtendedRequest, res: Response): Promise<Response> {
@@ -134,11 +140,14 @@ class UserController implements IUserController {
       if (typeof userId !== 'string') {
         throw new HttpException(400, 'Invalid UserId')
       }
+
+      await this.googleAuthService.deleteUser(userId)
+
       await this.userService.delete({
         id: userId,
       })
 
-      return responseHandler(204, res, 'Deleted Successfully', {})
+      return responseHandler(200, res, 'Deleted Successfully', {})
     } catch (e) {
       return errorHandler(e, res)
     }

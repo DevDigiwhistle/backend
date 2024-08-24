@@ -40,7 +40,7 @@ class GoogleAuthService implements IGoogleAuthService {
         uid: user.uid,
       }
     } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
+      throw new HttpException(e?.errorCode, e.message)
     }
   }
 
