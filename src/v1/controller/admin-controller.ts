@@ -89,18 +89,15 @@ class AdminController {
     res: Response
   ): Promise<Response> {
     try {
-      const { page, limit } = req.query
+      const { page, limit, name } = req.query
 
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let name: string | undefined
-      if (typeof req.query?.name === 'string') name = req.query.name
-
       const data = await this.userService.findAllAdminAndEmployees(
         parseInt(page),
         parseInt(limit),
-        name
+        name as string
       )
 
       const _data = this.adminAndEmployeeDTO(data)

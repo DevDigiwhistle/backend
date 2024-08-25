@@ -48,53 +48,47 @@ class UserService
   async findAllAdminAndEmployees(
     page: number,
     limit: number,
-    name?: string
+    name: string
   ): Promise<PaginatedResponse<IUser>> {
     try {
-      let query: FindOptionsWhere<IUser>[] = []
-      query.push(
-        {
-          role: {
-            id: 1,
-          },
-        },
-        {
-          role: {
-            id: 2,
-          },
-        }
-      )
+      let adminQuery: FindOptionsWhere<IUser> = {}
+      let employeeQuery: FindOptionsWhere<IUser> = {}
 
       if (typeof name === 'string') {
-        query.push(
-          {
-            employeeProfile: {
-              firstName: ILike(`%${name}%`),
-            },
+        adminQuery = {
+          adminProfile: {
+            firstName: ILike(`%${name}%`),
+            lastName: ILike(`%${name}%`),
           },
-          {
-            employeeProfile: {
-              lastName: ILike(`%${name}%`),
-            },
+        }
+
+        employeeQuery = {
+          employeeProfile: {
+            firstName: ILike(`%${name}%`),
+            lastName: ILike(`%${name}%`),
           },
-          {
-            adminProfile: {
-              firstName: ILike(`%${name}%`),
-            },
-          },
-          {
-            adminProfile: {
-              lastName: ILike(`%${name}%`),
-            },
-          }
-        )
+        }
       }
 
-      const data = await this.findAllPaginated(page, limit, query, [
-        'adminProfile',
-        'employeeProfile',
-        'role',
-      ])
+      const data = await this.findAllPaginated(
+        page,
+        limit,
+        [
+          {
+            ...adminQuery,
+            role: {
+              id: 1,
+            },
+          },
+          {
+            ...employeeQuery,
+            role: {
+              id: 2,
+            },
+          },
+        ],
+        ['adminProfile', 'employeeProfile', 'role']
+      )
 
       return data
     } catch (e) {
