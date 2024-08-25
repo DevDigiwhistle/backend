@@ -2,7 +2,7 @@ import { ILike } from 'typeorm'
 import { BaseService, HttpException } from '../../../../utils'
 import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
 import { IInfluencerProfileService } from '../interface/IService'
-import { InfluencerByEmailDTO } from '../types'
+import { InfluencerByEmailDTO, InfluencerStatsDTO } from '../types'
 
 class InfluencerProfileService
   extends BaseService<IInfluencerProfile, IInfluencerProfileCRUD>
@@ -43,6 +43,14 @@ class InfluencerProfileService
       })
 
       return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async getInfluencerStats(): Promise<InfluencerStatsDTO> {
+    try {
+      return await this.crudBase.getInfluencerStats()
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

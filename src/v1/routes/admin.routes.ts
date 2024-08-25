@@ -45,14 +45,14 @@ adminRouter.post(
 adminRouter.get(
   '/stats',
   verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN]),
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   adminController.findStatsController.bind(adminController)
 )
 
 adminRouter.get(
   '/all',
   verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN]),
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   adminController.getAllAdminAndEmployees.bind(adminController)
 )
 

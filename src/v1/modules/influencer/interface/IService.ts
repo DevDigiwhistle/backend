@@ -5,6 +5,7 @@ import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
   InfluencerByEmailDTO,
+  InfluencerStatsDTO,
   InstagramPostStats,
   InstagramProfileStats,
   TwitterPostStats,
@@ -28,6 +29,7 @@ import {
 export interface IInfluencerProfileService
   extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {
   findInfluencerByEmail(email: string): Promise<InfluencerByEmailDTO[]>
+  getInfluencerStats(): Promise<InfluencerStatsDTO>
 }
 
 export interface IYoutubeProfileStatsService
@@ -48,6 +50,7 @@ export interface ITwitterProfileStatsService
 export interface IInfluencerService {
   addInfluencer(data: IAddInfluencerInput): Promise<IInfluencerProfile>
   inviteInfluencer(data: IInviteInfluencerInput): Promise<void>
+  getInfluencerStats(): Promise<InfluencerStatsDTO>
   getAllInfluencer(
     page: number,
     limit: number,

@@ -20,7 +20,11 @@ import {
   IInfluencerProfileService,
   IInfluencerStatsService,
 } from '../interface'
-import { IAddInfluencerInput, IInviteInfluencerInput } from '../types'
+import {
+  IAddInfluencerInput,
+  IInviteInfluencerInput,
+  InfluencerStatsDTO,
+} from '../types'
 import { PaginatedResponse } from '../../../../utils/base-service'
 
 class InfluencerService implements IInfluencerService {
@@ -454,6 +458,14 @@ class InfluencerService implements IInfluencerService {
     } catch (e) {
       console.log(e)
       throw new HttpException(e?.errorCode, e?.errorMessage)
+    }
+  }
+
+  async getInfluencerStats(): Promise<InfluencerStatsDTO> {
+    try {
+      return await this.influencerProfileService.getInfluencerStats()
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
     }
   }
 }

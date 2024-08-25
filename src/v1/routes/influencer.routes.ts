@@ -58,6 +58,13 @@ influencerRouter.get(
 )
 
 influencerRouter.get(
+  '/stats',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  influencerController.getInfluencerStatsController.bind(influencerController)
+)
+
+influencerRouter.get(
   '/request',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

@@ -1,6 +1,6 @@
 import { DeepPartial } from 'typeorm'
 import { ICRUDBase } from '../../../../utils'
-import { IAddInfluencer } from '../types'
+import { IAddInfluencer, InfluencerStatsDTO } from '../types'
 import {
   IInfluencerProfile,
   IInstagramProfileStats,
@@ -8,7 +8,9 @@ import {
   IYoutubeProfileStats,
 } from './IModels'
 
-export interface IInfluencerProfileCRUD extends ICRUDBase<IInfluencerProfile> {}
+export interface IInfluencerProfileCRUD extends ICRUDBase<IInfluencerProfile> {
+  getInfluencerStats(): Promise<InfluencerStatsDTO>
+}
 
 export interface IInstagramProfileStatsCRUD
   extends ICRUDBase<IInstagramProfileStats> {

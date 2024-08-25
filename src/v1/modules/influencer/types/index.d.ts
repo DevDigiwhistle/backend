@@ -64,3 +64,8 @@ export type InfluencerByEmailDTO = {
   email: string
   profile: string
 }
+
+export type InfluencerStatsDTO = {
+  nonexclusive: string
+  exclusive: string
+}

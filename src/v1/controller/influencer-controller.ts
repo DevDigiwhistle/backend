@@ -310,6 +310,32 @@ class InfluencerController {
     }
   }
 
+  async getInfluencerStatsController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const data = await this.influencerService.getInfluencerStats()
+      const _data = [
+        {
+          label: 'Total Influencers',
+          value: parseInt(data.exclusive) + parseInt(data.nonexclusive),
+          subValue: '',
+          iconName: 'UsersIcon',
+        },
+        {
+          label: 'Exclusive Influencers',
+          value: parseInt(data.exclusive),
+          subValue: '',
+          iconName: 'StarIcon',
+        },
+      ]
+      return responseHandler(200, res, 'Fetched Successfully', _data)
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
   async getAllInfluencerRequestsController(
     req: Request,
     res: Response
