@@ -327,7 +327,7 @@ class InfluencerController {
           label: 'Exclusive Influencers',
           value: parseInt(data.exclusive),
           subValue: '',
-          iconName: 'Star',
+          iconName: 'StarIcon',
         },
       ]
       return responseHandler(200, res, 'Fetched Successfully', _data)

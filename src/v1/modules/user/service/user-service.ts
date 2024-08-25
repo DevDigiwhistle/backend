@@ -52,6 +52,18 @@ class UserService
   ): Promise<PaginatedResponse<IUser>> {
     try {
       let query: FindOptionsWhere<IUser>[] = []
+      query.push(
+        {
+          role: {
+            id: 1,
+          },
+        },
+        {
+          role: {
+            id: 2,
+          },
+        }
+      )
 
       if (typeof name === 'string') {
         query.push(
@@ -78,23 +90,11 @@ class UserService
         )
       }
 
-      const data = await this.findAllPaginated(
-        page,
-        limit,
-        [
-          {
-            role: {
-              id: 1,
-            },
-          },
-          {
-            role: {
-              id: 2,
-            },
-          },
-        ],
-        ['adminProfile', 'employeeProfile', 'role']
-      )
+      const data = await this.findAllPaginated(page, limit, query, [
+        'adminProfile',
+        'employeeProfile',
+        'role',
+      ])
 
       return data
     } catch (e) {
