@@ -2,6 +2,7 @@ import { EntityTarget, ILike } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
 import { InfluencerStatsDTO } from '../types'
+import { InfluencerProfile } from '../models'
 
 class InfluencerProfileCRUD
   extends CRUDBase<IInfluencerProfile>
@@ -25,11 +26,13 @@ class InfluencerProfileCRUD
   async getInfluencerStats(): Promise<InfluencerStatsDTO> {
     try {
       const result = await this.repository
-        .createQueryBuilder('InfluencerProfile')
+        .createQueryBuilder('influencerProfile')
         .select([
-          'SUM(CASE WHEN InfluencerProfile.exclusive IS TRUE THEN 1 ELSE 0 END) AS exclusive',
-          'SUM(CASE WHEN InfluencerProfile.exclusive IS FALSE THEN 1 ELSE 0 END) AS nonexclusive',
+          'SUM(CASE WHEN influencerProfile.exclusive IS TRUE THEN 1 ELSE 0 END) AS exclusive',
+          'SUM(CASE WHEN influencerProfile.exclusive IS FALSE THEN 1 ELSE 0 END) AS nonexclusive',
         ])
+        .leftJoin('influencerProfile.user', 'user')
+        .where('user.isApproved = true')
         .getRawOne()
 
       return result

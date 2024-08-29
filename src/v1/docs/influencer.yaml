@@ -78,7 +78,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [lessThan250k, moreThan750k, 250kTo500k, 500kTo750k]
+            enum: [lessThan250K, moreThan750K, 250KTo500K, 500KTo750K]
           description: Filter influencer by the number of followers.
         - name: refresh
           in: query
