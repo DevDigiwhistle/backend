@@ -17,3 +17,9 @@ export interface IAdminAndEmployeeDTO {
   profileId: string
   role: string
 }
+
+export type emailSearchDTO = {
+  profileId: string
+  profilePic: string | null
+  email: string
+}

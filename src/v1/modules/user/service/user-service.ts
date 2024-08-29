@@ -4,12 +4,13 @@ import { PaginatedResponse } from '../../../../utils/base-service'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
 import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
-import { IAdminAndEmployeeDTO, userStatsDTO } from '../types'
+import { emailSearchDTO, IAdminAndEmployeeDTO, userStatsDTO } from '../types'
 
 class UserService
   extends BaseService<IUser, IUserCRUD>
   implements IUserService
 {
+  x
   private static instance: IUserService | null = null
 
   static getInstance(UserCRUD: IUserCRUD): IUserService {
@@ -87,7 +88,8 @@ class UserService
             },
           },
         ],
-        ['adminProfile', 'employeeProfile', 'role']
+        ['adminProfile', 'employeeProfile', 'role'],
+        { id: 'ASC' }
       )
 
       return data
@@ -110,6 +112,50 @@ class UserService
   ): Promise<IUser | null> {
     try {
       return await this.crudBase.findUserByMobileNoAndEmail(mobileNo, email)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findInfluencerAndAgencyByEmail(
+    email: string
+  ): Promise<emailSearchDTO[]> {
+    try {
+      const data = await this.crudBase.findAll(
+        [
+          {
+            role: {
+              id: 4,
+            },
+            email: ILike(`%${email}%`),
+          },
+          {
+            role: {
+              id: 5,
+            },
+            email: ILike(`%${email}%`),
+          },
+        ],
+        ['agencyProfile', 'influencerProfile']
+      )
+
+      const _data: any[] = []
+
+      data.forEach((value) => {
+        const profile =
+          value.agencyProfile === null
+            ? value.influencerProfile
+            : value.agencyProfile
+        if (profile !== null && profile !== undefined) {
+          _data.push({
+            profileId: profile.id,
+            email: value.email,
+            profilePic: profile.profilePic,
+          })
+        }
+      })
+
+      return _data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

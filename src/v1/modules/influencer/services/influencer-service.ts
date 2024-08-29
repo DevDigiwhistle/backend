@@ -243,7 +243,7 @@ class InfluencerService implements IInfluencerService {
       }
 
       if (platform === 'instagram') {
-        if (followers === 'lessThan250k') {
+        if (followers === 'lessThan250K') {
           query = {
             ...query,
             instagramStats: {
@@ -251,7 +251,7 @@ class InfluencerService implements IInfluencerService {
               followers: LessThanOrEqual(250000),
             },
           }
-        } else if (followers === '250kTo500k') {
+        } else if (followers === '250KTo500K') {
           query = {
             ...query,
             instagramStats: {
@@ -259,7 +259,7 @@ class InfluencerService implements IInfluencerService {
               followers: Between(250000, 500000),
             },
           }
-        } else if (followers === '500kTo750k') {
+        } else if (followers === '500KTo750K') {
           query = {
             ...query,
             instagramStats: {
@@ -267,7 +267,7 @@ class InfluencerService implements IInfluencerService {
               followers: Between(500000, 750000),
             },
           }
-        } else if (followers === 'moreThan750k') {
+        } else if (followers === 'moreThan750K') {
           query = {
             ...query,
             instagramStats: {
@@ -288,7 +288,7 @@ class InfluencerService implements IInfluencerService {
       }
 
       if (platform === 'youtube') {
-        if (followers === 'lessThan250k') {
+        if (followers === 'lessThan250K') {
           query = {
             ...query,
             youtubeStats: {
@@ -296,7 +296,7 @@ class InfluencerService implements IInfluencerService {
               subscribers: LessThanOrEqual(250000),
             },
           }
-        } else if (followers === '250kTo500k') {
+        } else if (followers === '250KTo500K') {
           query = {
             ...query,
             youtubeStats: {
@@ -304,7 +304,7 @@ class InfluencerService implements IInfluencerService {
               subscribers: Between(250000, 500000),
             },
           }
-        } else if (followers === '500kTo750k') {
+        } else if (followers === '500KTo750K') {
           query = {
             ...query,
             youtubeStats: {
@@ -312,7 +312,7 @@ class InfluencerService implements IInfluencerService {
               subscribers: Between(500000, 750000),
             },
           }
-        } else if (followers === 'moreThan750k') {
+        } else if (followers === 'moreThan750K') {
           query = {
             ...query,
             youtubeStats: {
@@ -333,7 +333,7 @@ class InfluencerService implements IInfluencerService {
       }
 
       if (platform === 'x') {
-        if (followers === 'lessThan250k') {
+        if (followers === 'lessThan250K') {
           query = {
             ...query,
             twitterStats: {
@@ -341,7 +341,7 @@ class InfluencerService implements IInfluencerService {
               followers: LessThanOrEqual(250000),
             },
           }
-        } else if (followers === '250kTo500k') {
+        } else if (followers === '250KTo500K') {
           query = {
             ...query,
             twitterStats: {
@@ -349,7 +349,7 @@ class InfluencerService implements IInfluencerService {
               followers: Between(250000, 500000),
             },
           }
-        } else if (followers === '500kTo750k') {
+        } else if (followers === '500KTo750K') {
           query = {
             ...query,
             twitterStats: {
@@ -357,7 +357,7 @@ class InfluencerService implements IInfluencerService {
               followers: Between(500000, 750000),
             },
           }
-        } else if (followers === 'moreThan750k') {
+        } else if (followers === 'moreThan750K') {
           query = {
             ...query,
             twitterStats: {
