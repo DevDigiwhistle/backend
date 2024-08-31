@@ -1,150 +1,188 @@
-// import {
-//   Entity,
-//   PrimaryGeneratedColumn,
-//   Column,
-//   ManyToOne,
-//   OneToMany,
-//   CreateDateColumn,
-//   UpdateDateColumn,
-// } from 'typeorm'
-// import { Enum } from '../../../../constants'
-// import { EmployeeProfile } from '../../admin/models'
-// import { InfluencerProfile } from '../../influencer/models'
-// import { IEmployeeProfile } from '../../admin/interface'
-// import { ICampaign, ICampaignParticipants } from '../interface'
-// import { IInfluencerProfile } from '../../influencer/interface'
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Enum } from '../../../../constants'
+import { EmployeeProfile } from '../../admin/models'
+import { InfluencerProfile } from '../../influencer/models'
+import { AgencyProfile } from '../../brands/models'
+import {
+  ICampaign,
+  ICampaignDeliverables,
+  ICampaignParticipants,
+} from '../interface'
+import { IAgencyProfile } from '../../brands/interface'
 
-// @Entity()
-// export class Campaign implements ICampaign {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string
+@Entity()
+export class Campaign implements ICampaign {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
-//   @Column()
-//   name: string
+  @Column({ type: 'varchar', nullable: false })
+  name: string
 
-//   @Column()
-//   code: string
+  @Column({ type: 'varchar', nullable: false })
+  code: string
 
-//   @Column()
-//   brandName: string
+  @Column({ type: 'varchar', nullable: false })
+  brandName: string
 
-//   @Column({ type: 'date' })
-//   startDate: Date
+  @Column({ type: 'date', nullable: false })
+  startDate: Date
 
-//   @Column({ type: 'date' })
-//   endDate: Date
+  @Column({ type: 'date', nullable: false })
+  endDate: Date
 
-//   @Column({ type: 'float' })
-//   commercial: number
+  @Column({ type: 'float', nullable: false })
+  commercial: number
 
-//   @Column('simple-array')
-//   platform: string[]
+  @Column('simple-array')
+  platform: string[]
 
-//   @Column({ type: 'text' })
-//   details: string
+  @Column({ type: 'text', nullable: true })
+  details: string | null
 
-//   @Column({ type: 'enum', enum: Enum.CampaignStatus })
-//   status: Enum.CampaignStatus
+  @Column({ type: 'varchar', nullable: true })
+  invoiceNo: string | null
 
-//   @ManyToOne(() => EmployeeProfile)
-//   manager: IEmployeeProfile
+  @Column({
+    type: 'enum',
+    enum: Enum.CampaignStatus,
+    default: Enum.CampaignStatus.PENDING,
+  })
+  status: Enum.CampaignStatus
 
-//   @ManyToOne(() => EmployeeProfile, { nullable: true })
-//   incentiveWinner: IEmployeeProfile | null
+  @ManyToOne(
+    () => EmployeeProfile,
+    (employeeProfile) => employeeProfile.campaignManager
+  )
+  manager: EmployeeProfile
 
-//   @OneToMany(() => CampaignParticipants, (participant) => participant.campaign)
-//   participants: ICampaignParticipants[]
+  @ManyToOne(
+    () => EmployeeProfile,
+    (employeeProfile) => employeeProfile.campaignIncentives,
+    { nullable: true }
+  )
+  incentiveWinner: EmployeeProfile | null
 
-//   @Column({ type: 'float', nullable: true })
-//   cpv: number | null
+  @OneToMany(() => CampaignParticipants, (participant) => participant.campaign)
+  participants: ICampaignParticipants[]
 
-//   @CreateDateColumn()
-//   createdAt: Date
+  @Column({ type: 'float', nullable: true })
+  cpv: number | null
 
-//   @UpdateDateColumn()
-//   updatedAt: Date
-// }
+  @CreateDateColumn()
+  createdAt: Date
 
-// @Entity()
-// export class CampaignParticipants implements ICampaignParticipants {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string
+  @UpdateDateColumn()
+  updatedAt: Date
+}
 
-//   @Column()
-//   email: string
+@Entity()
+export class CampaignParticipants implements ICampaignParticipants {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
-//   @ManyToOne(() => InfluencerProfile)
-//   profile: IInfluencerProfile
+  @Column({ type: 'varchar', nullable: false })
+  email: string
 
-//   @ManyToOne(() => Campaign, (campaign) => campaign.participants)
-//   campaign: Campaign
+  @ManyToOne(
+    () => InfluencerProfile,
+    (influencerProfile) => influencerProfile.campaignParticipant,
+    { nullable: true }
+  )
+  influencerProfile: InfluencerProfile | null
 
-//   @Column()
-//   deliverable: string
+  @ManyToOne(
+    () => AgencyProfile,
+    (agencyProfile) => agencyProfile.campaignParticipant,
+    { nullable: true }
+  )
+  agencyProfile: IAgencyProfile | null
 
-//   @Column()
-//   platform: string
+  @ManyToOne(() => Campaign, (campaign) => campaign.participants)
+  campaign: ICampaign
 
-//   @Column({ type: 'float', nullable: true })
-//   toBePaid: number | null
+  @Column({ type: 'float', nullable: true })
+  toBePaid: number | null
 
-//   @Column()
-//   paymentStatus: string
+  @Column({ type: 'float', nullable: true })
+  margin: number | null
 
-//   @Column({ type: 'varchar', nullable: true })
-//   invoiceStatus: string | null
+  @Column({
+    type: 'enum',
+    enum: Enum.CampaignInvoiceStatus,
+    default: Enum.CampaignInvoiceStatus.NOT_GENERATED,
+  })
+  invoiceStatus: Enum.CampaignInvoiceStatus
 
-//   @Column({ type: 'float', nullable: true })
-//   margin: number | null
+  @Column({
+    type: 'enum',
+    enum: Enum.CampaignPaymentStatus,
+    default: Enum.CampaignPaymentStatus.PENDING,
+  })
+  paymentStatus: Enum.CampaignPaymentStatus
 
-//   @OneToMany(
-//     () => CampaignDeliverables,
-//     (deliverable) => deliverable.campaignParticipant
-//   )
-//   deliverables: CampaignDeliverables[]
+  @OneToMany(
+    () => CampaignDeliverables,
+    (deliverable) => deliverable.campaignParticipant
+  )
+  deliverables: ICampaignDeliverables[]
 
-//   @CreateDateColumn()
-//   createdAt: Date
+  @CreateDateColumn()
+  createdAt: Date
 
-//   @UpdateDateColumn()
-//   updatedAt: Date
-// }
+  @UpdateDateColumn()
+  updatedAt: Date
+}
 
-// @Entity()
-// export class CampaignDeliverables {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string
+@Entity()
+export class CampaignDeliverables implements ICampaignDeliverables {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
-//   @Column({ type: 'text' })
-//   desc: string
+  @Column({ type: 'varchar', nullable: true })
+  name: string
 
-//   @Column()
-//   platform: string
+  @Column({ type: 'text', nullable: true })
+  desc: string
 
-//   @Column()
-//   status: string
+  @Column({ type: 'string', enum: Enum.Platform })
+  platform: Enum.Platform
 
-//   @Column({ type: 'text' })
-//   link: string
+  @Column({
+    type: 'enum',
+    enum: Enum.CampaignDeliverableStatus,
+    default: Enum.CampaignDeliverableStatus.NOT_LIVE,
+  })
+  status: Enum.CampaignDeliverableStatus
 
-//   @Column({ type: 'float', nullable: true })
-//   EngagementRate: number
+  @Column({ type: 'text', nullable: true })
+  link: string | null
 
-//   @Column({ type: 'float', nullable: true })
-//   cpv: number
+  @Column({ type: 'float', nullable: true })
+  EngagementRate: number | null
 
-//   @Column({ type: 'date' })
-//   statsUpdatedAt: Date
+  @Column({ type: 'float', nullable: true })
+  cpv: number | null
 
-//   @ManyToOne(
-//     () => CampaignParticipants,
-//     (participant) => participant.deliverables
-//   )
-//   campaignParticipant: CampaignParticipants
+  @Column({ type: 'date', default: new Date() })
+  statsUpdatedAt: Date
 
-//   @CreateDateColumn()
-//   createdAt: Date
+  @ManyToOne(
+    () => CampaignParticipants,
+    (participant) => participant.deliverables
+  )
+  campaignParticipant: ICampaignParticipants
 
-//   @UpdateDateColumn()
-//   updatedAt: Date
-// }
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+}

@@ -7,11 +7,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm'
 import { IUser } from '../../user/interface'
 import { IAdminProfile, IRemarks } from '../interface'
 import { User } from '../../user/models'
 import { IEmployeeProfile } from '../../admin/interface'
+import { Campaign } from '../../campaign/models'
+import { ICampaign } from '../../campaign/interface'
 
 @Entity()
 export class AdminProfile implements IAdminProfile {
@@ -70,6 +73,12 @@ export class EmployeeProfile implements IEmployeeProfile {
   })
   @JoinColumn({ name: 'userId' })
   user: IUser
+
+  @OneToMany(() => Campaign, (campaign) => campaign.manager)
+  campaignManager: ICampaign[]
+
+  @OneToMany(() => Campaign, (campaign) => campaign.incentiveWinner)
+  campaignIncentives: ICampaign[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

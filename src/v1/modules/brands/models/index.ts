@@ -6,10 +6,13 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm'
 import { User } from '../../user/models'
 import { IUser } from '../../user/interface'
 import { IBrandProfile } from '../interface'
+import { CampaignParticipants } from '../../campaign/models'
+import { ICampaignParticipants } from '../../campaign/interface'
 
 @Entity()
 export class BrandProfile implements IBrandProfile {
@@ -69,6 +72,12 @@ export class AgencyProfile implements IBrandProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @OneToMany(
+    () => CampaignParticipants,
+    (campaignParticipant) => campaignParticipant.influencerProfile
+  )
+  campaignParticipant: ICampaignParticipants
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

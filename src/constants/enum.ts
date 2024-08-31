@@ -45,7 +45,24 @@ export enum CampaignStatus {
   COMPLETED = 'Completed',
 }
 
-export enum CampaignParticipantStatus {
+export enum CampaignDeliverableStatus {
   LIVE = 'Live',
   NOT_LIVE = 'Not Live',
+}
+
+export enum CampaignPaymentStatus {
+  DONE = 'Done',
+  ALL_PAID = 'All Paid',
+  PENDING = 'Pending',
+}
+
+export enum CampaignInvoiceStatus {
+  GENERATED = 'Generated',
+  NOT_GENERATED = 'Not Generated',
+}
+
+export enum Platform {
+  INSTAGRAM = 'Instagram',
+  YOUTUBE = 'Youtube',
+  X = 'X',
 }

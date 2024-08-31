@@ -6,6 +6,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm'
 import { IUser } from '../../user/interface'
 import {
@@ -15,6 +16,8 @@ import {
   IYoutubeProfileStats,
 } from '../interface'
 import { User } from '../../user/models'
+import { Campaign, CampaignParticipants } from '../../campaign/models'
+import { ICampaignParticipants } from '../../campaign/interface'
 
 @Entity()
 export class InfluencerProfile implements IInfluencerProfile {
@@ -83,6 +86,12 @@ export class InfluencerProfile implements IInfluencerProfile {
     (twitterStats) => twitterStats.influencerProfile
   )
   twitterStats: ITwitterProfileStats
+
+  @OneToMany(
+    () => CampaignParticipants,
+    (campaignParticipant) => campaignParticipant.influencerProfile
+  )
+  campaignParticipant: ICampaignParticipants
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
