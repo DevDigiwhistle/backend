@@ -88,7 +88,7 @@ class CampaignController extends BaseController<
     const influencer: Array<{
       id: string
       name: string
-      deliverable: Array<{
+      deliverables: Array<{
         id: string
         title: string
         platform: Enum.Platform
@@ -103,7 +103,7 @@ class CampaignController extends BaseController<
       influencer.push({
         name: key,
         id: uuidv4(),
-        deliverable: value,
+        deliverables: value,
       })
     }
 
@@ -188,7 +188,7 @@ class CampaignController extends BaseController<
     let _data: Array<{
       id: string
       name: string
-      deliverable: Array<{
+      deliverables: Array<{
         id: string
         title: string
         platform: Enum.Platform
