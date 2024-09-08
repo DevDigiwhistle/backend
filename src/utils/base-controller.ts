@@ -3,14 +3,13 @@ import { type IBaseService } from './base-service'
 import {
   type DeepPartial,
   type FindOptionsWhere,
-  type ObjectLiteral
+  type ObjectLiteral,
 } from 'typeorm'
 import { errorHandler } from './error-handler'
 import { Enum } from '../constants'
 import { responseHandler } from './response-handler'
 import { type ICRUDBase } from './base-crud'
 
-// @typescript-eslint/no-unused-vars
 export interface IBaseController<
   T extends ObjectLiteral,
   C extends ICRUDBase<T>,
@@ -27,14 +26,15 @@ export abstract class BaseController<
   T extends ObjectLiteral,
   C extends ICRUDBase<T>,
   S extends IBaseService<T, C>,
-> implements IBaseController<T, C, S> {
+> implements IBaseController<T, C, S>
+{
   protected readonly service: S
 
-  constructor (service: S) {
+  constructor(service: S) {
     this.service = service
   }
 
-  async addController (req: Request, res: Response): Promise<Response> {
+  async addController(req: Request, res: Response): Promise<Response> {
     try {
       const createdDoc = await this.service.add(req.body as DeepPartial<T>)
       return responseHandler(
@@ -48,7 +48,7 @@ export abstract class BaseController<
     }
   }
 
-  async getAllController (req: Request, res: Response): Promise<Response> {
+  async getAllController(req: Request, res: Response): Promise<Response> {
     try {
       const data = await this.service.findAll(req.query as FindOptionsWhere<T>)
       return responseHandler(
@@ -62,7 +62,7 @@ export abstract class BaseController<
     }
   }
 
-  async getByIdController (req: Request, res: Response): Promise<Response> {
+  async getByIdController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
       if (typeof id !== 'string') {
@@ -81,7 +81,7 @@ export abstract class BaseController<
     }
   }
 
-  async updateController (req: Request, res: Response): Promise<Response> {
+  async updateController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
       let data: T
@@ -107,7 +107,7 @@ export abstract class BaseController<
     }
   }
 
-  async deleteController (req: Request, res: Response): Promise<Response> {
+  async deleteController(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params?.id
 

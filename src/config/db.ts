@@ -5,15 +5,20 @@ import { BrandProfile, AgencyProfile } from '../v1/modules/brands/models'
 import {
   AdminProfile,
   EmployeeProfile,
-  Remarks
+  Remarks,
 } from '../v1/modules/admin/models'
 import {
   InfluencerProfile,
   YoutubeProfileStats,
   TwitterProfileStats,
-  InstagramProfileStats
+  InstagramProfileStats,
 } from '../v1/modules/influencer/models'
 import { User, Role } from '../v1/modules/user/models'
+import {
+  CampaignDeliverables,
+  Campaign,
+  CampaignParticipants,
+} from '../v1/modules/campaign/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -36,7 +41,10 @@ export const AppDataSource = new DataSource({
     Remarks,
     YoutubeProfileStats,
     InstagramProfileStats,
-    TwitterProfileStats
+    TwitterProfileStats,
+    Campaign,
+    CampaignParticipants,
+    CampaignDeliverables,
   ],
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
 })

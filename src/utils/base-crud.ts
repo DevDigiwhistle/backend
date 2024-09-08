@@ -7,7 +7,7 @@ import {
   type ObjectLiteral,
   type Repository,
   type FindOptionsWhere,
-  type FindOptionsOrder
+  type FindOptionsOrder,
 } from 'typeorm'
 
 export interface ICRUDBase<T extends ObjectLiteral> {
@@ -33,18 +33,21 @@ export interface ICRUDBase<T extends ObjectLiteral> {
     data: Partial<T>,
     relations?: string[]
   ) => Promise<T>
-  delete: (query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>) => Promise<void>
+  delete: (
+    query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>
+  ) => Promise<void>
 }
 
 export abstract class CRUDBase<T extends ObjectLiteral>
-implements ICRUDBase<T> {
+  implements ICRUDBase<T>
+{
   protected readonly repository: Repository<T>
 
-  constructor (entity: EntityTarget<T>) {
+  constructor(entity: EntityTarget<T>) {
     this.repository = AppDataSource.getRepository(entity)
   }
 
-  async add (data: DeepPartial<T>): Promise<T> {
+  async add(data: DeepPartial<T>): Promise<T> {
     try {
       const entity = this.repository.create(data)
       const resp = await this.repository.save(entity)
@@ -54,7 +57,7 @@ implements ICRUDBase<T> {
     }
   }
 
-  async findAll (
+  async findAll(
     query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
     relations: string[] = [],
     order?: FindOptionsOrder<T>
@@ -71,7 +74,7 @@ implements ICRUDBase<T> {
         const data = await this.repository.find({
           where: query,
           relations,
-          order
+          order,
         })
         return data
       }
@@ -80,7 +83,7 @@ implements ICRUDBase<T> {
     }
   }
 
-  async findOne (
+  async findOne(
     query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>>,
     relations: string[] = []
   ): Promise<T | null> {
@@ -91,7 +94,7 @@ implements ICRUDBase<T> {
 
       const data = await this.repository.findOne({
         where: query,
-        relations
+        relations,
       })
 
       return data
@@ -100,7 +103,7 @@ implements ICRUDBase<T> {
     }
   }
 
-  async update (
+  async update(
     query: FindOptionsWhere<T>,
     data: Partial<T>,
     relations?: string[]
@@ -124,7 +127,7 @@ implements ICRUDBase<T> {
     }
   }
 
-  async delete (query: FindOptionsWhere<T>): Promise<void> {
+  async delete(query: FindOptionsWhere<T>): Promise<void> {
     try {
       if (
         query === undefined ||
@@ -140,7 +143,7 @@ implements ICRUDBase<T> {
     }
   }
 
-  async findAllPaginated (
+  async findAllPaginated(
     page: number = 1,
     limit: number = 10,
     query: FindOptionsWhere<T> | Array<FindOptionsWhere<T>> | undefined,
@@ -157,14 +160,14 @@ implements ICRUDBase<T> {
           skip: (page - 1) * limit,
           take: limit,
           relations,
-          order
+          order,
         })
 
         return {
           data: results,
           totalPages: Math.ceil(total / limit),
           totalCount: total,
-          currentPage: page
+          currentPage: page,
         }
       } else {
         const [results, total] = await this.repository.findAndCount({
@@ -172,13 +175,13 @@ implements ICRUDBase<T> {
           take: limit,
           relations,
           where: query,
-          order
+          order,
         })
         return {
           data: results,
           totalPages: Math.ceil(total / limit),
           totalCount: total,
-          currentPage: page
+          currentPage: page,
         }
       }
     } catch (e) {

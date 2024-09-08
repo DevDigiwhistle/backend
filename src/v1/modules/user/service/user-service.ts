@@ -10,7 +10,6 @@ class UserService
   extends BaseService<IUser, IUserCRUD>
   implements IUserService
 {
-  x
   private static instance: IUserService | null = null
 
   static getInstance(UserCRUD: IUserCRUD): IUserService {
@@ -117,9 +116,7 @@ class UserService
     }
   }
 
-  async findInfluencerAndAgencyByEmail(
-    email: string
-  ): Promise<emailSearchDTO[]> {
+  async findInfluencerAndAgencyByEmail(email: string): Promise<IUser[]> {
     try {
       const data = await this.crudBase.findAll(
         [
@@ -139,23 +136,7 @@ class UserService
         ['agencyProfile', 'influencerProfile']
       )
 
-      const _data: any[] = []
-
-      data.forEach((value) => {
-        const profile =
-          value.agencyProfile === null
-            ? value.influencerProfile
-            : value.agencyProfile
-        if (profile !== null && profile !== undefined) {
-          _data.push({
-            profileId: profile.id,
-            email: value.email,
-            profilePic: profile.profilePic,
-          })
-        }
-      })
-
-      return _data
+      return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

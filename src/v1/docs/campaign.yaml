@@ -1,0 +1,397 @@
+tags:
+  name: Campaign
+  description: Endpoints for campaign
+
+paths:
+  /v1/campaign:
+    post:
+      summary: Add a new campaign
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCampaignSchema'
+      responses:
+        '201':
+          description: Campaign created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    example: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+  /v1/campaign/{id}:
+    patch:
+      summary: Update an existing campaign
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Campaign ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignSchema'
+      responses:
+        '200':
+          description: Campaign updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    example: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+    delete:
+      summary: Delete a campaign
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Campaign ID
+      responses:
+        '200':
+          description: Campaign deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+  /v1/campaign/search-by-email:
+    get:
+      summary: find all influencer and agency by emails
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+          description: The email of the search for
+      responses:
+        '200':
+          description: fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        roleId:
+                          type: number
+                        profileId:
+                          type: string
+                        email:
+                          type: string
+                        profilePic:
+                          type: string
+                        id:
+                          type: string
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+  /v1/campaign/search-employees:
+    get:
+      summary: find all employees
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+
+      responses:
+        '200':
+          description: fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        id:
+                          type: string
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+components:
+  schemas:
+    AddCampaignSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        brandName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        commercial:
+          type: number
+        platform:
+          type: array
+          items:
+            type: string
+            enum:
+              - X
+              - Instagram
+              - Youtube
+        details:
+          type: string
+          nullable: true
+        manager:
+          type: string
+        incentiveWinner:
+          oneOf:
+            - type: string
+            - type: 'null'
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              roleId:
+                type: number
+              profileId:
+                type: string
+              email:
+                type: string
+            required:
+              - id
+              - roleId
+              - profileId
+              - email
+      required:
+        - name
+        - code
+        - brandName
+        - startDate
+        - endDate
+        - commercial
+        - platform
+        - manager
+        - participants
+
+    UpdateCampaignSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        brandName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        commercial:
+          type: number
+        platform:
+          type: array
+          items:
+            type: string
+            enum:
+              - Youtube
+              - X
+              - Instagram
+        details:
+          type: string
+          nullable: true
+        invoiceNo:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - Pending
+            - Completed
+        manager:
+          type: string
+        incentiveWinner:
+          oneOf:
+            - type: string
+            - type: 'null'
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              roleId:
+                type: number
+              profileId:
+                type: string
+              email:
+                type: string
+              id:
+                type: string
+            required:
+              - id
+              - roleId
+              - profileId
+              - email

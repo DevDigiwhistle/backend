@@ -62,7 +62,7 @@ export enum CampaignInvoiceStatus {
 }
 
 export enum Platform {
-  INSTAGRAM = 'Instagram',
-  YOUTUBE = 'Youtube',
-  X = 'X',
+  INSTAGRAM = 'instagram',
+  YOUTUBE = 'youtube',
+  X = 'x',
 }

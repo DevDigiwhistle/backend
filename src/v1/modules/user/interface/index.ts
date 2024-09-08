@@ -57,6 +57,7 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     mobileNo: string,
     email: string
   ): Promise<IUser | null>
+  findInfluencerAndAgencyByEmail(email: string): Promise<IUser[]>
 }
 
 export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}

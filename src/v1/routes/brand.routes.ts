@@ -38,7 +38,7 @@ brandRouter.get(
   brandProfileController.getAllBrandsController.bind(brandProfileController)
 )
 
-brandRouter.put(
+brandRouter.patch(
   '/profile/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.BRAND, Enum.ROLES.EMPLOYEE, Enum.ROLES.ADMIN]),
