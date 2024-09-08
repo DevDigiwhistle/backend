@@ -1,6 +1,6 @@
 import { Enum } from '../../../../constants'
 import { IEmployeeProfile } from '../../admin/interface'
-import { IAgencyProfile } from '../../brands/interface'
+import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 
 export interface ICampaign {
@@ -29,9 +29,12 @@ export interface ICampaignParticipants {
   influencerProfile: IInfluencerProfile | null
   agencyProfile: IAgencyProfile | null
   campaign: ICampaign
-  toBePaid: number | null
+  commercialBrand: number
+  commercialCreator: number | null
+  invoice: string
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
+  toBePaid: number | null
   margin: number | null
   deliverables: ICampaignDeliverables[]
   createdAt: Date
@@ -42,10 +45,11 @@ export interface ICampaignDeliverables {
   id: string
   name: string
   desc: string
+  title: string
   platform: Enum.Platform
   status: Enum.CampaignDeliverableStatus
   link: string | null
-  EngagementRate: number | null
+  engagementRate: number | null
   cpv: number | null
   campaignParticipant: ICampaignParticipants
   statsUpdatedAt: Date

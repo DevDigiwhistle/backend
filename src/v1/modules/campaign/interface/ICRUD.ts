@@ -1,3 +1,4 @@
+import { DeepPartial } from 'typeorm'
 import { ICRUDBase } from '../../../../utils'
 import {
   ICampaign,
@@ -11,4 +12,6 @@ export interface ICampaignDeliverablesCRUD
   extends ICRUDBase<ICampaignDeliverables> {}
 
 export interface ICampaignParticipantsCRUD
-  extends ICRUDBase<ICampaignParticipants> {}
+  extends ICRUDBase<ICampaignParticipants> {
+  insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
+}

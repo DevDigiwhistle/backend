@@ -70,7 +70,11 @@ export class Campaign implements ICampaign {
   )
   incentiveWinner: EmployeeProfile | null
 
-  @OneToMany(() => CampaignParticipants, (participant) => participant.campaign)
+  @OneToMany(
+    () => CampaignParticipants,
+    (participant) => participant.campaign,
+    { cascade: true }
+  )
   participants: ICampaignParticipants[]
 
   @Column({ type: 'float', nullable: true })
@@ -90,6 +94,15 @@ export class CampaignParticipants implements ICampaignParticipants {
 
   @Column({ type: 'varchar', nullable: false })
   email: string
+
+  @Column({ type: 'float', nullable: false, default: 0 })
+  commercialBrand: number
+
+  @Column({ type: 'float', nullable: true, default: null })
+  commercialCreator: number | null
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  invoice: string
 
   @ManyToOne(
     () => InfluencerProfile,
@@ -130,7 +143,8 @@ export class CampaignParticipants implements ICampaignParticipants {
 
   @OneToMany(
     () => CampaignDeliverables,
-    (deliverable) => deliverable.campaignParticipant
+    (deliverable) => deliverable.campaignParticipant,
+    { cascade: true }
   )
   deliverables: ICampaignDeliverables[]
 
@@ -146,13 +160,16 @@ export class CampaignDeliverables implements ICampaignDeliverables {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
+  @Column({ type: 'varchar', nullable: false })
+  title: string
+
   @Column({ type: 'varchar', nullable: true })
   name: string
 
   @Column({ type: 'text', nullable: true })
   desc: string
 
-  @Column({ type: 'string', enum: Enum.Platform })
+  @Column({ type: 'enum', enum: Enum.Platform })
   platform: Enum.Platform
 
   @Column({
@@ -166,7 +183,7 @@ export class CampaignDeliverables implements ICampaignDeliverables {
   link: string | null
 
   @Column({ type: 'float', nullable: true })
-  EngagementRate: number | null
+  engagementRate: number | null
 
   @Column({ type: 'float', nullable: true })
   cpv: number | null

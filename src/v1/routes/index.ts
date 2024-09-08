@@ -11,6 +11,7 @@ import employeeRouter from './employee.routes'
 import agencyRouter from './agency.routes'
 import userRouter from './user.routes'
 import remarksRouter from './remarks.routes'
+import campaignRouter from './camapign.routes'
 
 const apiRouter = Router()
 
@@ -25,5 +26,6 @@ apiRouter.use('/employee', employeeRouter)
 apiRouter.use('/agency', agencyRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/remarks', remarksRouter)
+apiRouter.use('/campaign', campaignRouter)
 
 export default apiRouter

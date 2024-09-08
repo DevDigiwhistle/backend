@@ -92,8 +92,82 @@ paths:
     #           schema:
     #             $ref: '#/components/schemas/messageModel'
 
+  /v1/agency/profile/{id}:
+    patch:
+      summary: update a agency profile
+      tags:
+        - AgencyProfile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the agency profile to update
+      requestBody:
+        description: Agency profile data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgencyProfileUpdate'
+      responses:
+        '200':
+          description: Agency profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AgencyProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
+    AgencyProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        pocFirstName:
+          type: string
+        pocLastName:
+          type: string
+        mobileNo:
+          type: string
+        websiteURL:
+          type: string
+
     AgencyProfileInput:
       type: object
       properties:
@@ -125,5 +199,3 @@ components:
           type: string
         websiteURL:
           type: string
-        user:
-          $ref: '#/components/schemas/User'
