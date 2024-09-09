@@ -3,7 +3,7 @@ name: Deploy to DigitalOcean
 on:
   push:
     branches:
-      - main # Change this to the branch you want to deploy from
+      - main
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Set to the Node.js version you are using
+          node-version: '20'
 
       - name: Install dependencies
         run: yarn install
@@ -29,13 +29,59 @@ jobs:
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          PORT: ${{ secrets.PORT }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          SECRET: ${{ secrets.SECRET }}
+          GUPSHUP_API_KEY: ${{ secrets.GUPSHUP_API_KEY }}
+          GUPSHUP_API: ${{ secrets.GUPSHUP_API }}
+          WHATSAPP_SOURCE_NUMBER: ${{ secrets.WHATSAPP_SOURCE_NUMBER }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          INSTAGRAM_API_KEY: ${{ secrets.INSTAGRAM_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          LINKEDIN_API_KEY: ${{ secrets.LINKEDIN_API_KEY }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
         run: |
           # Install sshpass to handle password authentication
           sudo apt-get update
           sudo apt-get install -y sshpass
 
-          # Connect to the DigitalOcean VM and run deployment commands
-          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
+          # Create or update the .env file on the remote server
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+            echo "DB_HOST=$DB_HOST" > ../home/backend/.env
+            echo "DB_USER=$DB_USER" >> ../home/backend/.env
+            echo "DB_NAME=$DB_NAME" >> ../home/backend/.env
+            echo "DB_PASS=$DB_PASS" >> ../home/backend/.env
+            echo "DB_PORT=$DB_PORT" >> ../home/backend/.env
+            echo "PORT=$PORT" >> ../home/backend/.env
+            echo "FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID" >> ../home/backend/.env
+            echo "FIREBASE_CLIENT_EMAIL=$FIREBASE_CLIENT_EMAIL" >> ../home/backend/.env
+            echo "PRIVATE_KEY='$PRIVATE_KEY'" >> ../home/backend/.env
+            echo "FIREBASE_API_KEY=$FIREBASE_API_KEY" >> ../home/backend/.env
+            echo "MAIL_PORT=$MAIL_PORT" >> ../home/backend/.env
+            echo "MAIL_HOST=$MAIL_HOST" >> ../home/backend/.env
+            echo "MAIL_USER=$MAIL_USER" >> ../home/backend/.env
+            echo "MAIL_PASS=$MAIL_PASS" >> ../home/backend/.env
+            echo "SECRET=$SECRET" >> ../home/backend/.env
+            echo "GUPSHUP_API_KEY=$GUPSHUP_API_KEY" >> ../home/backend/.env
+            echo "GUPSHUP_API=$GUPSHUP_API" >> ../home/backend/.env
+            echo "WHATSAPP_SOURCE_NUMBER=$WHATSAPP_SOURCE_NUMBER" >> ../home/backend/.env
+            echo "FRONTEND_URL=$FRONTEND_URL" >> ../home/backend/.env
+            echo "INSTAGRAM_API_KEY=$INSTAGRAM_API_KEY" >> ../home/backend/.env
+            echo "YOUTUBE_API_KEY=$YOUTUBE_API_KEY" >> ../home/backend/.env
+            echo "LINKEDIN_API_KEY=$LINKEDIN_API_KEY" >> ../home/backend/.env
+            echo "TWITTER_API_KEY=$TWITTER_API_KEY" >> ../home/backend/.env
             cd ../home/backend
             git pull origin main
             yarn install
