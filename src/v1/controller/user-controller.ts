@@ -70,7 +70,7 @@ class UserController implements IUserController {
         { isVerified: true, isPaused: false, isApproved: true }
       )
 
-      return responseHandler(200, res, 'Approved User', {})
+      return responseHandler(200, res, 'User approved', {})
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -89,7 +89,7 @@ class UserController implements IUserController {
         { isPaused: true, isVerified: false }
       )
 
-      return responseHandler(200, res, 'Paused User', {})
+      return responseHandler(200, res, 'User paused', {})
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -127,7 +127,7 @@ class UserController implements IUserController {
         { isVerified: false, isPaused: false, isApproved: false }
       )
 
-      return responseHandler(200, res, 'Reverted Action', {})
+      return responseHandler(200, res, 'User rejected', {})
     } catch (e) {
       return errorHandler(e, res)
     }
