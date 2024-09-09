@@ -36,7 +36,7 @@ jobs:
 
           # Connect to the DigitalOcean VM and run deployment commands
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
-            cd ~/backend
+            cd ../home/backend
             git pull origin main
             yarn install
             yarn tsc
