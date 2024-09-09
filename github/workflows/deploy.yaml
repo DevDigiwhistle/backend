@@ -26,9 +26,9 @@ jobs:
 
       - name: Deploy to DigitalOcean VM
         env:
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }} # Add your SSH password to GitHub secrets
-          SSH_HOST: ${{ secrets.SSH_HOST }} # Add your SSH host to GitHub secrets
-          SSH_USER: ${{ secrets.SSH_USER }} # Add your SSH user to GitHub secrets
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
           # Install sshpass to handle password authentication
           sudo apt-get update
