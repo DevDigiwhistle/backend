@@ -86,5 +86,6 @@ jobs:
             git pull origin main
             yarn install
             yarn tsc
+            pm2 stop digiwhistle-api
             pm2 start dist/index.js --name digiwhistle-api
           EOF
