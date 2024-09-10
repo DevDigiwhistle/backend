@@ -1,7 +1,6 @@
-import { EntityTarget } from 'typeorm'
-import { CRUDBase } from '../../../../utils'
+import { DeepPartial, EntityTarget } from 'typeorm'
+import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaignDeliverables, ICampaignDeliverablesCRUD } from '../interface'
-import { CampaignDeliverables } from '../models'
 
 class CampaignDeliverablesCRUD
   extends CRUDBase<ICampaignDeliverables>
@@ -23,6 +22,21 @@ class CampaignDeliverablesCRUD
         campaignDeliverables
       )
     return CampaignDeliverablesCRUD.instance
+  }
+
+  async insertMany(data: DeepPartial<ICampaignDeliverables>[]): Promise<void> {
+    try {
+      await this.repository
+        .createQueryBuilder()
+        .insert()
+        .into(this.repository.target)
+        .values(data)
+        .orUpdate(['updatedAt'], ['id'])
+        .setParameter('updatedAt', new Date())
+        .execute()
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 
