@@ -58,7 +58,7 @@ jobs:
           sudo apt-get install -y sshpass
 
           # Decode Base64 private key
-          PRIVATE_KEY=$(echo "$BASE64_PRIVATE_KEY" | base64 -d)
+          PRIVATE_KEY=$(echo "$PRIVATE_KEY" | base64 -d)
 
           # Create or update the .env file on the remote server
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
