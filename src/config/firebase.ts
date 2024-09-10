@@ -12,8 +12,6 @@ const firebaseConfig: FirebaseConfig = {
   privateKey: process.env.PRIVATE_KEY ?? '',
 }
 
-console.log(firebaseConfig)
-
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseConfig),
 })

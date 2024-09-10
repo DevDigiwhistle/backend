@@ -70,7 +70,7 @@ jobs:
             echo "PORT=$PORT" >> ../home/backend/.env
             echo "FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID" >> ../home/backend/.env
             echo "FIREBASE_CLIENT_EMAIL=$FIREBASE_CLIENT_EMAIL" >> ../home/backend/.env
-            echo "PRIVATE_KEY='$PRIVATE_KEY'" >> ../home/backend/.env
+            echo "PRIVATE_KEY=\"$PRIVATE_KEY\"" >> ../home/backend/.env
             echo "FIREBASE_API_KEY=$FIREBASE_API_KEY" >> ../home/backend/.env
             echo "MAIL_PORT=$MAIL_PORT" >> ../home/backend/.env
             echo "MAIL_HOST=$MAIL_HOST" >> ../home/backend/.env
