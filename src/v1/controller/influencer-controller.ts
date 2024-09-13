@@ -5,6 +5,9 @@ import {
   IInfluencerProfile,
   IInfluencerService,
   IInfluencerStatsService,
+  IInstagramService,
+  ITwitterService,
+  IYoutubeService,
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 import millify from 'millify'
@@ -14,14 +17,24 @@ class InfluencerController {
   private readonly influencerService: IInfluencerService
   private readonly influencerStatsService: IInfluencerStatsService
   private readonly userService: IUserService
+  private readonly instagramService: IInstagramService
+  private readonly youtubeService: IYoutubeService
+  private readonly twitterService: ITwitterService
+
   constructor(
     influencerService: IInfluencerService,
     influencerStatsService: IInfluencerStatsService,
-    userService: IUserService
+    userService: IUserService,
+    instagramService: IInstagramService,
+    youtubeService: IYoutubeService,
+    twitterService: ITwitterService
   ) {
     this.influencerService = influencerService
     this.influencerStatsService = influencerStatsService
     this.userService = userService
+    this.instagramService = instagramService
+    this.youtubeService = youtubeService
+    this.twitterService = twitterService
   }
 
   private influencerResponseDTO(
@@ -358,6 +371,30 @@ class InfluencerController {
       const _data = this.influencerRequestResponseDTO(platform, data)
 
       return responseHandler(200, res, 'Fetched Successfully', _data)
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async exploreInfluencerController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { url } = req.query
+
+      if (typeof url !== 'string') throw new HttpException(400, 'Invalid URL')
+
+      if (url.includes('instagram')) {
+        const data = await this.instagramService.getInstagramProfileStats(url)
+        return responseHandler(200, res, 'Fetched Successfully', data)
+      } else if (url.includes('x.com')) {
+        const data = await this.twitterService.getTwitterProfileStats(url)
+        return responseHandler(200, res, 'Fetched Successfully', data)
+      } else if (url.includes('youtube')) {
+        const data = await this.youtubeService.getYoutubeProfileStats(url)
+        return responseHandler(200, res, 'Fetched Successfully', data)
+      } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {
       return errorHandler(e, res)
     }

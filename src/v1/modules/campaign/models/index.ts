@@ -10,13 +10,13 @@ import {
 import { Enum } from '../../../../constants'
 import { EmployeeProfile } from '../../admin/models'
 import { InfluencerProfile } from '../../influencer/models'
-import { AgencyProfile } from '../../brands/models'
+import { AgencyProfile, BrandProfile } from '../../brands/models'
 import {
   ICampaign,
   ICampaignDeliverables,
   ICampaignParticipants,
 } from '../interface'
-import { IAgencyProfile } from '../../brands/interface'
+import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 
 @Entity()
 export class Campaign implements ICampaign {
@@ -28,6 +28,11 @@ export class Campaign implements ICampaign {
 
   @Column({ type: 'varchar', nullable: false })
   code: string
+
+  @ManyToOne(() => BrandProfile, (brandProfile) => brandProfile.campaign, {
+    nullable: true,
+  })
+  brand: IBrandProfile | null
 
   @Column({ type: 'varchar', nullable: false })
   brandName: string
@@ -102,7 +107,7 @@ export class CampaignParticipants implements ICampaignParticipants {
   commercialCreator: number | null
 
   @Column({ type: 'varchar', nullable: true, default: null })
-  invoice: string
+  invoice: string | null
 
   @ManyToOne(
     () => InfluencerProfile,

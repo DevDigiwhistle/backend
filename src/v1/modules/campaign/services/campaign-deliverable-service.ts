@@ -1,3 +1,4 @@
+import { DeepPartial } from 'typeorm'
 import { BaseService } from '../../../../utils'
 import {
   ICampaignDeliverables,
@@ -21,6 +22,10 @@ class CampaignDeliverablesService
         campaignDeliverableCRUD
       )
     return CampaignDeliverablesService.instance
+  }
+
+  async insertMany(data: DeepPartial<ICampaignDeliverables>[]): Promise<void> {
+    await this.crudBase.insertMany(data)
   }
 }
 

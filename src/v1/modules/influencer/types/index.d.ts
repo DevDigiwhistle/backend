@@ -26,6 +26,9 @@ export type InstagramProfileStats = {
   engagementRate: number
   percentageFakeFollowers: number
   views: number
+  name: string
+  description: string
+  image: string
 }
 
 export type InstagramPostStats = {
@@ -44,6 +47,9 @@ export type YoutubeProfileStats = {
   views: number
   subscribers: number
   videos: number
+  title: string
+  description: string
+  image: string
 }
 
 export type TwitterProfileStats = {
@@ -52,6 +58,9 @@ export type TwitterProfileStats = {
   views: number
   replyCount: number
   retweets: number
+  name: string
+  image: string
+  description: string
 }
 
 export type TwitterPostStats = {

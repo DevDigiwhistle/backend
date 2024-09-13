@@ -40,6 +40,9 @@ class InstagramService implements IInstagramService {
         pctFakeFollowers,
         usersCount,
         avgViews,
+        name,
+        description,
+        image,
       } = _data
 
       return {
@@ -49,6 +52,9 @@ class InstagramService implements IInstagramService {
         percentageFakeFollowers: pctFakeFollowers,
         followers: usersCount,
         views: avgViews,
+        name: name,
+        description: description,
+        image: image,
       }
     } catch (e) {
       console.log(e)

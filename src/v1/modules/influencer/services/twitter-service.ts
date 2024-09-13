@@ -34,7 +34,14 @@ class TwitterService implements ITwitterService {
         header
       )
 
-      const { follower_count, number_of_tweets, user_id } = data
+      const {
+        follower_count,
+        number_of_tweets,
+        user_id,
+        name,
+        profile_pic_url,
+        description,
+      } = data
 
       const mediaData = await this.axiosService.get(
         'https://twitter154.p.rapidapi.com/user/medias',
@@ -61,6 +68,9 @@ class TwitterService implements ITwitterService {
         retweets: Math.ceil(
           retweetCount / Math.max(1, mediaData.results.length)
         ),
+        name: name,
+        image: profile_pic_url,
+        description: description,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.errorMessage)

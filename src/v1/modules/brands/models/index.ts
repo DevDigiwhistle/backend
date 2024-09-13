@@ -11,8 +11,8 @@ import {
 import { User } from '../../user/models'
 import { IUser } from '../../user/interface'
 import { IBrandProfile } from '../interface'
-import { CampaignParticipants } from '../../campaign/models'
-import { ICampaignParticipants } from '../../campaign/interface'
+import { Campaign, CampaignParticipants } from '../../campaign/models'
+import { ICampaign, ICampaignParticipants } from '../../campaign/interface'
 
 @Entity()
 export class BrandProfile implements IBrandProfile {
@@ -39,6 +39,9 @@ export class BrandProfile implements IBrandProfile {
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
+
+  @OneToMany(() => Campaign, (campaign) => campaign.brand)
+  campaign: ICampaign[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

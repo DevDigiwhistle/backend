@@ -8,6 +8,7 @@ export interface ICampaign {
   name: string
   code: string
   brandName: string
+  brand: IBrandProfile | null
   startDate: Date
   endDate: Date
   commercial: number
@@ -31,7 +32,7 @@ export interface ICampaignParticipants {
   campaign: ICampaign
   commercialBrand: number
   commercialCreator: number | null
-  invoice: string
+  invoice: string | null
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
   toBePaid: number | null

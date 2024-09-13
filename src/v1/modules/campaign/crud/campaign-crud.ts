@@ -1,7 +1,8 @@
 import { EntityTarget } from 'typeorm'
-import { CRUDBase } from '../../../../utils'
+import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaign, ICampaignCRUD } from '../interface'
 import { Campaign } from '../models'
+import { CampaignStats } from '../types'
 
 class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
   private static instance: ICampaignCRUD | null = null
@@ -14,6 +15,40 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
     if (CampaignCRUD.instance === null)
       CampaignCRUD.instance = new CampaignCRUD(campaign)
     return CampaignCRUD.instance
+  }
+
+  async getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    brandProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats> {
+    try {
+      let query = this.repository
+        .createQueryBuilder('campaign')
+        .select('SUM(campaign.commercialBrand)', 'totalRevenue')
+        .addSelect('COUNT(campaign.id)', 'totalCampaign')
+        .where('campaign.startDate>=:lowerBound', { lowerBound: lowerBound })
+        .andWhere('campaign.endDate<=:upperBound', { upperBound: upperBound })
+
+      if (typeof brandProfileId === 'string') {
+        query = query.andWhere('campaign.brandId=:brandId', {
+          brandId: brandProfileId,
+        })
+      }
+
+      if (typeof agencyProfileId === 'string') {
+        query = query.andWhere('campaign.agencyProfileId=:agencyProfileId', {
+          agencyProfileId: agencyProfileId,
+        })
+      }
+
+      const result = await query.getRawOne()
+
+      return result
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 

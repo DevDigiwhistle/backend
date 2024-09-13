@@ -58,6 +58,8 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     email: string
   ): Promise<IUser | null>
   findInfluencerAndAgencyByEmail(email: string): Promise<IUser[]>
+  findBrandsByName(name: string): Promise<IUser[]>
+  findEmployeeByName(name: string): Promise<IUser[]>
 }
 
 export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}

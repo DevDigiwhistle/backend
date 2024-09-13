@@ -14,3 +14,5 @@ campaignParticipantRouter.delete(
     campaignParticipantController
   )
 )
+
+export default campaignParticipantRouter

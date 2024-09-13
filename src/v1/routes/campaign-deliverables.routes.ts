@@ -14,3 +14,5 @@ campaignDeliverableRouter.delete(
     campaignDeliverablesController
   )
 )
+
+export default campaignDeliverableRouter

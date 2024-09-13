@@ -27,7 +27,7 @@ class YoutubeService implements IYoutubeService {
 
       const data = await this.axiosService.get(
         `https://youtube-v31.p.rapidapi.com/channels`,
-        { id: ytChannelId, part: 'statistics' },
+        { id: ytChannelId, part: 'snippet,statistics' },
         {
           'x-rapidapi-host': 'youtube-v31.p.rapidapi.com',
           'x-rapidapi-key': process.env.YOUTUBE_API_KEY,
@@ -38,10 +38,15 @@ class YoutubeService implements IYoutubeService {
 
       if (_data.length > 0) {
         const { viewCount, subscriberCount, videoCount } = _data[0].statistics
+        const { title, description } = _data[0].brandSettings.channel
+        const { bannerExternalUrl } = _data[0].brandSettings.image
         return {
           views: viewCount,
           subscribers: subscriberCount,
           videos: videoCount,
+          title: title,
+          description: description,
+          image: bannerExternalUrl,
         }
       }
 
@@ -49,6 +54,9 @@ class YoutubeService implements IYoutubeService {
         views: 0,
         subscribers: 0,
         videos: 0,
+        title: '',
+        description: '',
+        image: '',
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.errorMessage)

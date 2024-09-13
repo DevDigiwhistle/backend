@@ -1,9 +1,15 @@
 import { BaseService, HttpException } from '../../../../utils'
 import { ICampaign, ICampaignCRUD, ICampaignService } from '../interface'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { FindOptionsWhere, ILike } from 'typeorm'
+import { FindOptionsWhere, ILike, IsNull, Not } from 'typeorm'
 import { Enum } from '../../../../constants'
-import { AgencyFilters } from '../types'
+import {
+  AdminFilters,
+  AgencyFilters,
+  BrandFilters,
+  CampaignStats,
+} from '../types'
+import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 
 class CampaignService
   extends BaseService<ICampaign, ICampaignCRUD>
@@ -25,13 +31,21 @@ class CampaignService
     page: number,
     limit: number,
     roleId: number,
-    agencyFilters?: AgencyFilters
+    lowerBound: Date,
+    upperBound: Date,
+    agencyFilters?: AgencyFilters,
+    adminFilters?: AdminFilters,
+    brandFilters?: BrandFilters
   ): Promise<PaginatedResponse<ICampaign>> {
     try {
-      let query: FindOptionsWhere<ICampaign> = {}
+      let query: FindOptionsWhere<ICampaign>[] = []
 
       if (roleId === Enum.ROLES.AGENCY) {
-        query = {
+        let agencyQuery: FindOptionsWhere<ICampaign> = {}
+
+        agencyQuery = {
+          startDate: MoreThanOrEqual(lowerBound),
+          endDate: LessThanOrEqual(upperBound),
           participants: {
             agencyProfile: {
               id: agencyFilters?.id,
@@ -40,22 +54,168 @@ class CampaignService
         }
 
         if (typeof agencyFilters?.name === 'string')
-          query = { ...query, name: ILike(`${agencyFilters?.name}`) }
+          agencyQuery = {
+            ...agencyQuery,
+            name: ILike(`${agencyFilters?.name}`),
+          }
 
         if (typeof agencyFilters?.paymentStatus === 'string')
-          query = {
-            ...query,
+          agencyQuery = {
+            ...agencyQuery,
             participants: {
               paymentStatus: agencyFilters.paymentStatus,
             },
           }
 
         if (typeof agencyFilters?.platform === 'string') {
-          query = {
-            ...query,
+          agencyQuery = {
+            ...agencyQuery,
             participants: {
               deliverables: {
                 platform: agencyFilters.platform,
+              },
+            },
+          }
+        }
+
+        query.push(agencyQuery)
+      }
+
+      if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
+        let adminQuery: FindOptionsWhere<ICampaign> = {
+          startDate: MoreThanOrEqual(lowerBound),
+          endDate: LessThanOrEqual(upperBound),
+        }
+
+        if (typeof adminFilters?.paymentStatus === 'string') {
+          if (
+            adminFilters?.paymentStatus === Enum.CampaignPaymentStatus.ALL_PAID
+          ) {
+            adminQuery = {
+              ...adminQuery,
+              participants: {
+                paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
+              },
+            }
+          } else if (
+            adminFilters?.paymentStatus === Enum.CampaignPaymentStatus.PENDING
+          ) {
+            adminQuery = {
+              ...adminQuery,
+              participants: {
+                paymentStatus: Enum.CampaignPaymentStatus.PENDING,
+              },
+            }
+          }
+        }
+
+        if (typeof adminFilters?.influencerType === 'string') {
+          if (adminFilters?.influencerType === 'exclusive') {
+            adminQuery = {
+              ...adminQuery,
+              participants: {
+                influencerProfile: {
+                  exclusive: true,
+                },
+              },
+            }
+          } else if (adminFilters?.influencerType === 'non-exclusive') {
+            adminQuery = {
+              ...adminQuery,
+              participants: {
+                influencerProfile: {
+                  exclusive: Not(true),
+                },
+              },
+            }
+          }
+        }
+
+        query.push(adminQuery)
+      }
+
+      if (roleId === Enum.ROLES.BRAND) {
+        let brandQuery: FindOptionsWhere<ICampaign> = {
+          startDate: MoreThanOrEqual(lowerBound),
+          endDate: LessThanOrEqual(upperBound),
+        }
+
+        brandQuery = {
+          ...brandQuery,
+          brand: {
+            id: brandFilters?.brand,
+          },
+        }
+
+        if (
+          brandFilters?.paymentStatus === Enum.CampaignPaymentStatus.ALL_PAID
+        ) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
+            },
+          }
+        } else if (
+          brandFilters?.paymentStatus === Enum.CampaignPaymentStatus.PENDING
+        ) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              paymentStatus: Enum.CampaignPaymentStatus.PENDING,
+            },
+          }
+        }
+
+        if (brandFilters?.platform === Enum.Platform.INSTAGRAM) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.INSTAGRAM,
+              },
+            },
+          }
+        } else if (brandFilters?.platform === Enum.Platform.YOUTUBE) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.YOUTUBE,
+              },
+            },
+          }
+        } else if (brandFilters?.platform === Enum.Platform.X) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.X,
+              },
+            },
+          }
+        }
+
+        if (
+          brandFilters?.campaignStatus === Enum.CampaignDeliverableStatus.LIVE
+        ) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              deliverables: {
+                status: Enum.CampaignDeliverableStatus.LIVE,
+              },
+            },
+          }
+        } else if (
+          brandFilters?.campaignStatus ===
+          Enum.CampaignDeliverableStatus.NOT_LIVE
+        ) {
+          brandQuery = {
+            ...brandQuery,
+            participants: {
+              deliverables: {
+                status: Enum.CampaignDeliverableStatus.NOT_LIVE,
               },
             },
           }
@@ -77,6 +237,24 @@ class CampaignService
         { createdAt: 'DESC' }
       )
       return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    brandProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats> {
+    try {
+      return await this.crudBase.getTotalCampaignsAndRevenue(
+        lowerBound,
+        upperBound,
+        brandProfileId,
+        agencyProfileId
+      )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

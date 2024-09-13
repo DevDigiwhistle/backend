@@ -4,6 +4,7 @@ import {
   ICampaign,
   ICampaignCRUD,
   ICampaignDeliverables,
+  ICampaignDeliverablesService,
   ICampaignParticipants,
   ICampaignParticipantsService,
   ICampaignService,
@@ -13,8 +14,12 @@ import { IUserService } from '../modules/user/interface'
 import { v4 as uuidv4 } from 'uuid'
 import { DeepPartial } from 'typeorm'
 import { IExtendedRequest } from '../interface'
-import { IEmployeeProfileService } from '../modules/admin/interface'
 import { Enum } from '../../constants'
+import {
+  IAgencyDTO,
+  ICampaignDTO,
+  IInfluencerDTO,
+} from '../modules/campaign/types'
 
 class CampaignController extends BaseController<
   ICampaign,
@@ -22,19 +27,19 @@ class CampaignController extends BaseController<
   ICampaignService
 > {
   private readonly campaignParticipantsService: ICampaignParticipantsService
+  private readonly campaignDeliverableService: ICampaignDeliverablesService
   private readonly userService: IUserService
-  private readonly employeeProfileService: IEmployeeProfileService
 
   constructor(
     campaignService: ICampaignService,
     campaignParticipantsService: ICampaignParticipantsService,
-    userService: IUserService,
-    employeeProfileService: IEmployeeProfileService
+    campaignDeliverableService: ICampaignDeliverablesService,
+    userService: IUserService
   ) {
     super(campaignService)
     this.campaignParticipantsService = campaignParticipantsService
+    this.campaignDeliverableService = campaignDeliverableService
     this.userService = userService
-    this.employeeProfileService = employeeProfileService
   }
 
   private groupDeliverableByInfluencerName(
@@ -231,6 +236,101 @@ class CampaignController extends BaseController<
         ),
       }
     })
+
+    return _data
+  }
+
+  private groupDeliverablesByInfluencers(data: ICampaignParticipants[]) {
+    const mp: Map<
+      string,
+      Array<{
+        id: string
+        title: string
+        platform: Enum.Platform
+        status: Enum.CampaignDeliverableStatus
+        deliverableLink: string | null
+        er: number | null
+        cpv: number | null
+      }>
+    > = new Map()
+
+    const influencer: Array<{
+      name: string
+      deliverables: Array<{
+        id: string
+        title: string
+        platform: Enum.Platform
+        status: Enum.CampaignDeliverableStatus
+        deliverableLink: string | null
+        er: number | null
+        cpv: number | null
+      }>
+    }> = []
+
+    data.forEach((value: ICampaignParticipants) => {
+      value.deliverables.forEach((deliverable: ICampaignDeliverables) => {
+        let value = mp.get(deliverable.name)
+
+        if (value === undefined) {
+          mp.set(deliverable.name, [
+            {
+              id: deliverable.id,
+              title: deliverable.title,
+              platform: deliverable.platform,
+              status: deliverable.status,
+              deliverableLink: deliverable.link,
+              er: deliverable.engagementRate,
+              cpv: deliverable.cpv,
+            },
+          ])
+        } else {
+          value = [
+            ...value,
+            {
+              id: deliverable.id,
+              title: deliverable.title,
+              platform: deliverable.platform,
+              status: deliverable.status,
+              deliverableLink: deliverable.link,
+              er: deliverable.engagementRate,
+              cpv: deliverable.cpv,
+            },
+          ]
+          mp.set(deliverable.name, value)
+        }
+      })
+    })
+
+    for (const [key, value] of mp) {
+      influencer.push({
+        name: key,
+        deliverables: value,
+      })
+    }
+
+    return influencer
+  }
+
+  private campaignsBrandDTO(data: ICampaign[]) {
+    const _data = data.map((value) => {
+      return {
+        id: value.id,
+        name: value.name,
+        code: value.code,
+        brandName: value.brandName,
+        startDate: value.startDate,
+        endDate: value.endDate,
+        capital: value.commercial,
+        poc:
+          value.manager.firstName +
+          (value.manager.lastName === null
+            ? ''
+            : ' ' + value.manager.lastName) +
+          ' DW (POC)',
+        status: value.status,
+        participants: this.groupDeliverablesByInfluencers(value.participants),
+      }
+    })
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -334,18 +434,46 @@ class CampaignController extends BaseController<
     }
   }
 
-  async findAllEmployeesController(
+  async findEmployeesController(
     req: Request,
     res: Response
   ): Promise<Response> {
     try {
-      const data = await this.employeeProfileService.findAll({})
+      const { name } = req.query
+
+      if (typeof name !== 'string')
+        throw new HttpException(400, 'Invalid Email')
+
+      const data = await this.userService.findEmployeeByName(name)
+
       const _data = data.map((value) => {
         return {
           name:
             value.firstName +
             (value.lastName === null ? '' : ' ' + value.lastName),
           id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data)
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async findBrandsController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { name } = req.query
+
+      if (typeof name !== 'string')
+        throw new HttpException(400, 'Invalid Email')
+
+      const data = await this.userService.findBrandsByName(name)
+
+      const _data = data.map((value) => {
+        return {
+          id: value?.brandProfile?.id,
+          name: value?.brandProfile?.name,
         }
       })
 
@@ -423,12 +551,38 @@ class CampaignController extends BaseController<
 
       const roleId = req.user.role.id
 
+      const { startTime, endTime } = req.query
+
+      if (typeof startTime !== 'string' || typeof endTime !== 'string') {
+        throw new HttpException(400, 'Invalid Date format')
+      }
+
+      const lowerBound = new Date(startTime)
+      const upperBound = new Date(endTime)
+
+      if (
+        !(
+          lowerBound instanceof Date && lowerBound.toISOString() === startTime
+        ) ||
+        !(upperBound instanceof Date && upperBound.toISOString() === endTime)
+      ) {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
+        const { paymentStatus, influencerType } = req.query
+
         const data = await this.service.getAllCampaigns(
           parseInt(page),
           parseInt(limit),
           roleId,
-          undefined
+          lowerBound,
+          upperBound,
+          undefined,
+          {
+            influencerType: influencerType as string,
+            paymentStatus: paymentStatus as Enum.CampaignPaymentStatus,
+          }
         )
 
         const _data = this.campaignsAdminAndEmployeeDTO(data.data)
@@ -453,6 +607,8 @@ class CampaignController extends BaseController<
           parseInt(page),
           parseInt(limit),
           roleId,
+          lowerBound,
+          upperBound,
           {
             id: agencyProfileId,
             name: name as string,
@@ -468,9 +624,208 @@ class CampaignController extends BaseController<
           totalPages: data.totalPages,
           totalCount: data.totalCount,
         })
+      } else if (roleId === Enum.ROLES.BRAND) {
+        const { paymentStatus, campaignStatus, platform } = req.query
+
+        const user = await this.userService.findOne({ id: req.user.id }, [
+          'brandProfile',
+        ])
+        const brandProfileId = user?.brandProfile?.id
+
+        if (brandProfileId === undefined)
+          throw new HttpException(404, 'Brand Not Found')
+
+        const data = await this.service.getAllCampaigns(
+          parseInt(page),
+          parseInt(limit),
+          roleId,
+          lowerBound,
+          upperBound,
+          undefined,
+          undefined,
+          {
+            paymentStatus: paymentStatus as Enum.CampaignPaymentStatus,
+            campaignStatus: campaignStatus as Enum.CampaignDeliverableStatus,
+            platform: platform as Enum.Platform,
+            brand: brandProfileId,
+          }
+        )
+
+        const _data = this.campaignsBrandDTO(data.data)
+
+        return responseHandler(200, res, 'Fetched Successfully', {
+          data: _data,
+          currentPage: data.currentPage,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+        })
       }
 
       return responseHandler(200, res, 'Fetched Successfully', {})
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async getAllStatsController(
+    req: IExtendedRequest,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const roleId = req.user.role.id
+      const { startTime, endTime } = req.query
+
+      if (typeof startTime !== 'string' || typeof endTime !== 'string') {
+        throw new HttpException(400, 'Invalid Date format')
+      }
+
+      const lowerBound = new Date(startTime)
+      const upperBound = new Date(endTime)
+
+      if (
+        !(
+          lowerBound instanceof Date && lowerBound.toISOString() === startTime
+        ) ||
+        !(upperBound instanceof Date && upperBound.toISOString() === endTime)
+      ) {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
+      if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
+        const data = await this.service.getTotalCampaignsAndRevenue(
+          lowerBound,
+          upperBound
+        )
+        const _data = [
+          {
+            label: 'Total Campaigns',
+            value: parseInt(data.totalCampaign),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+          {
+            label: 'Total Comm.Brand',
+            value: parseInt(data.totalRevenue),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+        ]
+        return responseHandler(200, res, 'Fetched Successfully', _data)
+      } else if (roleId === Enum.ROLES.BRAND) {
+        const user = await this.userService.findOne({ id: req.user.id }, [
+          'brandProfile',
+        ])
+        const brandProfileId = user?.brandProfile?.id
+
+        const data = await this.service.getTotalCampaignsAndRevenue(
+          lowerBound,
+          upperBound,
+          brandProfileId
+        )
+        const _data = [
+          {
+            label: 'Total Campaigns',
+            value: parseInt(data.totalCampaign),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+          {
+            label: 'Total Capital',
+            value: parseInt(data.totalRevenue),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+        ]
+        return responseHandler(200, res, 'Fetched Successfully', _data)
+      } else if (roleId === Enum.ROLES.AGENCY) {
+        const user = await this.userService.findOne({ id: req.user.id }, [
+          'agencyProfile',
+        ])
+        const agencyProfileId = user?.agencyProfile?.id
+
+        const data = await this.service.getTotalCampaignsAndRevenue(
+          lowerBound,
+          upperBound,
+          undefined,
+          agencyProfileId
+        )
+        const _data = [
+          {
+            label: 'Total Campaigns',
+            value: parseInt(data.totalCampaign),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+          {
+            label: 'Total Capital',
+            value: parseInt(data.totalRevenue),
+            subValue: '',
+            iconName: 'FaceFrownIcon',
+          },
+        ]
+        return responseHandler(200, res, 'Fetched Successfully', _data)
+      }
+      return responseHandler(200, res, 'Fetched Successfully', {})
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async updateCardsController(req: Request, res: Response): Promise<Response> {
+    try {
+      const data = req.body as ICampaignDTO
+      const participants = data.participants
+      const participantData: Partial<ICampaignParticipants>[] = []
+      const deliverableData: Partial<ICampaignDeliverables>[] = []
+
+      participants.map((value) => {
+        participantData.push({
+          id: value.id,
+          commercialBrand: value.commercialBrand,
+          commercialCreator: value.commercialCreator,
+          paymentStatus: value.paymentStatus,
+          invoiceStatus: value.invoiceStatus,
+          toBePaid: value.toBeGiven,
+          margin: value.margin,
+        })
+
+        if (value.type === 'influencer') {
+          const participant = value as IInfluencerDTO
+          participant.deliverables.map((deliverable) => {
+            deliverableData.push({
+              id: deliverable.id,
+              cpv: deliverable.cpv,
+              engagementRate: deliverable.er,
+              platform: deliverable.platform,
+              status: deliverable.campaignStatus,
+              link: deliverable.deliverableLink,
+              title: deliverable.title,
+            })
+          })
+        } else if (value.type === 'agency') {
+          const participant = value as IAgencyDTO
+          participant.influencer.map((influencer) => {
+            influencer.deliverables.map((deliverable) => {
+              deliverableData.push({
+                id: deliverable.id,
+                cpv: deliverable.cpv,
+                engagementRate: deliverable.er,
+                platform: deliverable.platform,
+                status: deliverable.campaignStatus,
+                link: deliverable.deliverableLink,
+                title: deliverable.title,
+              })
+            })
+          })
+        }
+      })
+
+      await Promise.all([
+        this.campaignParticipantsService.insertMany(participantData),
+        this.campaignDeliverableService.insertMany(deliverableData),
+      ])
+
+      return responseHandler(200, res, 'Updated Successfully', {})
     } catch (e) {
       return errorHandler(e, res)
     }

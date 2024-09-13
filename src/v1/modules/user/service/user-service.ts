@@ -3,8 +3,8 @@ import { BaseService, HttpException } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
-import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
-import { emailSearchDTO, IAdminAndEmployeeDTO, userStatsDTO } from '../types'
+import { userStatsDTO } from '../types'
+import { Enum } from '../../../../constants'
 
 class UserService
   extends BaseService<IUser, IUserCRUD>
@@ -77,13 +77,13 @@ class UserService
           {
             ...adminQuery,
             role: {
-              id: 1,
+              id: Enum.ROLES.ADMIN,
             },
           },
           {
             ...employeeQuery,
             role: {
-              id: 2,
+              id: Enum.ROLES.EMPLOYEE,
             },
           },
         ],
@@ -122,18 +122,70 @@ class UserService
         [
           {
             role: {
-              id: 4,
+              id: Enum.ROLES.INFLUENCER,
             },
             email: ILike(`%${email}%`),
           },
           {
             role: {
-              id: 5,
+              id: Enum.ROLES.AGENCY,
             },
             email: ILike(`%${email}%`),
           },
         ],
         ['agencyProfile', 'influencerProfile']
+      )
+
+      return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findBrandsByName(name: string): Promise<IUser[]> {
+    try {
+      const data = await this.crudBase.findAll(
+        [
+          {
+            role: {
+              id: Enum.ROLES.BRAND,
+            },
+            brandProfile: {
+              name: ILike(`%${name}%`),
+            },
+          },
+        ],
+        ['brandProfile']
+      )
+
+      return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async findEmployeeByName(name: string): Promise<IUser[]> {
+    try {
+      const data = await this.crudBase.findAll(
+        [
+          {
+            role: {
+              id: Enum.ROLES.EMPLOYEE,
+            },
+            employeeProfile: {
+              firstName: ILike(`%${name}%`),
+            },
+          },
+          {
+            role: {
+              id: Enum.ROLES.EMPLOYEE,
+            },
+            employeeProfile: {
+              lastName: ILike(`%${name}%`),
+            },
+          },
+        ],
+        ['employeeProfile']
       )
 
       return data

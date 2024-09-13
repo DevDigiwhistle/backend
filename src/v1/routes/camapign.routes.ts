@@ -4,26 +4,30 @@ import { userService } from '../modules/user'
 import {
   campaignService,
   campaignParticipantsService,
+  campaignDeliverablesService,
 } from '../modules/campaign'
 import {
   addCampaignSchema,
   updateCampaignSchema,
-} from '../modules/campaign/validators/campaign-validator'
+  updateCampaignCardsSchema,
+} from '../modules/campaign/validators'
 import { BaseValidator } from '../../utils'
 import { Enum } from '../../constants'
 import { authorizeUser, verifyToken } from '../middleware'
-import { employeeProfileService } from '../modules/admin'
 
 const campaignRouter = Router()
 const campaignController = new CampaignController(
   campaignService,
   campaignParticipantsService,
-  userService,
-  employeeProfileService
+  campaignDeliverablesService,
+  userService
 )
 
 const addCampaignValidator = new BaseValidator(addCampaignSchema)
 const updateCampaignValidator = new BaseValidator(updateCampaignSchema)
+const updateCampaignCardsValidator = new BaseValidator(
+  updateCampaignCardsSchema
+)
 
 campaignRouter.post(
   '/',
@@ -58,7 +62,26 @@ campaignRouter.get(
   '/search-employees',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  campaignController.findAllEmployeesController.bind(campaignController)
+  campaignController.findEmployeesController.bind(campaignController)
+)
+
+campaignRouter.get(
+  '/search-brands',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  campaignController.findBrandsController.bind(campaignController)
+)
+
+campaignRouter.get(
+  '/stats',
+  verifyToken,
+  authorizeUser([
+    Enum.ROLES.ADMIN,
+    Enum.ROLES.EMPLOYEE,
+    Enum.ROLES.BRAND,
+    Enum.ROLES.AGENCY,
+  ]),
+  campaignController.getAllStatsController.bind(campaignController)
 )
 
 campaignRouter.delete(
@@ -66,6 +89,14 @@ campaignRouter.delete(
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   campaignController.deleteController.bind(campaignController)
+)
+
+campaignRouter.put(
+  '/',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  updateCampaignCardsValidator.validateInput.bind(updateCampaignCardsValidator),
+  campaignController.updateCardsController.bind(campaignController)
 )
 
 export default campaignRouter

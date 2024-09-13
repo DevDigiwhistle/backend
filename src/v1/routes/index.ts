@@ -12,6 +12,8 @@ import agencyRouter from './agency.routes'
 import userRouter from './user.routes'
 import remarksRouter from './remarks.routes'
 import campaignRouter from './camapign.routes'
+import campaignParticipantRouter from './campaign-participants.routes'
+import campaignDeliverableRouter from './campaign-deliverables.routes'
 
 const apiRouter = Router()
 
@@ -27,5 +29,7 @@ apiRouter.use('/agency', agencyRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/remarks', remarksRouter)
 apiRouter.use('/campaign', campaignRouter)
+apiRouter.use('/campaign-participants', campaignParticipantRouter)
+apiRouter.use('/campaign-deliverables', campaignDeliverableRouter)
 
 export default apiRouter

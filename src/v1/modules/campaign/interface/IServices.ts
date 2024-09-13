@@ -11,7 +11,12 @@ import {
   ICampaignParticipants,
 } from './IModel'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { AgencyFilters } from '../types'
+import {
+  AdminFilters,
+  AgencyFilters,
+  BrandFilters,
+  CampaignStats,
+} from '../types'
 
 export interface ICampaignService
   extends IBaseService<ICampaign, ICampaignCRUD> {
@@ -19,12 +24,24 @@ export interface ICampaignService
     page: number,
     limit: number,
     roleId: number,
-    agencyFilter?: AgencyFilters
+    lowerBound: Date,
+    upperBound: Date,
+    agencyFilters?: AgencyFilters,
+    adminFilters?: AdminFilters,
+    brandFilters?: BrandFilters
   ): Promise<PaginatedResponse<ICampaign>>
+  getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    brandProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats>
 }
 
 export interface ICampaignDeliverablesService
-  extends IBaseService<ICampaignDeliverables, ICampaignDeliverablesCRUD> {}
+  extends IBaseService<ICampaignDeliverables, ICampaignDeliverablesCRUD> {
+  insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
+}
 
 export interface ICampaignParticipantsService
   extends IBaseService<ICampaignParticipants, ICampaignParticipantsCRUD> {

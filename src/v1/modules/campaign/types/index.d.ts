@@ -7,93 +7,85 @@ export type AgencyFilters = {
   platform?: Enum.Platform
 }
 
-// type CampaignDeliverables = {
-//   id: string
-//   title: string
-//   platform: Enum.Platform
-//   status: Enum.CampaignDeliverableStatus
-//   link: string | null
-//   engagementRate: number | null
-//   cpv: number | null
-//   name: string
-// }
+export type AdminFilters = {
+  paymentStatus?: Enum.CampaignPaymentStatus
+  influencerType: string
+}
 
-// interface ICampaign {
-//   id: string
-//   name: string
-//   code: string
-//   brandName: string
-//   startDate: Date
-//   endDate: Date
-//   commercial: number
-//   manager: string
-//   status: Enum.CampaignPaymentStatus
-//   participants: Array<{
-//     id: string
-//     influencerProfile: {
-//       firstName: string
-//       lastName: string | null
-//       exclusive: boolean
-//     } | null
-//     agencyProfile: {
-//       name: string
-//     } | null
-//     invoice: string
-//     commercialBrand: number
-//     commercialCreator: number
-//     toBePaid: number
-//     margin: number
-//     paymentStatus: string
-//     invoiceStatus: string
-//     deliverables: ICampaignDeliverables[]
-//   }>
-// }
+export type BrandFilters = {
+  paymentStatus?: Enum.CampaignPaymentStatus
+  campaignStatus?: Enum.CampaignDeliverableStatus
+  platform?: Enum.Platform
+  brand: string
+}
 
-// interface IGroupedDeliverables {
-//   id: string
-//   title: string
-//   platform: Enum.Platform
-//   status: Enum.CampaignDeliverableStatus
-//   deliverableLink: string | null
-//   er: number | null
-//   cpv: number | null
-// }
+export type CampaignStats = {
+  totalRevenue: string
+  totalCampaign: string
+}
 
-// interface IInfluencerGroup {
-//   id: string
-//   name: string
-//   deliverables: IGroupedDeliverables[]
-// }
+export interface IInfluencerDTO {
+  id: string
+  type: string
+  name: string
+  exclusive: boolean
+  commercialBrand: number
+  commercialCreator: number
+  toBeGiven: number
+  margin: number
+  paymentStatus: Enum.CampaignPaymentStatus
+  invoiceStatus: Enum.CampaignInvoiceStatus
+  deliverables: [
+    {
+      id: string
+      title: string
+      platform: Enum.Platform
+      campaignStatus: Enum.CampaignDeliverableStatus
+      deliverableLink: string
+      er: number | null
+      cpv: number | null
+    },
+  ]
+}
 
-// // Function type declarations
-// declare class CampaignService {
-//   private groupDeliverableByInfluencerName(
-//     deliverables: ICampaignDeliverables[]
-//   ): IInfluencerGroup[]
+export interface IAgencyDTO {
+  id: string
+  type: string
+  name: string
+  commercialBrand: number
+  commercialCreator: number
+  toBeGiven: number
+  margin: number
+  paymentStatus: Enum.CampaignPaymentStatus
+  invoiceStatus: Enum.CampaignInvoiceStatus
+  influencer: [
+    {
+      name: string
+      deliverables: [
+        {
+          id: string
+          title: string
+          platform: Enum.Platform
+          campaignStatus: Enum.CampaignDeliverableStatus
+          deliverableLink: string
+          er: number | null
+          cpv: number | null
+        },
+      ]
+    },
+  ]
+}
 
-//   private campaignsAdminAndEmployeeDTO(data: ICampaign[]): Array<{
-//     id: string
-//     name: string
-//     code: string
-//     brandName: string
-//     startDate: Date
-//     endDate: Date
-//     commercial: number
-//     incentiveWinner: string
-//     status: string
-//     participants: Array<{
-//       type: 'influencer' | 'agency'
-//       id: string
-//       name: string
-//       invoice: string
-//       commercialBrand: number
-//       commercialCreator: number
-//       toBeGiven: number
-//       margin: number
-//       paymentStatus: string
-//       invoiceStatus: string
-//       deliverables?: IGroupedDeliverables[]
-//       influencer?: IInfluencerGroup[]
-//     }>
-//   }>
-// }
+export interface ICampaignDTO {
+  id: string
+  name: string
+  code: string
+  brandName: string
+  brand: string
+  startDate: Date
+  endDate: Date
+  commercial: number
+  incentiveWinner: string
+  status: string
+  participants: Array<IInfluencerDTO | IAgencyDTO>
+}

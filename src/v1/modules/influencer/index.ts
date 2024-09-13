@@ -54,4 +54,19 @@ const influencerService = InfluencerService.getInstance(
   influencerStatsService
 )
 
-export { influencerProfileService, influencerService, influencerStatsService }
+const instagramService = InstagramService.getInstance(
+  AxiosService.getInstance()
+)
+
+const youtubeService = YoutubeService.getInstance(AxiosService.getInstance())
+
+const twitterService = TwitterService.getInstance(AxiosService.getInstance())
+
+export {
+  influencerProfileService,
+  influencerService,
+  influencerStatsService,
+  instagramService,
+  youtubeService,
+  twitterService,
+}
