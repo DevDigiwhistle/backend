@@ -9,6 +9,13 @@ const campaignDeliverablesController = new CampaignDeliverablesController(
 const campaignDeliverableRouter = Router()
 
 campaignDeliverableRouter.delete(
+  '/',
+  campaignDeliverablesController.deleteManyController.bind(
+    campaignDeliverablesController
+  )
+)
+
+campaignDeliverableRouter.delete(
   '/:id',
   campaignDeliverablesController.deleteController.bind(
     campaignDeliverablesController

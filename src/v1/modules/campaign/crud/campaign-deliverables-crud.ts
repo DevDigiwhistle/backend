@@ -1,4 +1,4 @@
-import { DeepPartial, EntityTarget } from 'typeorm'
+import { DeepPartial, EntityTarget, In } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaignDeliverables, ICampaignDeliverablesCRUD } from '../interface'
 
@@ -44,6 +44,16 @@ class CampaignDeliverablesCRUD
           ['id']
         )
         .execute()
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async deleteMany(ids: Array<string>): Promise<void> {
+    try {
+      await this.repository.delete({
+        id: In(ids),
+      })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

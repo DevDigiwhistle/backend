@@ -42,6 +42,7 @@ export interface ICampaignService
 export interface ICampaignDeliverablesService
   extends IBaseService<ICampaignDeliverables, ICampaignDeliverablesCRUD> {
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
+  deleteMany(ids: Array<string>): Promise<void>
 }
 
 export interface ICampaignParticipantsService

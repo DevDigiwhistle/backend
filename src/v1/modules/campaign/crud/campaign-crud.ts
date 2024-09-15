@@ -1,4 +1,4 @@
-import { EntityTarget } from 'typeorm'
+import { EntityTarget, In } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaign, ICampaignCRUD } from '../interface'
 import { Campaign } from '../models'

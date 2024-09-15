@@ -19,6 +19,7 @@ export interface ICampaignCRUD extends ICRUDBase<ICampaign> {
 export interface ICampaignDeliverablesCRUD
   extends ICRUDBase<ICampaignDeliverables> {
   insertMany(data: DeepPartial<ICampaignDeliverables>[]): Promise<void>
+  deleteMany(ids: Array<string>): Promise<void>
 }
 
 export interface ICampaignParticipantsCRUD

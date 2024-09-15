@@ -1,5 +1,5 @@
 import { DeepPartial } from 'typeorm'
-import { BaseService } from '../../../../utils'
+import { BaseService, HttpException } from '../../../../utils'
 import {
   ICampaignDeliverables,
   ICampaignDeliverablesCRUD,
@@ -25,7 +25,19 @@ class CampaignDeliverablesService
   }
 
   async insertMany(data: DeepPartial<ICampaignDeliverables>[]): Promise<void> {
-    await this.crudBase.insertMany(data)
+    try {
+      await this.crudBase.insertMany(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async deleteMany(ids: Array<string>): Promise<void> {
+    try {
+      await this.crudBase.deleteMany(ids)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }
 
