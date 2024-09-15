@@ -73,6 +73,7 @@ class TwitterService implements ITwitterService {
         description: description,
       }
     } catch (e) {
+      console.log(e)
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }

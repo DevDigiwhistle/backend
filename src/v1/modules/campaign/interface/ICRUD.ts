@@ -24,4 +24,5 @@ export interface ICampaignDeliverablesCRUD
 export interface ICampaignParticipantsCRUD
   extends ICRUDBase<ICampaignParticipants> {
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
+  updateMany(data: Partial<ICampaignParticipants>[]): Promise<void>
 }

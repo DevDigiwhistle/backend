@@ -38,8 +38,8 @@ class YoutubeService implements IYoutubeService {
 
       if (_data.length > 0) {
         const { viewCount, subscriberCount, videoCount } = _data[0].statistics
-        const { title, description } = _data[0].brandSettings.channel
-        const { bannerExternalUrl } = _data[0].brandSettings.image
+        const { title, description } = _data[0].brandingSettings.channel
+        const { bannerExternalUrl } = _data[0].brandingSettings.image
         return {
           views: viewCount,
           subscribers: subscriberCount,

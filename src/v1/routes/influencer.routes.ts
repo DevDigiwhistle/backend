@@ -64,6 +64,12 @@ influencerRouter.get(
 )
 
 influencerRouter.get(
+  '/explore-influencer',
+  verifyToken,
+  influencerController.exploreInfluencerController.bind(influencerController)
+)
+
+influencerRouter.get(
   '/stats',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

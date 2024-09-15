@@ -26,19 +26,19 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
     try {
       let query = this.repository
         .createQueryBuilder('campaign')
-        .select('SUM(campaign.commercialBrand)', 'totalRevenue')
+        .select('SUM(campaign.commercial)', 'totalRevenue')
         .addSelect('COUNT(campaign.id)', 'totalCampaign')
-        .where('campaign.startDate>=:lowerBound', { lowerBound: lowerBound })
-        .andWhere('campaign.endDate<=:upperBound', { upperBound: upperBound })
+        .where('campaign."startDate">=:lowerBound', { lowerBound: lowerBound })
+        .andWhere('campaign."endDate"<=:upperBound', { upperBound: upperBound })
 
       if (typeof brandProfileId === 'string') {
-        query = query.andWhere('campaign.brandId=:brandId', {
+        query = query.andWhere('campaign."brandId"=:brandId', {
           brandId: brandProfileId,
         })
       }
 
       if (typeof agencyProfileId === 'string') {
-        query = query.andWhere('campaign.agencyProfileId=:agencyProfileId', {
+        query = query.andWhere('campaign."agencyProfileId"=:agencyProfileId', {
           agencyProfileId: agencyProfileId,
         })
       }

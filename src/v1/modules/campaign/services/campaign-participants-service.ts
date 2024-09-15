@@ -29,6 +29,10 @@ class CampaignParticipantsService
   async insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void> {
     await this.crudBase.insertMany(data)
   }
+
+  async updateMany(data: Partial<ICampaignParticipants>[]): Promise<void> {
+    await this.crudBase.updateMany(data)
+  }
 }
 
 export { CampaignParticipantsService }

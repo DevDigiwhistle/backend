@@ -26,6 +26,7 @@ export interface ICampaignService
     roleId: number,
     lowerBound: Date,
     upperBound: Date,
+    name?: string,
     agencyFilters?: AgencyFilters,
     adminFilters?: AdminFilters,
     brandFilters?: BrandFilters
@@ -46,4 +47,5 @@ export interface ICampaignDeliverablesService
 export interface ICampaignParticipantsService
   extends IBaseService<ICampaignParticipants, ICampaignParticipantsCRUD> {
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
+  updateMany(data: Partial<ICampaignParticipants>[]): Promise<void>
 }

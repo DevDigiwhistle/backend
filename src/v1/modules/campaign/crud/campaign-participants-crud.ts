@@ -32,8 +32,22 @@ class CampaignParticipantsCRUD
         .into(this.repository.target)
         .values(data)
         .orUpdate(['updatedAt'], ['id'])
-        .setParameter('updatedAt', new Date())
+        .setParameters(['updatedAt', new Date()])
         .execute()
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async updateMany(data: Partial<ICampaignParticipants>[]): Promise<void> {
+    try {
+      const promises: Promise<ICampaignParticipants>[] = []
+
+      data.forEach((value) => {
+        promises.push(this.update({ id: value.id }, value))
+      })
+
+      await Promise.all(promises)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

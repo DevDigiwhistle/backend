@@ -55,6 +55,7 @@ class CampaignController extends BaseController<
         deliverableLink: string | null
         er: number | null
         cpv: number | null
+        desc: string | null
       }>
     > = new Map()
 
@@ -71,6 +72,7 @@ class CampaignController extends BaseController<
             deliverableLink: deliverable.link,
             er: deliverable.engagementRate,
             cpv: deliverable.cpv,
+            desc: deliverable.desc,
           },
         ])
       } else {
@@ -84,6 +86,7 @@ class CampaignController extends BaseController<
             deliverableLink: deliverable.link,
             er: deliverable.engagementRate,
             cpv: deliverable.cpv,
+            desc: deliverable.desc,
           },
         ]
         mp.set(deliverable.name, value)
@@ -159,6 +162,7 @@ class CampaignController extends BaseController<
                   deliverableLink: deliverable.link,
                   er: deliverable.engagementRate,
                   cpv: deliverable.cpv,
+                  desc: deliverable.desc,
                 }
               }),
             }
@@ -331,6 +335,8 @@ class CampaignController extends BaseController<
         participants: this.groupDeliverablesByInfluencers(value.participants),
       }
     })
+
+    return _data
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -449,8 +455,10 @@ class CampaignController extends BaseController<
       const _data = data.map((value) => {
         return {
           name:
-            value.firstName +
-            (value.lastName === null ? '' : ' ' + value.lastName),
+            value?.employeeProfile?.firstName +
+            (value?.employeeProfile?.lastName === null
+              ? ''
+              : ' ' + value?.employeeProfile?.lastName),
           id: value.id,
         }
       })
@@ -569,6 +577,8 @@ class CampaignController extends BaseController<
         throw new HttpException(400, 'Invalid Date')
       }
 
+      const { name } = req.query
+
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
         const { paymentStatus, influencerType } = req.query
 
@@ -578,6 +588,7 @@ class CampaignController extends BaseController<
           roleId,
           lowerBound,
           upperBound,
+          name as string,
           undefined,
           {
             influencerType: influencerType as string,
@@ -609,9 +620,10 @@ class CampaignController extends BaseController<
           roleId,
           lowerBound,
           upperBound,
+          name as string,
           {
             id: agencyProfileId,
-            name: name as string,
+
             paymentStatus: paymentStatus as Enum.CampaignPaymentStatus,
             platform: platform as Enum.Platform,
           }
@@ -641,6 +653,7 @@ class CampaignController extends BaseController<
           roleId,
           lowerBound,
           upperBound,
+          name as string,
           undefined,
           undefined,
           {
@@ -776,7 +789,7 @@ class CampaignController extends BaseController<
       const data = req.body as ICampaignDTO
       const participants = data.participants
       const participantData: Partial<ICampaignParticipants>[] = []
-      const deliverableData: Partial<ICampaignDeliverables>[] = []
+      const deliverableData: DeepPartial<ICampaignDeliverables>[] = []
 
       participants.map((value) => {
         participantData.push({
@@ -787,6 +800,7 @@ class CampaignController extends BaseController<
           invoiceStatus: value.invoiceStatus,
           toBePaid: value.toBeGiven,
           margin: value.margin,
+          invoice: value.invoice,
         })
 
         if (value.type === 'influencer') {
@@ -800,6 +814,11 @@ class CampaignController extends BaseController<
               status: deliverable.campaignStatus,
               link: deliverable.deliverableLink,
               title: deliverable.title,
+              name: value.name,
+              desc: deliverable.desc,
+              campaignParticipant: {
+                id: value.id,
+              },
             })
           })
         } else if (value.type === 'agency') {
@@ -814,6 +833,11 @@ class CampaignController extends BaseController<
                 status: deliverable.campaignStatus,
                 link: deliverable.deliverableLink,
                 title: deliverable.title,
+                name: value.name,
+                desc: deliverable.desc,
+                campaignParticipant: {
+                  id: value.id,
+                },
               })
             })
           })
@@ -821,7 +845,7 @@ class CampaignController extends BaseController<
       })
 
       await Promise.all([
-        this.campaignParticipantsService.insertMany(participantData),
+        this.campaignParticipantsService.updateMany(participantData),
         this.campaignDeliverableService.insertMany(deliverableData),
       ])
 

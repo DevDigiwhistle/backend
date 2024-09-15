@@ -387,13 +387,112 @@ class InfluencerController {
 
       if (url.includes('instagram')) {
         const data = await this.instagramService.getInstagramProfileStats(url)
-        return responseHandler(200, res, 'Fetched Successfully', data)
+        const _data = {
+          cards: [
+            {
+              label: 'Followers Count',
+              value: data.followers,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Average ER',
+              value: Math.round(data.engagementRate * 100),
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Average Views',
+              value: data.views,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Average Likes',
+              value: data.likes,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+          ],
+          name: data.name,
+          profilePic: data.image,
+          desc: data.description,
+          metric: {
+            key: 'Fake Followers',
+            value: Math.round(data.percentageFakeFollowers * 100),
+          },
+          profileUrl: url,
+        }
+        return responseHandler(200, res, 'Fetched Successfully', _data)
       } else if (url.includes('x.com')) {
         const data = await this.twitterService.getTwitterProfileStats(url)
-        return responseHandler(200, res, 'Fetched Successfully', data)
+        const _data = {
+          cards: [
+            {
+              label: 'Followers Count',
+              value: data.followers,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Reply Count',
+              value: data.replyCount,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Tweets',
+              value: data.tweets,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Average Views',
+              value: data.views,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+          ],
+          name: data.name,
+          profilePic: data.image,
+          desc: data.description,
+          metric: {
+            key: 'Retweets',
+            value: data.retweets,
+          },
+          profileUrl: url,
+        }
+
+        return responseHandler(200, res, 'Fetched Successfully', _data)
       } else if (url.includes('youtube')) {
         const data = await this.youtubeService.getYoutubeProfileStats(url)
-        return responseHandler(200, res, 'Fetched Successfully', data)
+        const _data = {
+          cards: [
+            {
+              label: 'Subscribers',
+              value: data.subscribers,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Average Views',
+              value: data.views,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+            {
+              label: 'Videos',
+              value: data.videos,
+              subValue: '',
+              iconName: 'FaceFrownIcon',
+            },
+          ],
+          name: data.title,
+          profilePic: data.image,
+          desc: data.description,
+          profileUrl: url,
+        }
+        return responseHandler(200, res, 'Fetched Successfully', _data)
       } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {
       return errorHandler(e, res)

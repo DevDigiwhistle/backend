@@ -2,7 +2,6 @@ import { Enum } from '../../../../constants'
 
 export type AgencyFilters = {
   id: string
-  name?: string
   paymentStatus?: Enum.CampaignPaymentStatus
   platform?: Enum.Platform
 }
@@ -35,6 +34,7 @@ export interface IInfluencerDTO {
   margin: number
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
+  invoice: string | null
   deliverables: [
     {
       id: string
@@ -44,6 +44,7 @@ export interface IInfluencerDTO {
       deliverableLink: string
       er: number | null
       cpv: number | null
+      desc: string | null
     },
   ]
 }
@@ -58,6 +59,7 @@ export interface IAgencyDTO {
   margin: number
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
+  invoice: string | null
   influencer: [
     {
       name: string
@@ -70,6 +72,7 @@ export interface IAgencyDTO {
           deliverableLink: string
           er: number | null
           cpv: number | null
+          desc: string | null
         },
       ]
     },

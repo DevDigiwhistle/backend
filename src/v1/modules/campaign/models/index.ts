@@ -168,11 +168,11 @@ export class CampaignDeliverables implements ICampaignDeliverables {
   @Column({ type: 'varchar', nullable: false })
   title: string
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: false })
   name: string
 
   @Column({ type: 'text', nullable: true })
-  desc: string
+  desc: string | null
 
   @Column({ type: 'enum', enum: Enum.Platform })
   platform: Enum.Platform

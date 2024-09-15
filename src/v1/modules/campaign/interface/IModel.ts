@@ -45,7 +45,7 @@ export interface ICampaignParticipants {
 export interface ICampaignDeliverables {
   id: string
   name: string
-  desc: string
+  desc: string | null
   title: string
   platform: Enum.Platform
   status: Enum.CampaignDeliverableStatus

@@ -31,8 +31,18 @@ class CampaignDeliverablesCRUD
         .insert()
         .into(this.repository.target)
         .values(data)
-        .orUpdate(['updatedAt'], ['id'])
-        .setParameter('updatedAt', new Date())
+        .orUpdate(
+          [
+            'title',
+            'platform',
+            'status',
+            'engagementRate',
+            'cpv',
+            'link',
+            'name',
+          ],
+          ['id']
+        )
         .execute()
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

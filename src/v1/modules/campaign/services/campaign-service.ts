@@ -33,6 +33,7 @@ class CampaignService
     roleId: number,
     lowerBound: Date,
     upperBound: Date,
+    name?: string,
     agencyFilters?: AgencyFilters,
     adminFilters?: AdminFilters,
     brandFilters?: BrandFilters
@@ -53,11 +54,12 @@ class CampaignService
           },
         }
 
-        if (typeof agencyFilters?.name === 'string')
+        if (typeof name === 'string') {
           agencyQuery = {
             ...agencyQuery,
-            name: ILike(`${agencyFilters?.name}`),
+            name: ILike(`%${name}%`),
           }
+        }
 
         if (typeof agencyFilters?.paymentStatus === 'string')
           agencyQuery = {
@@ -85,6 +87,13 @@ class CampaignService
         let adminQuery: FindOptionsWhere<ICampaign> = {
           startDate: MoreThanOrEqual(lowerBound),
           endDate: LessThanOrEqual(upperBound),
+        }
+
+        if (typeof name === 'string') {
+          adminQuery = {
+            ...adminQuery,
+            name: ILike(`%${name}%`),
+          }
         }
 
         if (typeof adminFilters?.paymentStatus === 'string') {
@@ -138,6 +147,13 @@ class CampaignService
         let brandQuery: FindOptionsWhere<ICampaign> = {
           startDate: MoreThanOrEqual(lowerBound),
           endDate: LessThanOrEqual(upperBound),
+        }
+
+        if (typeof name === 'string') {
+          brandQuery = {
+            ...brandQuery,
+            name: ILike(`%${name}%`),
+          }
         }
 
         brandQuery = {
@@ -220,6 +236,8 @@ class CampaignService
             },
           }
         }
+
+        query.push(brandQuery)
       }
 
       const data = await this.findAllPaginated(
@@ -233,6 +251,7 @@ class CampaignService
           'incentiveWinner',
           'participants.influencerProfile',
           'participants.agencyProfile',
+          'brand',
         ],
         { createdAt: 'DESC' }
       )
