@@ -97,6 +97,34 @@ paths:
                 $ref: '#/components/schemas/messageModel'
 
   /v1/campaign/{id}:
+    get:
+      summary: fetch an existing campaign
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Campaign ID
+      responses:
+        '200':
+          description: fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Campaign'
+
     patch:
       summary: Update an existing campaign
       tags:
@@ -471,6 +499,10 @@ components:
           oneOf:
             - type: string
             - type: 'null'
+        invoiceNo:
+          oneOf:
+            - type: string
+            - type: 'null'
         participants:
           type: array
           items:
@@ -759,3 +791,87 @@ components:
         - incentiveWinner
         - status
         - participants
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+        name:
+          type: 'string'
+          example: 'Medical Campaign'
+        code:
+          type: 'string'
+          example: 'XBR2340'
+        brandName:
+          type: 'string'
+          example: 'chirag gupta'
+        startDate:
+          type: 'string'
+          format: 'date'
+          example: '2024-09-07'
+        endDate:
+          type: 'string'
+          format: 'date'
+          example: '2024-09-07'
+        commercial:
+          type: 'integer'
+          format: 'int64'
+          example: 200000
+        platform:
+          type: 'array'
+          items:
+            type: 'string'
+          example: ['X']
+        details:
+          type: 'string'
+          nullable: true
+          example: null
+        invoiceNo:
+          type: 'string'
+          nullable: true
+          example: null
+        status:
+          type: 'string'
+          example: 'Pending'
+        cpv:
+          type: 'integer'
+          nullable: true
+          example: null
+        createdAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-09-07T08:58:33.005Z'
+        updatedAt:
+          type: 'string'
+          format: 'date-time'
+          example: '2024-09-07T08:58:33.005Z'
+        participants:
+          type: 'array'
+          items:
+            $ref: '#/definitions/Participant'
+
+    Participant:
+      type: 'object'
+      properties:
+        profileId:
+          type: 'string'
+          format: 'uuid'
+          example: '1ff5afb3-c414-40fd-98bb-dd592644bbfb'
+        email:
+          type: 'string'
+          example: 'test@ageny.com'
+        id:
+          type: 'string'
+          format: 'uuid'
+          example: '1ff5afb3-c414-40fd-98bb-dd592644bbfb'
+        roleId:
+          type: 'integer'
+          format: 'int32'
+          example: 5
+        profilePic:
+          type: 'string'
+          nullable: true
+          example: null

@@ -19,7 +19,7 @@ export type BrandFilters = {
 }
 
 export type CampaignStats = {
-  totalRevenue: string
+  totalRevenue: number
   totalCampaign: string
 }
 

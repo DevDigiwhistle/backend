@@ -99,4 +99,11 @@ campaignRouter.put(
   campaignController.updateCardsController.bind(campaignController)
 )
 
+campaignRouter.get(
+  '/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  campaignController.getByIdController.bind(campaignController)
+)
+
 export default campaignRouter

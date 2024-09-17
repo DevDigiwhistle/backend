@@ -714,15 +714,16 @@ class CampaignController extends BaseController<
             label: 'Total Campaigns',
             value: parseInt(data.totalCampaign),
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'UsersIcon',
           },
           {
             label: 'Total Comm.Brand',
-            value: parseInt(data.totalRevenue),
+            value: data.totalRevenue === null ? 0 : data.totalRevenue,
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'CurrencyRupeeIcon',
           },
         ]
+
         return responseHandler(200, res, 'Fetched Successfully', _data)
       } else if (roleId === Enum.ROLES.BRAND) {
         const user = await this.userService.findOne({ id: req.user.id }, [
@@ -740,13 +741,13 @@ class CampaignController extends BaseController<
             label: 'Total Campaigns',
             value: parseInt(data.totalCampaign),
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'UsersIcon',
           },
           {
             label: 'Total Capital',
-            value: parseInt(data.totalRevenue),
+            value: data.totalRevenue === null ? 0 : data.totalRevenue,
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'CurrencyRupeeIcon',
           },
         ]
         return responseHandler(200, res, 'Fetched Successfully', _data)
@@ -762,18 +763,19 @@ class CampaignController extends BaseController<
           undefined,
           agencyProfileId
         )
+
         const _data = [
           {
             label: 'Total Campaigns',
             value: parseInt(data.totalCampaign),
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'UsersIcon',
           },
           {
             label: 'Total Capital',
-            value: parseInt(data.totalRevenue),
+            value: data.totalRevenue === null ? 0 : data.totalRevenue,
             subValue: '',
-            iconName: 'FaceFrownIcon',
+            iconName: 'CurrencyRupeeIcon',
           },
         ]
         return responseHandler(200, res, 'Fetched Successfully', _data)
@@ -850,6 +852,48 @@ class CampaignController extends BaseController<
       ])
 
       return responseHandler(200, res, 'Updated Successfully', {})
+    } catch (e) {
+      return errorHandler(e, res)
+    }
+  }
+
+  async getByIdController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params
+
+      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
+
+      const data = await this.service.findOne({ id: id }, [
+        'participants',
+        'participants.influencerProfile',
+        'participants.agencyProfile',
+      ])
+
+      if (data === null) throw new HttpException(404, 'Campaign Not Found')
+
+      const _participants = data.participants.map((value) => {
+        if (value.influencerProfile !== null) {
+          return {
+            profileId: value.influencerProfile?.id,
+            email: value.email,
+            id: value.id,
+            roleId: Enum.ROLES.INFLUENCER,
+            profilePic: value.influencerProfile?.profilePic,
+          }
+        } else {
+          return {
+            profileId: value.agencyProfile?.id,
+            email: value.email,
+            id: value.id,
+            roleId: Enum.ROLES.AGENCY,
+            profilePic: null,
+          }
+        }
+      })
+
+      const _data = { ...data, participants: _participants }
+
+      return responseHandler(200, res, 'Fetched Successfully', _data)
     } catch (e) {
       return errorHandler(e, res)
     }
