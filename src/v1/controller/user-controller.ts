@@ -52,7 +52,22 @@ class UserController implements IUserController {
         role: user.role.name,
       }
 
-      return responseHandler(200, res, 'user fetched successfully', _user)
+      if (_user.role === 'brand' || _user.role === 'agency') {
+        const _response = {
+          ..._user,
+          profile: {
+            id: _user.profile.id,
+            firstName: _user.profile.pocFirstName,
+            lastName: _user.profile.pocLastName,
+            name: _user.profile.name,
+            websiteURL: _user.profile.websiteURL,
+            mobileNo: _user.profile.mobileNo,
+          },
+        }
+        return responseHandler(200, res, 'user fetched successfully', _response)
+      } else {
+        return responseHandler(200, res, 'user fetched successfully', _user)
+      }
     } catch (e) {
       return errorHandler(e, res)
     }
