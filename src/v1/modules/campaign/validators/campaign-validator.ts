@@ -38,7 +38,6 @@ const addCampaignSchema = {
     'startDate',
     'endDate',
     'commercial',
-    'platform',
     'manager',
     'participants',
   ],
