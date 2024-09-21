@@ -10,6 +10,7 @@ const addCampaignSchema = {
     invoiceNo: { type: ['string', 'null'] },
     startDate: { type: 'string', format: 'date-time' },
     endDate: { type: 'string', format: 'date-time' },
+    status: { type: 'string' },
     commercial: { type: 'number' },
     details: { type: ['string', 'null'] },
     manager: { type: 'string' },
