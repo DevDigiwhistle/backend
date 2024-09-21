@@ -50,3 +50,5 @@ export interface ICampaignParticipantsService
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
   updateMany(data: Partial<ICampaignParticipants>[]): Promise<void>
 }
+
+export interface ICampaignInsightsService {}

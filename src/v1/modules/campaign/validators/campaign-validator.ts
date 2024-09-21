@@ -11,10 +11,6 @@ const addCampaignSchema = {
     startDate: { type: 'string', format: 'date-time' },
     endDate: { type: 'string', format: 'date-time' },
     commercial: { type: 'number' },
-    platform: {
-      type: 'array',
-      items: { type: 'string', enum: [...Object.values(Enum.Platform)] },
-    },
     details: { type: ['string', 'null'] },
     manager: { type: 'string' },
     incentiveWinner: {
@@ -59,10 +55,6 @@ const updateCampaignSchema = {
     startDate: { type: 'string', format: 'date-time' },
     endDate: { type: 'string', format: 'date-time' },
     commercial: { type: 'number' },
-    platform: {
-      type: 'array',
-      items: { type: 'string', enum: [...Object.values(Enum.Platform)] },
-    },
     details: { type: ['string', 'null'] },
     invoiceNo: { type: ['string', 'null'] },
     status: { type: 'string', enum: [...Object.values(Enum.CampaignStatus)] },
