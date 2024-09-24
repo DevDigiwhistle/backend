@@ -470,10 +470,14 @@ components:
           type: string
         code:
           type: string
+          example: 'code'
         brand:
           type: string
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
         brandName:
           type: string
+          example: 'Uber'
         startDate:
           type: string
           format: date-time
@@ -482,27 +486,27 @@ components:
           format: date-time
         commercial:
           type: number
-        platform:
-          type: array
-          items:
-            type: string
-            enum:
-              - X
-              - Instagram
-              - Youtube
+        status:
+          type: string
+          enum: [All Paid, Pending]
         details:
           type: string
           nullable: true
         manager:
           type: string
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
         incentiveWinner:
           oneOf:
             - type: string
             - type: 'null'
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
         invoiceNo:
           oneOf:
             - type: string
             - type: 'null'
+          example: 'XBR2340'
         participants:
           type: array
           items:
@@ -529,7 +533,6 @@ components:
         - startDate
         - endDate
         - commercial
-        - platform
         - manager
         - participants
 
@@ -540,10 +543,14 @@ components:
           type: string
         code:
           type: string
-        brandName:
-          type: string
+          example: 'code'
         brand:
           type: string
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+        brandName:
+          type: string
+          example: 'Uber'
         startDate:
           type: string
           format: date-time
@@ -552,49 +559,55 @@ components:
           format: date-time
         commercial:
           type: number
-        platform:
-          type: array
-          items:
-            type: string
-            enum:
-              - Youtube
-              - X
-              - Instagram
+        status:
+          type: string
+          enum: [All Paid, Pending]
         details:
           type: string
           nullable: true
-        invoiceNo:
-          type: string
-          nullable: true
-        status:
-          type: string
-          enum:
-            - Pending
-            - Completed
         manager:
           type: string
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
         incentiveWinner:
           oneOf:
             - type: string
             - type: 'null'
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+        invoiceNo:
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: 'XBR2340'
         participants:
           type: array
           items:
             type: object
             properties:
+              id:
+                type: string
               roleId:
                 type: number
               profileId:
                 type: string
               email:
                 type: string
-              id:
-                type: string
             required:
               - id
               - roleId
               - profileId
               - email
+      required:
+        - name
+        - code
+        - brandName
+        - brand
+        - startDate
+        - endDate
+        - commercial
+        - manager
+        - participants
 
     UpdateCampaignCards:
       type: object
@@ -808,6 +821,10 @@ components:
         brandName:
           type: 'string'
           example: 'chirag gupta'
+        brand:
+          type: 'string'
+          format: 'uuid'
+          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
         startDate:
           type: 'string'
           format: 'date'
@@ -820,26 +837,24 @@ components:
           type: 'integer'
           format: 'int64'
           example: 200000
-        platform:
-          type: 'array'
-          items:
-            type: 'string'
-          example: ['X']
         details:
           type: 'string'
           nullable: true
-          example: null
+          example: 'lorem ipsum'
         invoiceNo:
           type: 'string'
           nullable: true
-          example: null
+          example: 'DWT-567-85'
         status:
           type: 'string'
           example: 'Pending'
         cpv:
           type: 'integer'
           nullable: true
-          example: null
+          example: 0.45
+        platform:
+          type: 'string'
+          example: 'Instagram'
         createdAt:
           type: 'string'
           format: 'date-time'

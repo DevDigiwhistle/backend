@@ -46,14 +46,18 @@ export class Campaign implements ICampaign {
   @Column({ type: 'float', nullable: false })
   commercial: number
 
-  @Column('simple-array')
-  platform: string[]
-
   @Column({ type: 'text', nullable: true })
   details: string | null
 
   @Column({ type: 'varchar', nullable: true })
   invoiceNo: string | null
+
+  @Column({
+    type: 'enum',
+    enum: Enum.CampaignPaymentStatus,
+    default: Enum.CampaignPaymentStatus.PENDING,
+  })
+  paymentStatus: Enum.CampaignPaymentStatus
 
   @Column({
     type: 'enum',

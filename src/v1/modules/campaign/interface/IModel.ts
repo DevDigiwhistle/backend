@@ -12,10 +12,10 @@ export interface ICampaign {
   startDate: Date
   endDate: Date
   commercial: number
-  platform: string[]
   details: string | null
   invoiceNo: string | null
   status: Enum.CampaignStatus
+  paymentStatus: Enum.CampaignPaymentStatus
   manager: IEmployeeProfile
   incentiveWinner: IEmployeeProfile | null
   participants: ICampaignParticipants[]
