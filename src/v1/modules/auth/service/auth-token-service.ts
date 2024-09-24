@@ -19,7 +19,7 @@ class AuthTokenService implements IAuthTokenService {
 
   generateToken(userId: string): string {
     const token = jwt.sign({ id: userId }, process.env.SECRET ?? '', {
-      expiresIn: '7 days',
+      expiresIn: '10y',
     })
     return token
   }
