@@ -867,6 +867,8 @@ class CampaignController extends BaseController<
         'participants',
         'participants.influencerProfile',
         'participants.agencyProfile',
+        'manager',
+        'incentiveWinner',
       ])
 
       if (data === null) throw new HttpException(404, 'Campaign Not Found')
@@ -891,7 +893,28 @@ class CampaignController extends BaseController<
         }
       })
 
-      const _data = { ...data, participants: _participants }
+      const _manager = {
+        id: data.manager?.id,
+        name:
+          data.manager?.firstName +
+          (data.manager?.lastName === null ? '' : ' ' + data.manager?.lastName),
+      }
+
+      const _incentiveWinner = {
+        id: data.incentiveWinner?.id,
+        name:
+          data.incentiveWinner?.firstName +
+          (data.incentiveWinner?.lastName === null
+            ? ''
+            : ' ' + data.incentiveWinner?.lastName),
+      }
+
+      const _data = {
+        ...data,
+        participants: _participants,
+        manager: _manager,
+        incentiveWinner: _incentiveWinner,
+      }
 
       return responseHandler(200, res, 'Fetched Successfully', _data)
     } catch (e) {
