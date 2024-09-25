@@ -468,13 +468,14 @@ components:
       properties:
         name:
           type: string
+          example: 'Apollo'
         code:
           type: string
           example: 'code'
         brand:
           type: string
           format: 'uuid'
-          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+          example: '22068de9-c729-4f3e-9c5b-b22085f104c6'
         brandName:
           type: string
           example: 'Uber'
@@ -486,7 +487,7 @@ components:
           format: date-time
         commercial:
           type: number
-        status:
+        paymentStatus:
           type: string
           enum: [All Paid, Pending]
         details:
@@ -494,14 +495,12 @@ components:
           nullable: true
         manager:
           type: string
-          format: 'uuid'
-          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+          example: '0088ab76-a750-4d4d-b705-a4a2b439861c'
         incentiveWinner:
           oneOf:
             - type: string
             - type: 'null'
-          format: 'uuid'
-          example: 'dad749c8-fb7d-44af-bdc2-7cf5fdacff2c'
+          example: '0088ab76-a750-4d4d-b705-a4a2b439861c'
         invoiceNo:
           oneOf:
             - type: string
@@ -525,6 +524,11 @@ components:
               - roleId
               - profileId
               - email
+          example:
+            - id: '1ff5afb3-c414-40fd-98bb-dd592644bbfb'
+              roleId: 5
+              profileId: '1ff5afb3-c414-40fd-98bb-dd592644bbfb'
+              email: 'test@ageny.com'
       required:
         - name
         - code

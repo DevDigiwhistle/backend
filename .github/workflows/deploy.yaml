@@ -85,10 +85,10 @@ jobs:
             echo "YOUTUBE_API_KEY=$YOUTUBE_API_KEY" >> ../home/backend/.env
             echo "LINKEDIN_API_KEY=$LINKEDIN_API_KEY" >> ../home/backend/.env
             echo "TWITTER_API_KEY=$TWITTER_API_KEY" >> ../home/backend/.env
+            pm2 stop digiwhistle-api
             cd ../home/backend
             git pull origin main
             yarn install
             yarn tsc
-            pm2 stop digiwhistle-api
             pm2 start dist/index.js --name digiwhistle-api
           EOF
