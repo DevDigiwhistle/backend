@@ -459,7 +459,7 @@ class CampaignController extends BaseController<
             (value?.employeeProfile?.lastName === null
               ? ''
               : ' ' + value?.employeeProfile?.lastName),
-          id: value.id,
+          id: value.employeeProfile?.id,
         }
       })
 
