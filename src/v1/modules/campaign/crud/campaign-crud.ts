@@ -38,9 +38,11 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
       }
 
       if (typeof agencyProfileId === 'string') {
-        query = query.andWhere('campaign."agencyProfileId"=:agencyProfileId', {
-          agencyProfileId: agencyProfileId,
-        })
+        query = query
+          .leftJoin('campaign.participants', 'participants')
+          .andWhere('participants."agencyProfileId"=:agencyProfileId', {
+            agencyProfileId: agencyProfileId,
+          })
       }
 
       const result = await query.getRawOne()

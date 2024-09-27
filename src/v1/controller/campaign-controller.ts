@@ -135,6 +135,7 @@ class CampaignController extends BaseController<
             : ' ' + value.manager?.lastName) +
           ' 5% (incentive)',
         status: value.status,
+        paymentStatus: value.paymentStatus,
         participants: value.participants.map((participant) => {
           if (participant.influencerProfile !== null) {
             return {
@@ -153,20 +154,36 @@ class CampaignController extends BaseController<
               margin: participant.margin,
               paymentStatus: participant.paymentStatus,
               invoiceStatus: participant.invoiceStatus,
-              deliverables: participant.deliverables.map((deliverable) => {
-                return {
-                  id: deliverable.id,
-                  title: deliverable.title,
-                  platform: deliverable.platform,
-                  status: deliverable.status,
-                  deliverableLink: deliverable.link,
-                  er: deliverable.engagementRate,
-                  cpv: deliverable.cpv,
-                  desc: deliverable.desc,
-                }
-              }),
+              deliverables:
+                participant.deliverables.length > 0
+                  ? participant.deliverables.map((deliverable) => {
+                      return {
+                        id: deliverable.id,
+                        title: deliverable.title,
+                        platform: deliverable.platform,
+                        status: deliverable.status,
+                        deliverableLink: deliverable.link,
+                        er: deliverable.engagementRate,
+                        cpv: deliverable.cpv,
+                        desc: deliverable.desc,
+                      }
+                    })
+                  : [
+                      {
+                        id: null,
+                        title: null,
+                        platform: Enum.Platform.INSTAGRAM,
+                        status: Enum.CampaignDeliverableStatus.NOT_LIVE,
+                        deliverableLink: null,
+                        er: null,
+                        cpv: null,
+                      },
+                    ],
             }
           } else {
+            const influencerGroupedData = this.groupDeliverableByInfluencerName(
+              participant.deliverables
+            )
             return {
               type: 'agency',
               id: participant.id,
@@ -178,9 +195,26 @@ class CampaignController extends BaseController<
               margin: participant.margin,
               paymentStatus: participant.paymentStatus,
               invoiceStatus: participant.invoiceStatus,
-              influencer: this.groupDeliverableByInfluencerName(
-                participant.deliverables
-              ),
+              influencer:
+                influencerGroupedData.length > 0
+                  ? influencerGroupedData
+                  : [
+                      {
+                        id: null,
+                        name: null,
+                        deliverables: [
+                          {
+                            id: null,
+                            title: null,
+                            platform: Enum.Platform.INSTAGRAM,
+                            status: Enum.CampaignDeliverableStatus.NOT_LIVE,
+                            deliverableLink: null,
+                            er: null,
+                            cpv: null,
+                          },
+                        ],
+                      },
+                    ],
             }
           }
         }),
@@ -234,6 +268,7 @@ class CampaignController extends BaseController<
             : ' ' + value.manager.lastName) +
           ' DW (POC)',
         status: value.status,
+        paymentStatus: value.paymentStatus,
         participants: this.getAllDeliverablesForParticipants(
           value.participants,
           agencyProfileId
@@ -332,6 +367,7 @@ class CampaignController extends BaseController<
             : ' ' + value.manager.lastName) +
           ' DW (POC)',
         status: value.status,
+        paymentStatus: value.paymentStatus,
         participants: this.groupDeliverablesByInfluencers(value.participants),
       }
     })
@@ -580,7 +616,7 @@ class CampaignController extends BaseController<
       const { name } = req.query
 
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
-        const { paymentStatus, influencerType } = req.query
+        const { payment, type } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -591,8 +627,8 @@ class CampaignController extends BaseController<
           name as string,
           undefined,
           {
-            influencerType: influencerType as string,
-            paymentStatus: paymentStatus as Enum.CampaignPaymentStatus,
+            influencerType: type as string,
+            paymentStatus: payment as Enum.CampaignPaymentStatus,
           }
         )
 
@@ -612,7 +648,7 @@ class CampaignController extends BaseController<
         if (agencyProfileId === undefined)
           throw new HttpException(404, 'Agency Not Found')
 
-        const { name, paymentStatus, platform } = req.query
+        const { name, payment, platform } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -623,8 +659,7 @@ class CampaignController extends BaseController<
           name as string,
           {
             id: agencyProfileId,
-
-            paymentStatus: paymentStatus as Enum.CampaignPaymentStatus,
+            paymentStatus: payment as Enum.CampaignPaymentStatus,
             platform: platform as Enum.Platform,
           }
         )

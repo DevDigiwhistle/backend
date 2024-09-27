@@ -64,9 +64,7 @@ class CampaignService
         if (typeof agencyFilters?.paymentStatus === 'string')
           agencyQuery = {
             ...agencyQuery,
-            participants: {
-              paymentStatus: agencyFilters.paymentStatus,
-            },
+            paymentStatus: agencyFilters?.paymentStatus,
           }
 
         if (typeof agencyFilters?.platform === 'string') {
@@ -84,14 +82,16 @@ class CampaignService
       }
 
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
-        let adminQuery: FindOptionsWhere<ICampaign> = {
-          startDate: MoreThanOrEqual(lowerBound),
-          endDate: LessThanOrEqual(upperBound),
-        }
+        let adminQuery: FindOptionsWhere<ICampaign>[] = [
+          {
+            startDate: MoreThanOrEqual(lowerBound),
+            endDate: LessThanOrEqual(upperBound),
+          },
+        ]
 
         if (typeof name === 'string') {
-          adminQuery = {
-            ...adminQuery,
+          adminQuery[0] = {
+            ...adminQuery[0],
             name: ILike(`%${name}%`),
           }
         }
@@ -100,28 +100,24 @@ class CampaignService
           if (
             adminFilters?.paymentStatus === Enum.CampaignPaymentStatus.ALL_PAID
           ) {
-            adminQuery = {
-              ...adminQuery,
-              participants: {
-                paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
-              },
+            adminQuery[0] = {
+              ...adminQuery[0],
+              paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
             }
           } else if (
             adminFilters?.paymentStatus === Enum.CampaignPaymentStatus.PENDING
           ) {
-            adminQuery = {
-              ...adminQuery,
-              participants: {
-                paymentStatus: Enum.CampaignPaymentStatus.PENDING,
-              },
+            adminQuery[0] = {
+              ...adminQuery[0],
+              paymentStatus: Enum.CampaignPaymentStatus.PENDING,
             }
           }
         }
 
         if (typeof adminFilters?.influencerType === 'string') {
           if (adminFilters?.influencerType === 'exclusive') {
-            adminQuery = {
-              ...adminQuery,
+            adminQuery[0] = {
+              ...adminQuery[0],
               participants: {
                 influencerProfile: {
                   exclusive: true,
@@ -129,18 +125,25 @@ class CampaignService
               },
             }
           } else if (adminFilters?.influencerType === 'non-exclusive') {
-            adminQuery = {
-              ...adminQuery,
+            adminQuery[0] = {
+              ...adminQuery[0],
               participants: {
                 influencerProfile: {
-                  exclusive: Not(true),
+                  exclusive: false,
                 },
               },
             }
+
+            adminQuery.push({
+              ...adminQuery[0],
+              participants: {
+                influencerProfile: IsNull(),
+              },
+            })
           }
         }
 
-        query.push(adminQuery)
+        query = adminQuery
       }
 
       if (roleId === Enum.ROLES.BRAND) {
@@ -243,7 +246,7 @@ class CampaignService
       const data = await this.findAllPaginated(
         page,
         limit,
-        query,
+        query.length === 1 ? query[0] : query,
         [
           'participants',
           'participants.deliverables',
