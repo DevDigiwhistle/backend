@@ -16,7 +16,7 @@ const addCampaignDeliverableSchema = {
     link: { type: ['string', 'null'] },
     engagementRate: { type: ['number', 'null'] },
     cpv: { type: ['number', 'null'] },
-    campaignParticipant: { type: 'string' },
+    campaignParticipant: { type: 'string', format: 'uuid' },
   },
   required: ['name', 'desc', 'platform', 'campaignParticipant'],
   additionalProperties: false,

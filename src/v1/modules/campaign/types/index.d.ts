@@ -8,7 +8,7 @@ export type AgencyFilters = {
 
 export type AdminFilters = {
   paymentStatus?: Enum.CampaignPaymentStatus
-  influencerType: string
+  influencerType?: string
 }
 
 export type BrandFilters = {
@@ -16,6 +16,12 @@ export type BrandFilters = {
   campaignStatus?: Enum.CampaignDeliverableStatus
   platform?: Enum.Platform
   brand: string
+}
+
+export type InfluencerFilters = {
+  id: string
+  paymentStatus?: Enum.CampaignPaymentStatus
+  platform?: Enum.Platform
 }
 
 export type CampaignStats = {

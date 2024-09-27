@@ -12,7 +12,8 @@ export interface ICampaignCRUD extends ICRUDBase<ICampaign> {
     lowerBound: Date,
     upperBound: Date,
     brandProfileId?: string,
-    agencyProfileId?: string
+    agencyProfileId?: string,
+    influencerProfileId?: string
   ): Promise<CampaignStats>
 }
 

@@ -16,6 +16,7 @@ import {
   AgencyFilters,
   BrandFilters,
   CampaignStats,
+  InfluencerFilters,
 } from '../types'
 
 export interface ICampaignService
@@ -29,13 +30,15 @@ export interface ICampaignService
     name?: string,
     agencyFilters?: AgencyFilters,
     adminFilters?: AdminFilters,
-    brandFilters?: BrandFilters
+    brandFilters?: BrandFilters,
+    influencerFilters?: InfluencerFilters
   ): Promise<PaginatedResponse<ICampaign>>
   getTotalCampaignsAndRevenue(
     lowerBound: Date,
     upperBound: Date,
     brandProfileId?: string,
-    agencyProfileId?: string
+    agencyProfileId?: string,
+    influencerProfileId?: string
   ): Promise<CampaignStats>
 }
 

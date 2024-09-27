@@ -21,7 +21,8 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
     lowerBound: Date,
     upperBound: Date,
     brandProfileId?: string,
-    agencyProfileId?: string
+    agencyProfileId?: string,
+    influencerProfileId?: string
   ): Promise<CampaignStats> {
     try {
       let query = this.repository
@@ -42,6 +43,14 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
           .leftJoin('campaign.participants', 'participants')
           .andWhere('participants."agencyProfileId"=:agencyProfileId', {
             agencyProfileId: agencyProfileId,
+          })
+      }
+
+      if (typeof influencerProfileId === 'string') {
+        query = query
+          .leftJoin('campaign.participants', 'participants')
+          .andWhere('participants."influencerProfileId"=:influencerProfileId', {
+            influencerProfileId: influencerProfileId,
           })
       }
 

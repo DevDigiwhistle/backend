@@ -8,6 +8,7 @@ import {
   AgencyFilters,
   BrandFilters,
   CampaignStats,
+  InfluencerFilters,
 } from '../types'
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
 
@@ -36,7 +37,8 @@ class CampaignService
     name?: string,
     agencyFilters?: AgencyFilters,
     adminFilters?: AdminFilters,
-    brandFilters?: BrandFilters
+    brandFilters?: BrandFilters,
+    influencerFilters?: InfluencerFilters
   ): Promise<PaginatedResponse<ICampaign>> {
     try {
       let query: FindOptionsWhere<ICampaign>[] = []
@@ -243,6 +245,82 @@ class CampaignService
         query.push(brandQuery)
       }
 
+      if (roleId === Enum.ROLES.INFLUENCER) {
+        let influencerQuery: FindOptionsWhere<ICampaign> = {
+          startDate: MoreThanOrEqual(lowerBound),
+          endDate: LessThanOrEqual(upperBound),
+        }
+
+        if (typeof name === 'string') {
+          influencerQuery = {
+            ...influencerQuery,
+            name: ILike(`%${name}%`),
+          }
+        }
+
+        influencerQuery = {
+          ...influencerQuery,
+          participants: {
+            influencerProfile: {
+              id: influencerFilters?.id,
+            },
+          },
+        }
+
+        if (
+          influencerFilters?.paymentStatus ===
+          Enum.CampaignPaymentStatus.ALL_PAID
+        ) {
+          influencerQuery = {
+            ...influencerQuery,
+            participants: {
+              paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
+            },
+          }
+        } else if (
+          influencerFilters?.paymentStatus ===
+          Enum.CampaignPaymentStatus.PENDING
+        ) {
+          influencerQuery = {
+            ...influencerQuery,
+            participants: {
+              paymentStatus: Enum.CampaignPaymentStatus.PENDING,
+            },
+          }
+        }
+
+        if (influencerFilters?.platform === Enum.Platform.INSTAGRAM) {
+          influencerQuery = {
+            ...influencerQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.INSTAGRAM,
+              },
+            },
+          }
+        } else if (influencerFilters?.platform === Enum.Platform.YOUTUBE) {
+          influencerQuery = {
+            ...influencerQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.YOUTUBE,
+              },
+            },
+          }
+        } else if (influencerFilters?.platform === Enum.Platform.X) {
+          influencerQuery = {
+            ...influencerQuery,
+            participants: {
+              deliverables: {
+                platform: Enum.Platform.X,
+              },
+            },
+          }
+        }
+
+        query.push(influencerQuery)
+      }
+
       const data = await this.findAllPaginated(
         page,
         limit,
@@ -268,14 +346,16 @@ class CampaignService
     lowerBound: Date,
     upperBound: Date,
     brandProfileId?: string,
-    agencyProfileId?: string
+    agencyProfileId?: string,
+    influencerProfileId?: string
   ): Promise<CampaignStats> {
     try {
       return await this.crudBase.getTotalCampaignsAndRevenue(
         lowerBound,
         upperBound,
         brandProfileId,
-        agencyProfileId
+        agencyProfileId,
+        influencerProfileId
       )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
