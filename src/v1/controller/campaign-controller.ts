@@ -1011,6 +1011,7 @@ class CampaignController extends BaseController<
         'participants.agencyProfile',
         'manager',
         'incentiveWinner',
+        'brand',
       ])
 
       if (data === null) throw new HttpException(404, 'Campaign Not Found')
@@ -1051,11 +1052,17 @@ class CampaignController extends BaseController<
             : ' ' + data.incentiveWinner?.lastName),
       }
 
+      const _brand = {
+        id: data.brand?.id,
+        name: data.brand?.name,
+      }
+
       const _data = {
         ...data,
         participants: _participants,
         manager: _manager,
         incentiveWinner: _incentiveWinner,
+        brand: _brand,
       }
 
       return responseHandler(200, res, 'Fetched Successfully', _data)
