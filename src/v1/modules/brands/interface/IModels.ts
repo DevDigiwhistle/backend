@@ -6,10 +6,10 @@ export interface IBrandProfile extends ObjectLiteral {
   pocFirstName: string
   pocLastName: string
   name: string
-  userId?: string
   websiteURL: string
   user: IUser
   mobileNo: string
+  profilePicURL?: string
   createdAt?: Date
   updatedAt?: Date
 }
@@ -19,8 +19,8 @@ export interface IAgencyProfile extends ObjectLiteral {
   pocFirstName: string
   pocLastName: string
   name: string
-  userId?: string
   websiteURL: string
+  profilePicURL?: string
   user: IUser
   mobileNo: string
   createdAt?: Date

@@ -20,6 +20,7 @@ const updateBrandProfileSchema = {
     pocLastName: { type: 'string', nullable: true },
     mobileNo: { type: 'string', nullable: true },
     websiteURL: { type: 'string', nullable: true },
+    profilePicURL: { type: 'string', nullable: true },
   },
   additionalProperties: false,
 }

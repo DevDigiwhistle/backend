@@ -167,6 +167,8 @@ components:
           type: string
         websiteURL:
           type: string
+        profilePicURL:
+          type: string
 
     AgencyProfileInput:
       type: object
