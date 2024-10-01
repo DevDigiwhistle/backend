@@ -62,6 +62,7 @@ class UserController implements IUserController {
             name: _user.profile.name,
             websiteURL: _user.profile.websiteURL,
             mobileNo: _user.profile.mobileNo,
+            profilePic: _user.profile.profilePic,
           },
         }
         return responseHandler(200, res, 'user fetched successfully', _response)
