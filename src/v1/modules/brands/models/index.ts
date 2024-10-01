@@ -40,6 +40,9 @@ export class BrandProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string
 
+  @Column({ type: 'varchar', nullable: true, default: null })
+  profilePic: string | null
+
   @OneToMany(() => Campaign, (campaign) => campaign.brand)
   campaign: ICampaign[]
 
@@ -72,6 +75,9 @@ export class AgencyProfile implements IBrandProfile {
 
   @Column({ type: 'varchar', nullable: false })
   websiteURL: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  profilePic: string | null
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   mobileNo: string

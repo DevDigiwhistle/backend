@@ -182,6 +182,8 @@ components:
           type: string
         user:
           type: string
+        profilePicURL:
+          type: string
 
     BrandProfile:
       type: object
