@@ -49,7 +49,13 @@ export class BrandProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -66,7 +72,8 @@ export class BrandProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -88,7 +95,7 @@ export class BrandProfileController
         name as string
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

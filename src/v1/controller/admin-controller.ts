@@ -78,7 +78,7 @@ class AdminController {
       if (data.role === 'employee')
         await this.employeeService.addEmployee(req.body)
 
-      return responseHandler(200, res, 'Added Successfully', {})
+      return responseHandler(200, res, 'Added Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -102,7 +102,7 @@ class AdminController {
 
       const _data = this.adminAndEmployeeDTO(data)
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -132,7 +132,7 @@ class AdminController {
           iconName: 'FaceFrownIcon',
         },
       ]
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

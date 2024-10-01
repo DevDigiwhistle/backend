@@ -5,6 +5,8 @@ dotenv.config({ debug: true })
 import express, { type Request, type Response } from 'express'
 import { AppDataSource } from './config'
 import apiRouter from './v1/routes'
+import cron from 'node-cron'
+import { logsScheduler } from './utils'
 
 const app = express()
 app.use(
@@ -38,6 +40,16 @@ app.listen(PORT, () => {
     })
     .catch((e) => {
       console.log(`Database error ${e}`)
+    })
+})
+
+cron.schedule('0 0 * * *', () => {
+  logsScheduler()
+    .then(() => {
+      console.log(`Done upload of logs at ${new Date()}`)
+    })
+    .catch((e) => {
+      console.log(e)
     })
 })
 

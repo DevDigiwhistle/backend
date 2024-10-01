@@ -464,7 +464,8 @@ class CampaignController extends BaseController<
         201,
         res,
         'Campaign created successfully',
-        campaign
+        campaign,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -505,7 +506,13 @@ class CampaignController extends BaseController<
         }
       })
 
-      return responseHandler(200, res, 'Campaigns fetched successfully', _data)
+      return responseHandler(
+        200,
+        res,
+        'Campaigns fetched successfully',
+        _data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -534,7 +541,7 @@ class CampaignController extends BaseController<
         }
       })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -556,7 +563,7 @@ class CampaignController extends BaseController<
         }
       })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -612,7 +619,7 @@ class CampaignController extends BaseController<
 
       await this.campaignParticipantsService.insertMany(campaignParticipants)
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -669,12 +676,18 @@ class CampaignController extends BaseController<
 
         const _data = this.campaignsAdminAndEmployeeDTO(data.data)
 
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
-        })
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.AGENCY) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'agencyProfile',
@@ -700,12 +713,18 @@ class CampaignController extends BaseController<
         )
 
         const _data = this.campaignsAgencyDTO(data.data, agencyProfileId)
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
-        })
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.BRAND) {
         const { payment, campaignStatus, platform } = req.query
 
@@ -736,12 +755,18 @@ class CampaignController extends BaseController<
 
         const _data = this.campaignsBrandDTO(data.data)
 
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
-        })
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.INFLUENCER) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'influencerProfile',
@@ -775,15 +800,21 @@ class CampaignController extends BaseController<
           influencerProfileId
         )
 
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
-        })
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       }
 
-      return responseHandler(200, res, 'Fetched Successfully', {})
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -833,7 +864,7 @@ class CampaignController extends BaseController<
           },
         ]
 
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.BRAND) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'brandProfile',
@@ -859,7 +890,7 @@ class CampaignController extends BaseController<
             iconName: 'CurrencyRupeeIcon',
           },
         ]
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.AGENCY) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'agencyProfile',
@@ -887,7 +918,7 @@ class CampaignController extends BaseController<
             iconName: 'CurrencyRupeeIcon',
           },
         ]
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.INFLUENCER) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'influencerProfile',
@@ -920,9 +951,9 @@ class CampaignController extends BaseController<
           },
         ]
 
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       }
-      return responseHandler(200, res, 'Fetched Successfully', {})
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -993,7 +1024,7 @@ class CampaignController extends BaseController<
         this.campaignDeliverableService.insertMany(deliverableData),
       ])
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -1065,7 +1096,7 @@ class CampaignController extends BaseController<
         brand: _brand,
       }
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

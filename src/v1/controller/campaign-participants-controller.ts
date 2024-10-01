@@ -42,7 +42,13 @@ class CampaignParticipantsController extends BaseController<
         })
       }
 
-      return responseHandler(200, res, 'Participant added successfully', null)
+      return responseHandler(
+        200,
+        res,
+        'Participant added successfully',
+        null,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }

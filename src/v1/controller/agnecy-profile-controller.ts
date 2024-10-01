@@ -53,7 +53,13 @@ export class AgencyProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -70,7 +76,8 @@ export class AgencyProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -92,7 +99,7 @@ export class AgencyProfileController
         name as string
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

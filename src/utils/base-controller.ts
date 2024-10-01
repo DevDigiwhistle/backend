@@ -41,7 +41,8 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.CREATED,
         res,
         'Requested Submitted Successfully',
-        createdDoc
+        createdDoc,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -55,7 +56,8 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.OK,
         res,
         'Fetched Successfully',
-        data
+        data,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -74,7 +76,8 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.OK,
         res,
         'Fetched Successfully',
-        data
+        data,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -100,7 +103,8 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.OK,
         res,
         'Updated Successfully',
-        data
+        data,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -122,7 +126,8 @@ export abstract class BaseController<
         Enum.RESPONSE_CODES.OK,
         res,
         'Deleted Successfully',
-        null
+        null,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)

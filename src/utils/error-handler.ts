@@ -4,9 +4,8 @@ import { Enum } from '../constants'
 import AppLogger from './app-logger'
 
 export const errorHandler = (e: any, res: Response): Response => {
-  // const appLogger = AppLogger.getInstance()
-  // appLogger.error(e)
-  console.log(e)
+  const logger = AppLogger.getInstance()
+  logger.error(e)
 
   if (e instanceof HttpException) {
     return res
@@ -15,7 +14,7 @@ export const errorHandler = (e: any, res: Response): Response => {
   } else {
     return res.status(Enum.RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
       message: e?.message ?? 'Internal Server Error',
-      status: Enum.RESPONSE_STATES.ERROR
+      status: Enum.RESPONSE_STATES.ERROR,
     })
   }
 }

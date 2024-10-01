@@ -51,7 +51,13 @@ export class EmployeeProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -71,10 +77,16 @@ export class EmployeeProfileController
       let user: any = req.user
       delete user.role
 
-      return responseHandler(200, res, 'Profile Fetched!!', {
-        ...profile,
-        user: req.user,
-      })
+      return responseHandler(
+        200,
+        res,
+        'Profile Fetched!!',
+        {
+          ...profile,
+          user: req.user,
+        },
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -88,7 +100,7 @@ export class EmployeeProfileController
 
       const data = await this.service.update({ id: id }, req.body, ['user'])
 
-      return responseHandler(200, res, 'Updated Successfully', data)
+      return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

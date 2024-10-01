@@ -32,7 +32,7 @@ class RemarksController
     try {
       const userId = req.user.id
       const data = await this.service.add({ remarker: userId, ...req.body })
-      return responseHandler(201, res, 'Added Successfully', data)
+      return responseHandler(201, res, 'Added Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -49,7 +49,7 @@ class RemarksController
         throw new HttpException(400, 'Invalid UserId')
 
       const data = await this.service.findAllRemarksByUserId(userId)
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -64,7 +64,7 @@ class RemarksController
       else if (typeof userId === 'string')
         await this.service.clearAllRemarksByUserId(userId)
 
-      return responseHandler(200, res, 'Deleted Successfully', {})
+      return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }

@@ -251,7 +251,7 @@ class InfluencerController {
         linkedInURL
       )
 
-      return responseHandler(200, res, 'Added Successfully', {})
+      return responseHandler(200, res, 'Added Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -263,7 +263,7 @@ class InfluencerController {
   ): Promise<Response> {
     try {
       await this.influencerService.inviteInfluencer(req.body)
-      return responseHandler(200, res, 'Invited Successfully', {})
+      return responseHandler(200, res, 'Invited Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -317,7 +317,7 @@ class InfluencerController {
 
       const _data = this.influencerResponseDTO(platform, data)
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -343,7 +343,7 @@ class InfluencerController {
           iconName: 'StarIcon',
         },
       ]
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -370,7 +370,7 @@ class InfluencerController {
 
       const _data = this.influencerRequestResponseDTO(platform, data)
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -423,7 +423,7 @@ class InfluencerController {
           },
           profileUrl: url,
         }
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('x.com')) {
         const data = await this.twitterService.getTwitterProfileStats(url)
         const _data = {
@@ -463,7 +463,7 @@ class InfluencerController {
           profileUrl: url,
         }
 
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('youtube')) {
         const data = await this.youtubeService.getYoutubeProfileStats(url)
         const _data = {
@@ -492,7 +492,7 @@ class InfluencerController {
           desc: data.description,
           profileUrl: url,
         }
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {
       return errorHandler(e, res)

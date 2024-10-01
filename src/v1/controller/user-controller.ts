@@ -64,9 +64,21 @@ class UserController implements IUserController {
             mobileNo: _user.profile.mobileNo,
           },
         }
-        return responseHandler(200, res, 'user fetched successfully', _response)
+        return responseHandler(
+          200,
+          res,
+          'user fetched successfully',
+          _response,
+          req
+        )
       } else {
-        return responseHandler(200, res, 'user fetched successfully', _user)
+        return responseHandler(
+          200,
+          res,
+          'user fetched successfully',
+          _user,
+          req
+        )
       }
     } catch (e) {
       return errorHandler(e, res)
@@ -85,7 +97,7 @@ class UserController implements IUserController {
         { isVerified: true, isPaused: false, isApproved: true }
       )
 
-      return responseHandler(200, res, 'User approved', {})
+      return responseHandler(200, res, 'User approved', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -104,7 +116,7 @@ class UserController implements IUserController {
         { isPaused: true, isVerified: false }
       )
 
-      return responseHandler(200, res, 'User paused', {})
+      return responseHandler(200, res, 'User paused', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -123,7 +135,7 @@ class UserController implements IUserController {
         { isVerified: false, isPaused: false, isApproved: null }
       )
 
-      return responseHandler(200, res, 'Reverted Action', {})
+      return responseHandler(200, res, 'Reverted Action', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -142,7 +154,7 @@ class UserController implements IUserController {
         { isVerified: false, isPaused: false, isApproved: false }
       )
 
-      return responseHandler(200, res, 'User rejected', {})
+      return responseHandler(200, res, 'User rejected', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -162,7 +174,7 @@ class UserController implements IUserController {
         id: userId,
       })
 
-      return responseHandler(200, res, 'Deleted Successfully', {})
+      return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }

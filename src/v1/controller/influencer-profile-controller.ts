@@ -66,7 +66,13 @@ export class InfluencerProfileController
         linkedInURL
       )
 
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -83,7 +89,8 @@ export class InfluencerProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
       return errorHandler(e, res)
@@ -149,7 +156,7 @@ export class InfluencerProfileController
         _linkedInURL
       )
 
-      return responseHandler(200, res, 'Updated Successfully', data)
+      return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }

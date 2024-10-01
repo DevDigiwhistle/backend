@@ -1,4 +1,4 @@
-import { HttpException } from '../../../../utils'
+import { AppLogger, HttpException } from '../../../../utils'
 import { IAxiosService } from '../../../utils'
 import { IInstagramService } from '../interface'
 import { InstagramPostStats, InstagramProfileStats } from '../types'
@@ -57,7 +57,9 @@ class InstagramService implements IInstagramService {
         image: image,
       }
     } catch (e) {
-      console.log(e)
+      AppLogger.getInstance().error(
+        `Error: ${e} in InstagramService in Profile Section`
+      )
       throw new HttpException(e?.errorCode, e?.response?.statusText)
     }
   }
@@ -82,6 +84,9 @@ class InstagramService implements IInstagramService {
         views,
       }
     } catch (e) {
+      AppLogger.getInstance().error(
+        `Error: ${e} in InstagramService in Post Section`
+      )
       throw new HttpException(e?.errorCode, e?.response?.statusText)
     }
   }

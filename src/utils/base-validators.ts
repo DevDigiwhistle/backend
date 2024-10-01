@@ -3,6 +3,7 @@ import HttpException from './http-exception'
 import { Enum } from '../constants'
 import { type Request, type Response, type NextFunction } from 'express'
 import addFormats from 'ajv-formats'
+import AppLogger from './app-logger'
 
 export class BaseValidator {
   private readonly schemaObj: Schema
@@ -43,6 +44,8 @@ export class BaseValidator {
       if (typeof e?.errorCode !== 'number') {
         e.errorCode = 500
       }
+
+      AppLogger.getInstance().error(`Error: ${e}, url: ${req.url}`)
 
       res
         .status(e.errorCode as number)

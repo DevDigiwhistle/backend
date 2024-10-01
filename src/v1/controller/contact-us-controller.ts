@@ -62,7 +62,7 @@ export class ContactUsController
         { id: 'DESC' }
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res)
     }
@@ -76,7 +76,7 @@ export class ContactUsController
 
       await this.service.update({ id: id }, { viewed: true })
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res)
     }
