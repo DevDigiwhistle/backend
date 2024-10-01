@@ -7,6 +7,15 @@ import { AppDataSource } from './config'
 import apiRouter from './v1/routes'
 import cron from 'node-cron'
 import { logsScheduler } from './utils'
+import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
+import csrf from 'csurf'
+
+// Rate Limit
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // limit each IP to 100 requests per windowMs
+// })
 
 const app = express()
 app.use(
@@ -17,6 +26,9 @@ app.use(
   })
 )
 
+// app.use(apiLimiter)
+app.use(helmet)
+app.use(csrf({ cookie: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
