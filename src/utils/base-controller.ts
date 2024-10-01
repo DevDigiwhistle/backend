@@ -45,7 +45,7 @@ export abstract class BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -60,7 +60,7 @@ export abstract class BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -80,7 +80,7 @@ export abstract class BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -107,7 +107,7 @@ export abstract class BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -130,7 +130,7 @@ export abstract class BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

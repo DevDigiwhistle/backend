@@ -26,7 +26,7 @@ class CampaignDeliverablesController extends BaseController<
       await this.service.deleteMany(ids)
       return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

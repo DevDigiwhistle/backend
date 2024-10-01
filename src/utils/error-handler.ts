@@ -1,11 +1,18 @@
-import { type Response } from 'express'
+import { type Response, type Request } from 'express'
 import HttpException from './http-exception'
 import { Enum } from '../constants'
 import AppLogger from './app-logger'
+import { IExtendedRequest } from '../v1/interface'
 
-export const errorHandler = (e: any, res: Response): Response => {
+export const errorHandler = (
+  e: any,
+  res: Response,
+  req: IExtendedRequest | Request
+): Response => {
   const logger = AppLogger.getInstance()
-  logger.error(e)
+  logger.error(
+    `Error: ${e} in  url: ${req.url} method: ${req.method} body: ${req.body}\n`
+  )
 
   if (e instanceof HttpException) {
     return res

@@ -35,7 +35,7 @@ class AuthController implements IAuthController {
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -51,7 +51,7 @@ class AuthController implements IAuthController {
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -70,7 +70,7 @@ class AuthController implements IAuthController {
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -89,7 +89,7 @@ class AuthController implements IAuthController {
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -102,7 +102,7 @@ class AuthController implements IAuthController {
 
       return responseHandler(200, res, 'OTP sent successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -114,7 +114,7 @@ class AuthController implements IAuthController {
       const data = await this.authService.verifyMobileOTP(req.body)
       return responseHandler(200, res, 'OTP verified successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

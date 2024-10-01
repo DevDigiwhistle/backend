@@ -80,7 +80,7 @@ class AdminController {
 
       return responseHandler(200, res, 'Added Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -104,7 +104,7 @@ class AdminController {
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -134,7 +134,7 @@ class AdminController {
       ]
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

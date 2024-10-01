@@ -59,7 +59,7 @@ export class EmployeeProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -88,7 +88,7 @@ export class EmployeeProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -102,7 +102,7 @@ export class EmployeeProfileController
 
       return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

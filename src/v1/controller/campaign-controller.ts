@@ -468,7 +468,7 @@ class CampaignController extends BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -514,7 +514,7 @@ class CampaignController extends BaseController<
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -543,7 +543,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -565,7 +565,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -621,7 +621,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -816,7 +816,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -1026,7 +1026,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -1098,7 +1098,7 @@ class CampaignController extends BaseController<
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

@@ -61,7 +61,7 @@ export class AgencyProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -80,7 +80,7 @@ export class AgencyProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -101,7 +101,7 @@ export class AgencyProfileController
 
       return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

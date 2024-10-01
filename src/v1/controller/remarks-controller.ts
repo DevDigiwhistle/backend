@@ -34,7 +34,7 @@ class RemarksController
       const data = await this.service.add({ remarker: userId, ...req.body })
       return responseHandler(201, res, 'Added Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -51,7 +51,7 @@ class RemarksController
       const data = await this.service.findAllRemarksByUserId(userId)
       return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -66,7 +66,7 @@ class RemarksController
 
       return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

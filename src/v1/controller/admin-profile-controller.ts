@@ -55,7 +55,7 @@ export class AdminProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -85,7 +85,7 @@ export class AdminProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -99,7 +99,7 @@ export class AdminProfileController
 
       return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

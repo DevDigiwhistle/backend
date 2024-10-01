@@ -81,7 +81,7 @@ class UserController implements IUserController {
         )
       }
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -99,7 +99,7 @@ class UserController implements IUserController {
 
       return responseHandler(200, res, 'User approved', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -118,7 +118,7 @@ class UserController implements IUserController {
 
       return responseHandler(200, res, 'User paused', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -137,7 +137,7 @@ class UserController implements IUserController {
 
       return responseHandler(200, res, 'Reverted Action', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -156,7 +156,7 @@ class UserController implements IUserController {
 
       return responseHandler(200, res, 'User rejected', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -176,7 +176,7 @@ class UserController implements IUserController {
 
       return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

@@ -64,7 +64,7 @@ export class ContactUsController
 
       return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -78,7 +78,7 @@ export class ContactUsController
 
       return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

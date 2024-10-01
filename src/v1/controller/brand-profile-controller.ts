@@ -57,7 +57,7 @@ export class BrandProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -76,7 +76,7 @@ export class BrandProfileController
         req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -97,7 +97,7 @@ export class BrandProfileController
 
       return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

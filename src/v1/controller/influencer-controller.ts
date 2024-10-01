@@ -253,7 +253,7 @@ class InfluencerController {
 
       return responseHandler(200, res, 'Added Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -265,7 +265,7 @@ class InfluencerController {
       await this.influencerService.inviteInfluencer(req.body)
       return responseHandler(200, res, 'Invited Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -319,7 +319,7 @@ class InfluencerController {
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -345,7 +345,7 @@ class InfluencerController {
       ]
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -372,7 +372,7 @@ class InfluencerController {
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -495,7 +495,7 @@ class InfluencerController {
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }
