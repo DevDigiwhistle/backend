@@ -380,9 +380,11 @@ class CampaignController extends BaseController<
     influencerProfileId: string
   ) {
     const _data = data.map((value) => {
-      const influencerDetails = value.participants.filter((value) => {
-        value.influencerProfile !== null &&
-          value.influencerProfile.id === influencerProfileId
+      const influencerDetails = value.participants.filter((participant) => {
+        return (
+          participant.influencerProfile !== null &&
+          participant.influencerProfile.id === influencerProfileId
+        )
       })
 
       return {
@@ -683,7 +685,7 @@ class CampaignController extends BaseController<
         if (agencyProfileId === undefined)
           throw new HttpException(404, 'Agency Not Found')
 
-        const { name, payment, platform } = req.query
+        const { name, payment, platform, campaignStatus } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -696,6 +698,7 @@ class CampaignController extends BaseController<
             id: agencyProfileId,
             paymentStatus: payment as Enum.CampaignPaymentStatus,
             platform: platform as Enum.Platform,
+            campaignStatus: campaignStatus as Enum.CampaignDeliverableStatus,
           }
         )
 
@@ -707,8 +710,6 @@ class CampaignController extends BaseController<
           totalCount: data.totalCount,
         })
       } else if (roleId === Enum.ROLES.BRAND) {
-        const { payment, campaignStatus, platform } = req.query
-
         const user = await this.userService.findOne({ id: req.user.id }, [
           'brandProfile',
         ])
@@ -716,6 +717,8 @@ class CampaignController extends BaseController<
 
         if (brandProfileId === undefined)
           throw new HttpException(404, 'Brand Not Found')
+
+        const { name, payment, platform, campaignStatus } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -977,7 +980,7 @@ class CampaignController extends BaseController<
                 status: deliverable.campaignStatus,
                 link: deliverable.deliverableLink,
                 title: deliverable.title,
-                name: value.name,
+                name: influencer.name,
                 desc: deliverable.desc,
                 campaignParticipant: {
                   id: value.id,

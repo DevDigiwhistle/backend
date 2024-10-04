@@ -53,6 +53,9 @@ class CampaignService
             agencyProfile: {
               id: agencyFilters?.id,
             },
+            influencerProfile: {
+              id: IsNull(),
+            },
           },
         }
 
@@ -63,19 +66,72 @@ class CampaignService
           }
         }
 
-        if (typeof agencyFilters?.paymentStatus === 'string')
+        if (
+          typeof agencyFilters?.paymentStatus === 'string' &&
+          Object.values(Enum.CampaignPaymentStatus).includes(
+            agencyFilters?.paymentStatus
+          )
+        )
           agencyQuery = {
             ...agencyQuery,
             paymentStatus: agencyFilters?.paymentStatus,
           }
 
         if (typeof agencyFilters?.platform === 'string') {
-          agencyQuery = {
-            ...agencyQuery,
-            participants: {
+          if (
+            typeof agencyFilters?.campaignStatus === 'string' &&
+            Object.values(Enum.CampaignDeliverableStatus).includes(
+              agencyFilters?.campaignStatus
+            )
+          ) {
+            agencyQuery.participants = {
+              agencyProfile: {
+                id: agencyFilters?.id,
+              },
+              influencerProfile: {
+                id: IsNull(),
+              },
+              id: Not(IsNull()),
               deliverables: {
+                id: Not(IsNull()),
+                platform: agencyFilters.platform,
+                status: agencyFilters.campaignStatus,
+              },
+            }
+          } else {
+            agencyQuery.participants = {
+              agencyProfile: {
+                id: agencyFilters?.id,
+              },
+              influencerProfile: {
+                id: IsNull(),
+              },
+              id: Not(IsNull()),
+              deliverables: {
+                id: Not(IsNull()),
                 platform: agencyFilters.platform,
               },
+            }
+          }
+        }
+
+        if (
+          typeof agencyFilters?.campaignStatus === 'string' &&
+          Object.values(Enum.CampaignDeliverableStatus).includes(
+            agencyFilters?.campaignStatus
+          )
+        ) {
+          agencyQuery.participants = {
+            agencyProfile: {
+              id: agencyFilters?.id,
+            },
+            influencerProfile: {
+              id: IsNull(),
+            },
+            id: Not(IsNull()),
+            deliverables: {
+              id: Not(IsNull()),
+              status: agencyFilters.campaignStatus,
             },
           }
         }
@@ -152,6 +208,9 @@ class CampaignService
         let brandQuery: FindOptionsWhere<ICampaign> = {
           startDate: MoreThanOrEqual(lowerBound),
           endDate: LessThanOrEqual(upperBound),
+          brand: {
+            id: brandFilters?.brand,
+          },
         }
 
         if (typeof name === 'string') {
@@ -161,82 +220,63 @@ class CampaignService
           }
         }
 
-        brandQuery = {
-          ...brandQuery,
-          brand: {
-            id: brandFilters?.brand,
-          },
-        }
-
         if (
-          brandFilters?.paymentStatus === Enum.CampaignPaymentStatus.ALL_PAID
+          typeof brandFilters?.paymentStatus === 'string' &&
+          Object.values(Enum.CampaignPaymentStatus).includes(
+            brandFilters?.paymentStatus
+          )
         ) {
           brandQuery = {
             ...brandQuery,
-            participants: {
-              paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
-            },
-          }
-        } else if (
-          brandFilters?.paymentStatus === Enum.CampaignPaymentStatus.PENDING
-        ) {
-          brandQuery = {
-            ...brandQuery,
-            participants: {
-              paymentStatus: Enum.CampaignPaymentStatus.PENDING,
-            },
+            paymentStatus: brandFilters?.paymentStatus,
           }
         }
 
-        if (brandFilters?.platform === Enum.Platform.INSTAGRAM) {
-          brandQuery = {
-            ...brandQuery,
-            participants: {
-              deliverables: {
-                platform: Enum.Platform.INSTAGRAM,
+        if (typeof brandFilters?.platform === 'string') {
+          if (
+            typeof brandFilters?.campaignStatus === 'string' &&
+            Object.values(Enum.CampaignDeliverableStatus).includes(
+              brandFilters?.campaignStatus
+            )
+          ) {
+            brandQuery = {
+              ...brandQuery,
+              participants: {
+                id: Not(IsNull()),
+                deliverables: {
+                  id: Not(IsNull()),
+                  platform: brandFilters?.platform,
+                  status: brandFilters?.campaignStatus,
+                },
               },
-            },
-          }
-        } else if (brandFilters?.platform === Enum.Platform.YOUTUBE) {
-          brandQuery = {
-            ...brandQuery,
-            participants: {
-              deliverables: {
-                platform: Enum.Platform.YOUTUBE,
+            }
+          } else {
+            brandQuery = {
+              ...brandQuery,
+              participants: {
+                id: Not(IsNull()),
+                deliverables: {
+                  platform: brandFilters?.platform,
+                  id: Not(IsNull()),
+                },
               },
-            },
-          }
-        } else if (brandFilters?.platform === Enum.Platform.X) {
-          brandQuery = {
-            ...brandQuery,
-            participants: {
-              deliverables: {
-                platform: Enum.Platform.X,
-              },
-            },
+            }
           }
         }
 
         if (
-          brandFilters?.campaignStatus === Enum.CampaignDeliverableStatus.LIVE
+          typeof brandFilters?.campaignStatus === 'string' &&
+          Object.values(Enum.CampaignDeliverableStatus).includes(
+            brandFilters?.campaignStatus
+          )
         ) {
           brandQuery = {
             ...brandQuery,
             participants: {
+              id: Not(IsNull()),
               deliverables: {
-                status: Enum.CampaignDeliverableStatus.LIVE,
-              },
-            },
-          }
-        } else if (
-          brandFilters?.campaignStatus ===
-          Enum.CampaignDeliverableStatus.NOT_LIVE
-        ) {
-          brandQuery = {
-            ...brandQuery,
-            participants: {
-              deliverables: {
-                status: Enum.CampaignDeliverableStatus.NOT_LIVE,
+                status: brandFilters?.campaignStatus,
+                id: Not(IsNull()),
               },
             },
           }
@@ -336,6 +376,7 @@ class CampaignService
         ],
         { createdAt: 'DESC' }
       )
+
       return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
