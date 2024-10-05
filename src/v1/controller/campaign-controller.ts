@@ -11,7 +11,6 @@ import {
 } from '../modules/campaign/interface'
 import { responseHandler } from '../../utils/response-handler'
 import { IUserService } from '../modules/user/interface'
-import { v4 as uuidv4 } from 'uuid'
 import { DeepPartial } from 'typeorm'
 import { IExtendedRequest } from '../interface'
 import { Enum } from '../../constants'
@@ -20,6 +19,7 @@ import {
   ICampaignDTO,
   IInfluencerDTO,
 } from '../modules/campaign/types'
+import { CampaignDTO } from '../dtos/camapaign-dtos'
 
 class CampaignController extends BaseController<
   ICampaign,
@@ -40,374 +40,6 @@ class CampaignController extends BaseController<
     this.campaignParticipantsService = campaignParticipantsService
     this.campaignDeliverableService = campaignDeliverableService
     this.userService = userService
-  }
-
-  private groupDeliverableByInfluencerName(
-    deliverables: ICampaignDeliverables[]
-  ) {
-    const mp: Map<
-      string,
-      Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-        desc: string | null
-      }>
-    > = new Map()
-
-    deliverables.map((deliverable: ICampaignDeliverables) => {
-      let value = mp.get(deliverable.name)
-
-      if (value === undefined) {
-        mp.set(deliverable.name, [
-          {
-            id: deliverable.id,
-            title: deliverable.title,
-            platform: deliverable.platform,
-            status: deliverable.status,
-            deliverableLink: deliverable.link,
-            er: deliverable.engagementRate,
-            cpv: deliverable.cpv,
-            desc: deliverable.desc,
-          },
-        ])
-      } else {
-        value = [
-          ...value,
-          {
-            id: deliverable.id,
-            title: deliverable.title,
-            platform: deliverable.platform,
-            status: deliverable.status,
-            deliverableLink: deliverable.link,
-            er: deliverable.engagementRate,
-            cpv: deliverable.cpv,
-            desc: deliverable.desc,
-          },
-        ]
-        mp.set(deliverable.name, value)
-      }
-    })
-
-    const influencer: Array<{
-      id: string
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    for (const [key, value] of mp) {
-      influencer.push({
-        name: key,
-        id: uuidv4(),
-        deliverables: value,
-      })
-    }
-
-    return influencer
-  }
-
-  private getAllDeliverablesForParticipants(
-    participants: ICampaignParticipants[],
-    agencyProfileId: string
-  ) {
-    let _data: Array<{
-      id: string
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    participants.forEach((value) => {
-      if (value.agencyProfile?.id === agencyProfileId) {
-        _data = this.groupDeliverableByInfluencerName(value.deliverables)
-      }
-    })
-
-    return _data
-  }
-
-  private groupDeliverablesByInfluencers(data: ICampaignParticipants[]) {
-    const mp: Map<
-      string,
-      Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    > = new Map()
-
-    const influencer: Array<{
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    data.forEach((value: ICampaignParticipants) => {
-      value.deliverables.forEach((deliverable: ICampaignDeliverables) => {
-        let value = mp.get(deliverable.name)
-
-        if (value === undefined) {
-          mp.set(deliverable.name, [
-            {
-              id: deliverable.id,
-              title: deliverable.title,
-              platform: deliverable.platform,
-              status: deliverable.status,
-              deliverableLink: deliverable.link,
-              er: deliverable.engagementRate,
-              cpv: deliverable.cpv,
-            },
-          ])
-        } else {
-          value = [
-            ...value,
-            {
-              id: deliverable.id,
-              title: deliverable.title,
-              platform: deliverable.platform,
-              status: deliverable.status,
-              deliverableLink: deliverable.link,
-              er: deliverable.engagementRate,
-              cpv: deliverable.cpv,
-            },
-          ]
-          mp.set(deliverable.name, value)
-        }
-      })
-    })
-
-    for (const [key, value] of mp) {
-      influencer.push({
-        name: key,
-        deliverables: value,
-      })
-    }
-
-    return influencer
-  }
-
-  private campaignsAdminAndEmployeeDTO(data: ICampaign[]) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        commercial: value.commercial,
-        incentiveWinner:
-          value.manager?.firstName +
-          (value.manager?.lastName === null
-            ? ''
-            : ' ' + value.manager?.lastName) +
-          ' 5% (incentive)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: value.participants.map((participant) => {
-          if (participant.influencerProfile !== null) {
-            return {
-              type: 'influencer',
-              id: participant.id,
-              name:
-                participant.influencerProfile.firstName +
-                (participant.influencerProfile.lastName === null
-                  ? ''
-                  : ' ' + participant.influencerProfile.lastName),
-              exclusive: participant.influencerProfile.exclusive,
-              invoice: participant.invoice,
-              commercialBrand: participant.commercialBrand,
-              commercialCreator: participant.commercialCreator,
-              toBeGiven: participant.toBePaid,
-              margin: participant.margin,
-              paymentStatus: participant.paymentStatus,
-              invoiceStatus: participant.invoiceStatus,
-              deliverables:
-                participant.deliverables.length > 0
-                  ? participant.deliverables.map((deliverable) => {
-                      return {
-                        id: deliverable.id,
-                        title: deliverable.title,
-                        platform: deliverable.platform,
-                        status: deliverable.status,
-                        deliverableLink: deliverable.link,
-                        er: deliverable.engagementRate,
-                        cpv: deliverable.cpv,
-                        desc: deliverable.desc,
-                      }
-                    })
-                  : [
-                      {
-                        id: null,
-                        title: null,
-                        platform: Enum.Platform.INSTAGRAM,
-                        status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                        deliverableLink: null,
-                        er: null,
-                        cpv: null,
-                      },
-                    ],
-            }
-          } else {
-            const influencerGroupedData = this.groupDeliverableByInfluencerName(
-              participant.deliverables
-            )
-            return {
-              type: 'agency',
-              id: participant.id,
-              name: participant?.agencyProfile?.name,
-              invoice: participant.invoice,
-              commercialBrand: participant.commercialBrand,
-              commercialCreator: participant.commercialCreator,
-              toBeGiven: participant.toBePaid,
-              margin: participant.margin,
-              paymentStatus: participant.paymentStatus,
-              invoiceStatus: participant.invoiceStatus,
-              influencer:
-                influencerGroupedData.length > 0
-                  ? influencerGroupedData
-                  : [
-                      {
-                        id: null,
-                        name: null,
-                        deliverables: [
-                          {
-                            id: null,
-                            title: null,
-                            platform: Enum.Platform.INSTAGRAM,
-                            status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                            deliverableLink: null,
-                            er: null,
-                            cpv: null,
-                          },
-                        ],
-                      },
-                    ],
-            }
-          }
-        }),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsAgencyDTO(data: ICampaign[], agencyProfileId: string) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        commercial: value.commercial,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: this.getAllDeliverablesForParticipants(
-          value.participants,
-          agencyProfileId
-        ),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsBrandDTO(data: ICampaign[]) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        capital: value.commercial,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: this.groupDeliverablesByInfluencers(value.participants),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsInfluencerDTO(
-    data: ICampaign[],
-    influencerProfileId: string
-  ) {
-    const _data = data.map((value) => {
-      const influencerDetails = value.participants.filter((value) => {
-        value.influencerProfile !== null &&
-          value.influencerProfile.id === influencerProfileId
-      })
-
-      return {
-        campaignId: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        paymentStatus: influencerDetails[0].paymentStatus,
-        commercial: influencerDetails[0].commercialCreator,
-        toBeGiven: influencerDetails[0].toBePaid,
-        invoice: influencerDetails[0].invoice,
-        deliverable: influencerDetails[0].deliverables,
-        participantId: influencerDetails[0].id,
-      }
-    })
-
-    return _data
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -577,7 +209,9 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsAdminAndEmployeeDTO(data.data)
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForAdminAndEmployee(value)
+        })
 
         return responseHandler(
           200,
@@ -615,7 +249,10 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsAgencyDTO(data.data, agencyProfileId)
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForAgency(value, agencyProfileId)
+        })
+
         return responseHandler(
           200,
           res,
@@ -656,7 +293,9 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsBrandDTO(data.data)
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForBrands(value)
+        })
 
         return responseHandler(
           200,
@@ -698,10 +337,12 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsInfluencerDTO(
-          data.data,
-          influencerProfileId
-        )
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForInfluencer(
+            value,
+            influencerProfileId
+          )
+        })
 
         return responseHandler(
           200,

@@ -160,11 +160,21 @@ class UserController {
         throw new HttpException(400, 'Invalid UserId')
       }
 
-      await this.googleAuthService.deleteUser(userId)
+      const user = await this.userService.findOne({ id: userId })
+
+      if (user === null) throw new HttpException(404, 'User does not exist')
 
       await this.userService.delete({
         id: userId,
       })
+
+      await this.googleAuthService
+        .deleteUser(userId)
+        .then(() => {})
+        .catch(async (e) => {
+          await this.userService.add(user)
+          throw new HttpException(e?.errorCode, e?.message)
+        })
 
       return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {

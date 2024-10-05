@@ -26,32 +26,12 @@ export class ContactUsController extends BaseController<
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let query: FindOptionsWhere<IContactUsForm>[] = []
-
-      if (brands === 'true') {
-        query.push({
-          personType: Enum.PersonType.BRAND,
-        })
-      }
-
-      if (influencer === 'true') {
-        query.push({
-          personType: Enum.PersonType.INFLUENCER,
-        })
-      }
-
-      if (typeof name === 'string') {
-        query.push({
-          name: ILike(`%${name}%`),
-        })
-      }
-
-      const data = await this.service.findAllPaginated(
+      const data = await this.service.findAllContactUs(
         parseInt(page),
         parseInt(limit),
-        query,
-        [],
-        { id: 'DESC' }
+        name as string,
+        brands as string,
+        influencer as string
       )
 
       return responseHandler(200, res, 'Fetched Successfully', data, req)

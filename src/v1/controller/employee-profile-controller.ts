@@ -1,5 +1,4 @@
 import { BaseController, errorHandler, HttpException } from '../../utils'
-import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
 import {

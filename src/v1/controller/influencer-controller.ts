@@ -1,8 +1,6 @@
 import { errorHandler, HttpException } from '../../utils'
-import { PaginatedResponse } from '../../utils/base-service'
 import { responseHandler } from '../../utils/response-handler'
 import {
-  IInfluencerProfile,
   IInfluencerService,
   IInfluencerStatsService,
   IInstagramService,
@@ -10,8 +8,9 @@ import {
   IYoutubeService,
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
-import millify from 'millify'
 import { IUserService } from '../modules/user/interface'
+import { InfluencerDTO } from '../dtos/influencer-dtos'
+import { Enum } from '../../constants'
 
 class InfluencerController {
   private readonly influencerService: IInfluencerService
@@ -35,193 +34,6 @@ class InfluencerController {
     this.instagramService = instagramService
     this.youtubeService = youtubeService
     this.twitterService = twitterService
-  }
-
-  private influencerResponseDTO(
-    platform: string,
-    data: PaginatedResponse<IInfluencerProfile>
-  ): PaginatedResponse<any> {
-    let _data: any = []
-
-    if (platform === 'youtube') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isPaused: item.user.isPaused,
-          isVerified: item.user.isVerified,
-          mobileNo: item.mobileNo,
-          exclusive: item.exclusive,
-          pay: item.pay,
-          hideFrom: item.hideFrom,
-          userId: item.user.id,
-          views: millify(item?.youtubeStats?.views as number),
-          subscribers: millify(item?.youtubeStats?.subscribers as number),
-          videos: millify(item?.youtubeStats?.videos as number),
-          profileUrl: item.youtubeURL,
-          requestDate: item.createdAt,
-          isApproved: item.user.isApproved,
-        }
-      })
-    }
-
-    if (platform === 'instagram') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isPaused: item.user.isPaused,
-          isVerified: item.user.isVerified,
-          mobileNo: item.mobileNo,
-          exclusive: item.exclusive,
-          pay: item.pay,
-          hideFrom: item.hideFrom,
-          userId: item.user.id,
-          followers: millify(item?.instagramStats?.followers as number),
-          likes: millify(item?.instagramStats?.likes as number),
-          comments: millify(item?.instagramStats?.comments as number),
-          views: millify(item?.instagramStats?.views as number),
-          engagementRate: {
-            value: (item?.instagramStats?.engagementRate as number) * 100,
-            label: 'High',
-          },
-          percentageFakeFollowers:
-            (item?.instagramStats?.percentageFakeFollowers as number) * 100,
-          profileUrl: item.instagramURL,
-          requestDate: item.createdAt,
-          isApproved: item.user.isApproved,
-        }
-      })
-    }
-
-    if (platform === 'x') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isPaused: item.user.isPaused,
-          isVerified: item.user.isVerified,
-          mobileNo: item.mobileNo,
-          exclusive: item.exclusive,
-          pay: item.pay,
-          hideFrom: item.hideFrom,
-          userId: item.user.id,
-          followers: millify(item?.twitterStats?.followers as number),
-          views: millify(item?.twitterStats?.views as number),
-          tweets: millify(item?.twitterStats?.tweets as number),
-          replyCount: millify(item?.twitterStats?.replyCount as number),
-          retweets: millify(item?.twitterStats?.retweets as number),
-          profileUrl: item.twitterURL,
-          requestDate: item.createdAt,
-          isApproved: item.user.isApproved,
-        }
-      })
-    }
-
-    return {
-      data: _data,
-      totalPages: data.totalPages,
-      totalCount: data.totalCount,
-      currentPage: data.currentPage,
-    }
-  }
-
-  private influencerRequestResponseDTO(
-    platform: string,
-    data: PaginatedResponse<IInfluencerProfile>
-  ): PaginatedResponse<any> {
-    let _data: any = []
-
-    if (platform === 'youtube') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isApproved: item.user.isApproved,
-          mobileNo: item.mobileNo,
-          userId: item.user.id,
-          views: millify(item?.youtubeStats?.views as number),
-          subscribers: millify(item?.youtubeStats?.subscribers as number),
-          videos: millify(item?.youtubeStats?.videos as number),
-          profileUrl: item.youtubeURL,
-          requestDate: item.createdAt,
-        }
-      })
-    }
-
-    if (platform === 'instagram') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isApproved: item.user.isApproved,
-          mobileNo: item.mobileNo,
-          userId: item.user.id,
-          followers: millify(item?.instagramStats?.followers as number),
-          likes: millify(item?.instagramStats?.likes as number),
-          comments: millify(item?.instagramStats?.comments as number),
-          views: millify(item?.instagramStats?.views as number),
-          engagementRate: {
-            value: (item?.instagramStats?.engagementRate as number) * 100,
-            label: 'High',
-          },
-          percentageFakeFollowers:
-            (item?.instagramStats?.percentageFakeFollowers as number) * 100,
-          profileUrl: item.instagramURL,
-          requestDate: item.createdAt,
-        }
-      })
-    }
-
-    if (platform === 'x') {
-      _data = data.data.map((item) => {
-        return {
-          profileId: item.id,
-          name:
-            item.firstName +
-            ' ' +
-            (item.lastName !== null ? item.lastName : ''),
-          email: item.user.email,
-          isApproved: item.user.isApproved,
-          mobileNo: item.mobileNo,
-          userId: item.user.id,
-          followers: millify(item?.twitterStats?.followers as number),
-          views: millify(item?.twitterStats?.views as number),
-          tweets: millify(item?.twitterStats?.tweets as number),
-          replyCount: millify(item?.twitterStats?.replyCount as number),
-          retweets: millify(item?.twitterStats?.retweets as number),
-          profileUrl: item.twitterURL,
-          requestDate: item.createdAt,
-        }
-      })
-    }
-
-    return {
-      data: _data,
-      totalPages: data.totalPages,
-      totalCount: data.totalCount,
-      currentPage: data.currentPage,
-    }
   }
 
   async addInfluencerController(
@@ -315,9 +127,25 @@ class InfluencerController {
         rejected as string
       )
 
-      const _data = this.influencerResponseDTO(platform, data)
+      const _data = data.data.map((value) => {
+        return InfluencerDTO.transformationForInfluencerResponse(
+          value,
+          platform as Enum.Platform
+        )
+      })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      return responseHandler(
+        200,
+        res,
+        'Fetched Successfully',
+        {
+          data: _data,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+          currentPage: data.currentPage,
+        },
+        req
+      )
     } catch (e) {
       return errorHandler(e, res, req)
     }
@@ -368,9 +196,25 @@ class InfluencerController {
         platform
       )
 
-      const _data = this.influencerRequestResponseDTO(platform, data)
+      const _data = data.data.map((value) => {
+        return InfluencerDTO.transformationForInfluencerRequests(
+          value,
+          platform as Enum.Platform
+        )
+      })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      return responseHandler(
+        200,
+        res,
+        'Fetched Successfully',
+        {
+          data: _data,
+          currentPage: data.currentPage,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+        },
+        req
+      )
     } catch (e) {
       return errorHandler(e, res, req)
     }
@@ -387,111 +231,30 @@ class InfluencerController {
 
       if (url.includes('instagram')) {
         const data = await this.instagramService.getInstagramProfileStats(url)
-        const _data = {
-          cards: [
-            {
-              label: 'Followers Count',
-              value: data.followers,
-              subValue: '',
-              iconName: 'UsersIcon',
-            },
-            {
-              label: 'Average ER',
-              value: Math.round(data.engagementRate * 100),
-              subValue: '',
-              iconName: 'ChartPieIcon',
-            },
-            {
-              label: 'Average Views',
-              value: data.views,
-              subValue: '',
-              iconName: 'ChartBarIcon',
-            },
-            {
-              label: 'Average Likes',
-              value: data.likes,
-              subValue: '',
-              iconName: 'EyeIcon',
-            },
-          ],
-          name: data.name,
-          profilePic: data.image,
-          desc: data.description,
-          metric: {
-            key: 'Fake Followers',
-            value: Math.round(data.percentageFakeFollowers * 100),
-          },
-          profileUrl: url,
-        }
+
+        const _data = InfluencerDTO.transformationForExploreInstagramProfile(
+          data,
+          url
+        )
+
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('x.com')) {
         const data = await this.twitterService.getTwitterProfileStats(url)
-        const _data = {
-          cards: [
-            {
-              label: 'Followers Count',
-              value: data.followers,
-              subValue: '',
-              iconName: 'UsersIcon',
-            },
-            {
-              label: 'Reply Count',
-              value: data.replyCount,
-              subValue: '',
-              iconName: 'InboxArrowDownIcon',
-            },
-            {
-              label: 'Tweets',
-              value: data.tweets,
-              subValue: '',
-              iconName: 'ChatBubbleBottomCenterTextIcon',
-            },
-            {
-              label: 'Average Views',
-              value: data.views,
-              subValue: '',
-              iconName: 'EyeIcon',
-            },
-          ],
-          name: data.name,
-          profilePic: data.image,
-          desc: data.description,
-          metric: {
-            key: 'Retweets',
-            value: data.retweets,
-          },
-          profileUrl: url,
-        }
+
+        const _data = InfluencerDTO.transformationForExploreTwitterProfile(
+          data,
+          url
+        )
 
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('youtube')) {
         const data = await this.youtubeService.getYoutubeProfileStats(url)
-        const _data = {
-          cards: [
-            {
-              label: 'Subscribers',
-              value: data.subscribers,
-              subValue: '',
-              iconName: 'UsersIcon',
-            },
-            {
-              label: 'Average Views',
-              value: data.views,
-              subValue: '',
-              iconName: 'EyeIcon',
-            },
-            {
-              label: 'Videos',
-              value: data.videos,
-              subValue: '',
-              iconName: 'VideoCameraIcon',
-            },
-          ],
-          name: data.title,
-          profilePic: data.image,
-          desc: data.description,
-          profileUrl: url,
-        }
+
+        const _data = InfluencerDTO.transformationForExploreYoutubeProfile(
+          data,
+          url
+        )
+
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {

@@ -95,7 +95,10 @@ export class BrandProfileController extends BaseController<
   async findBrandsController(req: Request, res: Response): Promise<Response> {
     try {
       const { name } = req.query
-      const data = await this.service.findBrandsByName(name as string)
+
+      if (typeof name !== 'string') throw new HttpException(400, 'Invalid name')
+
+      const data = await this.service.findBrandsByName(name)
 
       const _data = data.map((value) => {
         return {

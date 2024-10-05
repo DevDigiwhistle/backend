@@ -10,6 +10,7 @@ import { responseHandler } from '../../utils/response-handler'
 import { IUser, IUserService } from '../modules/user/interface'
 import { PaginatedResponse } from '../../utils/base-service'
 import { IAdminAndEmployeeDTO } from '../modules/user/types'
+import { AdminDTO } from '../dtos/admin-dtos'
 
 class AdminController {
   private readonly adminService: IAdminService
@@ -24,36 +25,6 @@ class AdminController {
     this.adminService = adminService
     this.employeeService = employeeService
     this.userService = userService
-  }
-
-  private adminAndEmployeeDTO(
-    data: PaginatedResponse<IUser>
-  ): PaginatedResponse<IAdminAndEmployeeDTO> {
-    const _data = data.data.map((item) => {
-      const profile: IEmployeeProfile | IAdminProfile =
-        item[`${item.role.name}Profile`]
-
-      return {
-        userId: item.id,
-        email: item.email,
-        mobileNo: profile.mobileNo,
-        designation: item.role.name === 'admin' ? 'admin' : profile.designation,
-        isPaused: item.isPaused,
-        isApproved: item.isApproved,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        profilePic: profile.profilePic,
-        profileId: profile.id,
-        role: item.role.name,
-      }
-    })
-
-    return {
-      data: _data,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalCount: data.totalCount,
-    }
   }
 
   async addAdminOrEmployeeController(
@@ -100,9 +71,22 @@ class AdminController {
         name as string
       )
 
-      const _data = this.adminAndEmployeeDTO(data)
+      const _data = data.data.map((value) => {
+        return AdminDTO.transformationForAdminAndEmployee(value)
+      })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      return responseHandler(
+        200,
+        res,
+        'Fetched Successfully',
+        {
+          data: _data,
+          currentPage: data.currentPage,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+        },
+        req
+      )
     } catch (e) {
       return errorHandler(e, res, req)
     }
