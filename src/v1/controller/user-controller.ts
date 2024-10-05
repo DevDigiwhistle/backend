@@ -5,6 +5,7 @@ import { Request, Response } from 'express'
 import { userResponseDTO } from '../modules/auth/types'
 import { responseHandler } from '../../utils/response-handler'
 import { IGoogleAuthService } from '../modules/auth/interface'
+import { v4 as uuidv4 } from 'uuid'
 
 interface IUserController {
   getUser(req: Request, res: Response): Promise<Response>
@@ -175,6 +176,57 @@ class UserController implements IUserController {
       })
 
       return responseHandler(200, res, 'Deleted Successfully', {}, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async findUsersController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { queryType, email } = req.query
+
+      if (typeof queryType !== 'string') {
+        throw new HttpException(400, 'Invalid Query Type')
+      }
+
+      const _data: any[] = []
+
+      if (queryType === 'InfluencerAndAgencyByEmail') {
+        if (typeof email !== 'string') {
+          throw new HttpException(400, 'Invalid Email')
+        }
+
+        const data = await this.userService.findInfluencerAndAgencyByEmail(
+          req.query.email as string
+        )
+
+        data.forEach((value) => {
+          const profile =
+            value.agencyProfile === null
+              ? value.influencerProfile
+              : value.agencyProfile
+
+          const roleId = value.agencyProfile === null ? 4 : 5
+
+          if (profile !== null && profile !== undefined) {
+            _data.push({
+              profileId: profile.id,
+              email: value.email,
+              profilePic: profile.profilePic,
+              roleId: roleId,
+              id: uuidv4(),
+            })
+          }
+        })
+      }
+
+      return responseHandler(
+        200,
+        res,
+        'Campaigns fetched successfully',
+        _data,
+        req
+      )
     } catch (e) {
       return errorHandler(e, res, req)
     }

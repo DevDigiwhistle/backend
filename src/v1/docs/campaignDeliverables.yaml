@@ -3,7 +3,7 @@ tags:
   description: Endpoints for campaign deliverables
 
 paths:
-  /v1/campaign-deliverables:
+  /v1/campaign/deliverables:
     delete:
       summary: delete a group of deliverables
       tags:
@@ -52,7 +52,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/campaign-deliverables/{id}:
+  /v1/campaign/deliverables/{id}:
     delete:
       summary: delete a deliverable
       tags:

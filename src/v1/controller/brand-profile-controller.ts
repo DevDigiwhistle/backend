@@ -100,4 +100,22 @@ export class BrandProfileController
       return errorHandler(e, res, req)
     }
   }
+
+  async findBrandsController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { name } = req.query
+      const data = await this.service.findBrandsByName(name as string)
+
+      const _data = data.map((value) => {
+        return {
+          name: value.name,
+          id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
 }

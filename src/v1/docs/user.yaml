@@ -242,7 +242,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
-  /v1/user/revertAction:
+  /v1/user/revert:
     post:
       summary: Set User to pending
       tags:
@@ -281,6 +281,55 @@ paths:
                 $ref: '#/components/schemas/messageModel'
         '404':
           description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
+  /v1/user/search:
+    get:
+      summary: Search users
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+        - in: query
+          name: queryType
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/user'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:

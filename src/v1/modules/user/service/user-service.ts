@@ -141,57 +141,5 @@ class UserService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
-
-  async findBrandsByName(name: string): Promise<IUser[]> {
-    try {
-      const data = await this.crudBase.findAll(
-        [
-          {
-            role: {
-              id: Enum.ROLES.BRAND,
-            },
-            brandProfile: {
-              name: ILike(`%${name}%`),
-            },
-          },
-        ],
-        ['brandProfile']
-      )
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
-  async findEmployeeByName(name: string): Promise<IUser[]> {
-    try {
-      const data = await this.crudBase.findAll(
-        [
-          {
-            role: {
-              id: Enum.ROLES.EMPLOYEE,
-            },
-            employeeProfile: {
-              firstName: ILike(`%${name}%`),
-            },
-          },
-          {
-            role: {
-              id: Enum.ROLES.EMPLOYEE,
-            },
-            employeeProfile: {
-              lastName: ILike(`%${name}%`),
-            },
-          },
-        ],
-        ['employeeProfile']
-      )
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
 }
 export { UserService }

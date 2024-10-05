@@ -105,4 +105,30 @@ export class EmployeeProfileController
       return errorHandler(e, res, req)
     }
   }
+
+  async findEmployeesController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { name } = req.query
+
+      if (typeof name !== 'string') throw new HttpException(400, 'Invalid name')
+
+      const data = await this.service.findEmployeesByName(name)
+
+      const _data = data.map((value) => {
+        return {
+          name:
+            value.firstName +
+            (value.lastName === null ? '' : ' ' + value.lastName),
+          id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
 }

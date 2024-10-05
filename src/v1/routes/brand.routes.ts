@@ -38,6 +38,13 @@ brandRouter.get(
   brandProfileController.getAllBrandsController.bind(brandProfileController)
 )
 
+brandRouter.get(
+  '/search',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  brandProfileController.findBrandsController.bind(brandProfileController)
+)
+
 brandRouter.patch(
   '/profile/:id',
   verifyToken,

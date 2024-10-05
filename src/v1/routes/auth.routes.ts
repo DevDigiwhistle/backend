@@ -32,25 +32,25 @@ authRouter.post(
 )
 
 authRouter.post(
-  '/reset-password',
+  '/reset/password',
   resetPasswordValidators.validateInput.bind(resetPasswordValidators),
   authController.resetPasswordController.bind(authController)
 )
 
 authRouter.post(
-  '/reset-password-email',
+  '/reset/password/request',
   resetPasswordEmailValidators.validateInput.bind(resetPasswordEmailValidators),
   authController.sendResetPasswordEmailController.bind(authController)
 )
 
 authRouter.post(
-  '/generate-mobile-otp',
+  '/otp',
   mobileOTPValidator.validateInput.bind(mobileOTPValidator),
   authController.sendMobileOTPController.bind(authController)
 )
 
 authRouter.post(
-  '/verify-mobile-otp',
+  '/otp/verify',
   verifyMobileOTPValidator.validateInput.bind(verifyMobileOTPValidator),
   authController.verifyMobileOTPController.bind(authController)
 )

@@ -12,6 +12,7 @@ export interface IBrandProfileService
     rejected?: string,
     name?: string
   ): Promise<PaginatedResponse<IBrandProfile>>
+  findBrandsByName(name: string): Promise<IBrandProfile[]>
 }
 
 export interface IAgencyProfileService

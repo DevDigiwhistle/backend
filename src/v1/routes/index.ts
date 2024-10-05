@@ -28,8 +28,8 @@ apiRouter.use('/employee', employeeRouter)
 apiRouter.use('/agency', agencyRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/remarks', remarksRouter)
+apiRouter.use('/campaign/participants', campaignParticipantRouter)
+apiRouter.use('/campaign/deliverables', campaignDeliverableRouter)
 apiRouter.use('/campaign', campaignRouter)
-apiRouter.use('/campaign-participants', campaignParticipantRouter)
-apiRouter.use('/campaign-deliverables', campaignDeliverableRouter)
 
 export default apiRouter

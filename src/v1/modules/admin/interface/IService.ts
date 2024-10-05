@@ -7,7 +7,9 @@ export interface IAdminProfileService
   extends IBaseService<IAdminProfile, IAdminProfileCRUD> {}
 
 export interface IEmployeeProfileService
-  extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {}
+  extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {
+  findEmployeesByName(name: string): Promise<IEmployeeProfile[]>
+}
 
 export interface IAdminService {
   addAdmin(data: AddAdminOrEmployeeInput): Promise<void>

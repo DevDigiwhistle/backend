@@ -52,27 +52,6 @@ campaignRouter.patch(
 )
 
 campaignRouter.get(
-  '/search-by-email',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  campaignController.findInfluencerAndAgencyController.bind(campaignController)
-)
-
-campaignRouter.get(
-  '/search-employees',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  campaignController.findEmployeesController.bind(campaignController)
-)
-
-campaignRouter.get(
-  '/search-brands',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  campaignController.findBrandsController.bind(campaignController)
-)
-
-campaignRouter.get(
   '/stats',
   verifyToken,
   authorizeUser([

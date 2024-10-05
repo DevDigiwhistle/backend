@@ -73,6 +73,18 @@ class BrandProfileService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async findBrandsByName(name: string): Promise<IBrandProfile[]> {
+    try {
+      const data = await this.crudBase.findAll({
+        name: ILike(`%${name}%`),
+      })
+
+      return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 
 export { BrandProfileService }

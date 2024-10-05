@@ -47,4 +47,13 @@ employeeRouter.patch(
   employeeProfileController.updateController.bind(employeeProfileController)
 )
 
+employeeRouter.get(
+  '/search',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  employeeProfileController.findEmployeesController.bind(
+    employeeProfileController
+  )
+)
+
 export default employeeRouter
