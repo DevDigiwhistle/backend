@@ -11,20 +11,11 @@ import {
 } from '../modules/brands/interface'
 import { Request, Response } from 'express'
 
-interface IBrandProfileController
-  extends IBaseController<
-    IBrandProfile,
-    IBrandProfileCRUD,
-    IBrandProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-  getAllBrandsController(req: Request, res: Response): Promise<Response>
-}
-
-export class BrandProfileController
-  extends BaseController<IBrandProfile, IBrandProfileCRUD, IBrandProfileService>
-  implements IBrandProfileController
-{
+export class BrandProfileController extends BaseController<
+  IBrandProfile,
+  IBrandProfileCRUD,
+  IBrandProfileService
+> {
   private readonly userService: IUserService
 
   constructor(

@@ -11,24 +11,11 @@ import {
 } from '../modules/brands/interface'
 import { Response, Request } from 'express'
 
-interface IAgencyProfileController
-  extends IBaseController<
-    IAgencyProfile,
-    IAgencyProfileCRUD,
-    IAgencyProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-  getAllAgencyController(req: Request, res: Response): Promise<Response>
-}
-
-export class AgencyProfileController
-  extends BaseController<
-    IAgencyProfile,
-    IAgencyProfileCRUD,
-    IAgencyProfileService
-  >
-  implements IAgencyProfileController
-{
+export class AgencyProfileController extends BaseController<
+  IAgencyProfile,
+  IAgencyProfileCRUD,
+  IAgencyProfileService
+> {
   private readonly userService: IUserService
 
   constructor(

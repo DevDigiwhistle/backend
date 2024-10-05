@@ -10,19 +10,11 @@ import {
 import { Request, Response } from 'express'
 import { IUserService } from '../modules/user/interface'
 
-interface IAdminProfileController
-  extends IBaseController<
-    IAdminProfile,
-    IAdminProfileCRUD,
-    IAdminProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-}
-
-export class AdminProfileController
-  extends BaseController<IAdminProfile, IAdminProfileCRUD, IAdminProfileService>
-  implements IAdminProfileController
-{
+export class AdminProfileController extends BaseController<
+  IAdminProfile,
+  IAdminProfileCRUD,
+  IAdminProfileService
+> {
   private readonly userService: IUserService
 
   constructor(

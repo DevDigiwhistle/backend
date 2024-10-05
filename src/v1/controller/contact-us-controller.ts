@@ -10,19 +10,11 @@ import { Request, Response } from 'express'
 import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/response-handler'
 
-interface IContactUsController
-  extends IBaseController<
-    IContactUsForm,
-    IContactUsFormCRUD,
-    IContactUsService
-  > {
-  getAllPaginated(req: Request, res: Response): Promise<Response>
-}
-
-export class ContactUsController
-  extends BaseController<IContactUsForm, IContactUsFormCRUD, IContactUsService>
-  implements IContactUsController
-{
+export class ContactUsController extends BaseController<
+  IContactUsForm,
+  IContactUsFormCRUD,
+  IContactUsService
+> {
   constructor(contactUsService: IContactUsService) {
     super(contactUsService)
   }

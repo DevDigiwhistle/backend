@@ -7,16 +7,7 @@ import { responseHandler } from '../../utils/response-handler'
 import { IGoogleAuthService } from '../modules/auth/interface'
 import { v4 as uuidv4 } from 'uuid'
 
-interface IUserController {
-  getUser(req: Request, res: Response): Promise<Response>
-  approveUser(req: Request, res: Response): Promise<Response>
-  pauseUser(req: Request, res: Response): Promise<Response>
-  rejectUser(req: Request, res: Response): Promise<Response>
-  revertAction(req: Request, res: Response): Promise<Response>
-  deleteUser(req: Request, res: Response): Promise<Response>
-}
-
-class UserController implements IUserController {
+class UserController {
   private readonly userService: IUserService
   private readonly googleAuthService: IGoogleAuthService
 

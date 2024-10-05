@@ -13,15 +13,11 @@ import {
 } from '../modules/admin/interface'
 import { Request, Response } from 'express'
 
-interface IRemarksController
-  extends IBaseController<IRemarks, IRemarksCRUD, IRemarksService> {
-  getRemarksByUserIdController(req: Request, res: Response): Promise<Response>
-}
-
-class RemarksController
-  extends BaseController<IRemarks, IRemarksCRUD, IRemarksService>
-  implements IRemarksController
-{
+export class RemarksController extends BaseController<
+  IRemarks,
+  IRemarksCRUD,
+  IRemarksService
+> {
   private readonly remarksService: IRemarksService
 
   constructor(remarksService: IRemarksService) {
@@ -70,5 +66,3 @@ class RemarksController
     }
   }
 }
-
-export { RemarksController }

@@ -4,19 +4,7 @@ import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/response-handler'
 import { IAuthService } from '../modules/auth/interface'
 
-interface IAuthController {
-  signUpController: (req: Request, res: Response) => Promise<Response>
-  logInController: (req: Request, res: Response) => Promise<Response>
-  resetPasswordController(req: Request, res: Response): Promise<Response>
-  sendResetPasswordEmailController(
-    req: Request,
-    res: Response
-  ): Promise<Response>
-  sendMobileOTPController(req: Request, res: Response): Promise<Response>
-  verifyMobileOTPController(req: Request, res: Response): Promise<Response>
-}
-
-class AuthController implements IAuthController {
+export class AuthController {
   private readonly authService: IAuthService
 
   constructor(authService: IAuthService) {
@@ -118,5 +106,3 @@ class AuthController implements IAuthController {
     }
   }
 }
-
-export { type IAuthController, AuthController }

@@ -10,23 +10,11 @@ import {
 import { Request, Response } from 'express'
 import { IUserService } from '../modules/user/interface'
 
-interface IEmployeeProfileController
-  extends IBaseController<
-    IEmployeeProfile,
-    IEmployeeProfileCRUD,
-    IEmployeeProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-}
-
-export class EmployeeProfileController
-  extends BaseController<
-    IEmployeeProfile,
-    IEmployeeProfileCRUD,
-    IEmployeeProfileService
-  >
-  implements IEmployeeProfileController
-{
+export class EmployeeProfileController extends BaseController<
+  IEmployeeProfile,
+  IEmployeeProfileCRUD,
+  IEmployeeProfileService
+> {
   private readonly userService: IUserService
 
   constructor(

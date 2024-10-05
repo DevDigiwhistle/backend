@@ -12,23 +12,11 @@ import {
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 
-interface IInfluencerProfileController
-  extends IBaseController<
-    IInfluencerProfile,
-    IInfluencerProfileCRUD,
-    IInfluencerProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-}
-
-export class InfluencerProfileController
-  extends BaseController<
-    IInfluencerProfile,
-    IInfluencerProfileCRUD,
-    IInfluencerProfileService
-  >
-  implements IInfluencerProfileController
-{
+export class InfluencerProfileController extends BaseController<
+  IInfluencerProfile,
+  IInfluencerProfileCRUD,
+  IInfluencerProfileService
+> {
   private readonly userService: IUserService
   private readonly influencerStatsService: IInfluencerStatsService
   constructor(
