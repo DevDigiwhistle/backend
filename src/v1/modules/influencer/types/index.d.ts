@@ -69,7 +69,7 @@ export type TwitterPostStats = {
   retweets: number
 }
 
-export type InfluencerByEmailDTO = {
+export type InfluencerByEmailResponse = {
   email: string
   profile: string
 }

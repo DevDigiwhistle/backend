@@ -2,7 +2,7 @@ import { ILike } from 'typeorm'
 import { BaseService, HttpException } from '../../../../utils'
 import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
 import { IInfluencerProfileService } from '../interface/IService'
-import { InfluencerByEmailDTO, InfluencerStats } from '../types'
+import { InfluencerByEmailResponse, InfluencerStats } from '../types'
 
 class InfluencerProfileService
   extends BaseService<IInfluencerProfile, IInfluencerProfileCRUD>
@@ -24,7 +24,9 @@ class InfluencerProfileService
     super(influencerProfileCRUD)
   }
 
-  async findInfluencerByEmail(email: string): Promise<InfluencerByEmailDTO[]> {
+  async findInfluencerByEmail(
+    email: string
+  ): Promise<InfluencerByEmailResponse[]> {
     try {
       const influencer = await this.findAll(
         {

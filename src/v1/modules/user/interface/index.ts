@@ -3,7 +3,7 @@ import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { ICRUDBase } from '../../../../utils'
-import { IAdminAndEmployeeDTO, userStats } from '../types'
+import { userStats } from '../types'
 import { IBaseService, PaginatedResponse } from '../../../../utils/base-service'
 
 export interface IUser extends ObjectLiteral {

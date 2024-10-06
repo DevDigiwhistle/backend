@@ -2,42 +2,42 @@ import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 
-export type authDTO = {
+export type authRequest = {
   idToken: string
   role: string
 }
 
-export type loginDTO = {
+export type loginRequest = {
   idToken: string
 }
 
-export type userDTO = {
+export type firebaseUser = {
   email: string
   uid: string
 }
 
-export type resetPassDTO = {
+export type resetPassRequest = {
   oobCode: string
   password: string
 }
 
-export type loginResponseDTO = {
+export type loginResponse = {
   token: string
   user: userResponse
 }
 
-export type signUpResponseDTO = {
+export type signUpResponse = {
   id: string
   email: string
   role: string
   isVerified: boolean
 }
 
-export type mobileDTO = {
+export type mobileRequest = {
   mobileNo: string
 }
 
-export type verifyMobileDTO = {
+export type verifyMobileRequest = {
   mobileNo: string
   otp: string
 }
@@ -56,15 +56,3 @@ export type userResponse = {
     | IInfluencerProfile
   isOnBoarded?: boolean
 }
-
-// export type userProfileDTO = {
-//   userId: string
-//   email: string
-//   role: string
-//   isVerified: boolean
-//   isPaused: boolean
-//   isApproved: boolean
-//   name: string
-//   mobileNo: string
-//   profilePic: string | null
-// }

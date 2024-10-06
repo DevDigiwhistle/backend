@@ -15,9 +15,9 @@ import { DeepPartial } from 'typeorm'
 import { IExtendedRequest } from '../interface'
 import { Enum } from '../../constants'
 import {
-  IAgencyDTO,
-  ICampaignDTO,
-  IInfluencerDTO,
+  ICampaignAgencyData,
+  ICampaignCardsRequest,
+  ICampaignInfluencerData,
 } from '../modules/campaign/types'
 import { CampaignDTO } from '../dtos'
 
@@ -505,7 +505,7 @@ class CampaignController extends BaseController<
 
   async updateCardsController(req: Request, res: Response): Promise<Response> {
     try {
-      const data = req.body as ICampaignDTO
+      const data = req.body as ICampaignCardsRequest
       const { participants, deliverables } =
         CampaignDTO.transformationForParticipantsAndDeliverablesFromCampaigns(
           data

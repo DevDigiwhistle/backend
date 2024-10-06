@@ -1,15 +1,8 @@
 import { Request, Response } from 'express'
 import { errorHandler, HttpException } from '../../utils'
-import {
-  IAdminProfile,
-  IAdminService,
-  IEmployeeProfile,
-  IEmployeeService,
-} from '../modules/admin/interface'
+import { IAdminService, IEmployeeService } from '../modules/admin/interface'
 import { responseHandler } from '../../utils/response-handler'
-import { IUser, IUserService } from '../modules/user/interface'
-import { PaginatedResponse } from '../../utils/base-service'
-import { IAdminAndEmployeeDTO } from '../modules/user/types'
+import { IUserService } from '../modules/user/interface'
 import { AdminDTO } from '../dtos'
 
 class AdminController {

@@ -1,5 +1,5 @@
 import { IBaseService } from '../../../../utils'
-import { AddAdmin, AddAdminOrEmployeeInput, remarksDTO } from '../types'
+import { AddAdmin, AddAdminOrEmployeeInput, remarksResponse } from '../types'
 import { IAdminProfileCRUD, IEmployeeProfileCRUD, IRemarksCRUD } from './ICRUD'
 import { IAdminProfile, IEmployeeProfile, IRemarks } from './IModels'
 
@@ -20,6 +20,6 @@ export interface IEmployeeService {
 }
 
 export interface IRemarksService extends IBaseService<IRemarks, IRemarksCRUD> {
-  findAllRemarksByUserId(userId: string): Promise<remarksDTO[]>
+  findAllRemarksByUserId(userId: string): Promise<remarksResponse[]>
   clearAllRemarksByUserId(userId: string): Promise<void>
 }

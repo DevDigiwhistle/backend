@@ -1,7 +1,7 @@
 import { IRemarks, IRemarksCRUD } from '../interface'
 import { IRemarksService } from '../interface'
 import { BaseService, HttpException, IBaseService } from '../../../../utils'
-import { remarksDTO } from '../types'
+import { remarksResponse } from '../types'
 
 class RemarksService
   extends BaseService<IRemarks, IRemarksCRUD>
@@ -20,7 +20,7 @@ class RemarksService
     super(remarksCRUD)
   }
 
-  async findAllRemarksByUserId(userId: string): Promise<remarksDTO[]> {
+  async findAllRemarksByUserId(userId: string): Promise<remarksResponse[]> {
     try {
       const data = await this.findAll(
         {
@@ -47,7 +47,7 @@ class RemarksService
       })
 
       const filteredData = _data.filter((item) => item !== undefined)
-      return filteredData as remarksDTO[]
+      return filteredData as remarksResponse[]
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

@@ -2,7 +2,7 @@ import { firebase } from '../../../../config'
 import { HttpException } from '../../../../utils'
 import { IAxiosService } from '../../../utils'
 import { IGoogleAuthService } from '../interface'
-import { userDTO } from '../types'
+import { firebaseUser } from '../types'
 
 class GoogleAuthService implements IGoogleAuthService {
   private readonly axiosService: IAxiosService
@@ -27,7 +27,7 @@ class GoogleAuthService implements IGoogleAuthService {
     }
   }
 
-  async createUser(email: string): Promise<userDTO> {
+  async createUser(email: string): Promise<firebaseUser> {
     try {
       const user = await firebase.auth().createUser({
         email: email,
@@ -44,7 +44,7 @@ class GoogleAuthService implements IGoogleAuthService {
     }
   }
 
-  async verifyIdToken(idToken: string): Promise<userDTO> {
+  async verifyIdToken(idToken: string): Promise<firebaseUser> {
     try {
       const user = await firebase.auth().verifyIdToken(idToken)
 

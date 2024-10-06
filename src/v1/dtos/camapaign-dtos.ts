@@ -7,9 +7,9 @@ import {
 } from '../modules/campaign/interface'
 import { v4 as uuidv4 } from 'uuid'
 import {
-  IAgencyDTO,
-  ICampaignDTO,
-  IInfluencerDTO,
+  ICampaignAgencyData,
+  ICampaignCardsRequest,
+  ICampaignInfluencerData,
 } from '../modules/campaign/types'
 
 export class CampaignDTO {
@@ -335,7 +335,7 @@ export class CampaignDTO {
   }
 
   static transformationForParticipantsAndDeliverablesFromCampaigns(
-    data: ICampaignDTO
+    data: ICampaignCardsRequest
   ) {
     const participantData: Partial<ICampaignParticipants>[] = []
     const deliverableData: DeepPartial<ICampaignDeliverables>[] = []
@@ -353,7 +353,7 @@ export class CampaignDTO {
       })
 
       if (value.type === 'influencer') {
-        const participant = value as IInfluencerDTO
+        const participant = value as ICampaignInfluencerData
         participant.deliverables.map((deliverable) => {
           deliverableData.push({
             id: deliverable.id,
@@ -371,7 +371,7 @@ export class CampaignDTO {
           })
         })
       } else if (value.type === 'agency') {
-        const participant = value as IAgencyDTO
+        const participant = value as ICampaignAgencyData
         participant.influencer.map((influencer) => {
           influencer.deliverables.map((deliverable) => {
             deliverableData.push({

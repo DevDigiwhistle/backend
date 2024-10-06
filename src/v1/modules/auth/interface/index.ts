@@ -1,14 +1,14 @@
 import { type ObjectLiteral } from 'typeorm'
 import { IBaseService, ICRUDBase } from '../../../../utils'
 import {
-  authDTO,
-  loginDTO,
-  loginResponseDTO,
-  mobileDTO,
-  resetPassDTO,
-  signUpResponseDTO,
-  userDTO,
-  verifyMobileDTO,
+  authRequest,
+  loginRequest,
+  loginResponse,
+  mobileRequest,
+  resetPassRequest,
+  signUpResponse,
+  firebaseUser,
+  verifyMobileRequest,
 } from '../types'
 
 // models
@@ -32,18 +32,18 @@ export interface IVerificationService
 }
 
 export interface IAuthService {
-  signUp(signUpData: authDTO): Promise<signUpResponseDTO>
-  logIn(logInData: loginDTO): Promise<loginResponseDTO>
+  signUp(signUpData: authRequest): Promise<signUpResponse>
+  logIn(logInData: loginRequest): Promise<loginResponse>
   emailResetPasswordLink(email: string): Promise<void>
-  resetPassword(resetPassData: resetPassDTO): Promise<void>
-  verifyMobileOTP(verifyMobileData: verifyMobileDTO): Promise<loginResponseDTO>
-  sendMobileOTP(mobileData: mobileDTO): Promise<void>
+  resetPassword(resetPassData: resetPassRequest): Promise<void>
+  verifyMobileOTP(verifyMobileData: verifyMobileRequest): Promise<loginResponse>
+  sendMobileOTP(mobileData: mobileRequest): Promise<void>
 }
 
 export interface IGoogleAuthService {
-  createUser(email: string): Promise<userDTO>
+  createUser(email: string): Promise<firebaseUser>
   deleteUser(uid: string): Promise<void>
-  verifyIdToken(idToken: string): Promise<userDTO>
+  verifyIdToken(idToken: string): Promise<firebaseUser>
   generateResetLink(email: string): Promise<string>
   resetPassword(password: string, oobCode: string): Promise<void>
 }

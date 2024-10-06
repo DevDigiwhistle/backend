@@ -27,7 +27,7 @@ export type AddAdmin = {
   userId: string
 }
 
-export type remarksDTO = {
+export type remarksResponse = {
   id: string
   name: string
   profilePic: string | null
