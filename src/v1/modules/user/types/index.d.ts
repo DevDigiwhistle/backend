@@ -1,4 +1,4 @@
-export type userStatsDTO = {
+export type userStats = {
   approved: string
   pending: string
   rejected: string

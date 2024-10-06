@@ -13,7 +13,7 @@ import {
   mobileDTO,
   resetPassDTO,
   signUpResponseDTO,
-  userResponseDTO,
+  userResponse,
   verifyMobileDTO,
 } from '../types'
 import { IMailerService } from '../../../utils'
@@ -144,7 +144,7 @@ class AuthService implements IAuthService {
       if (_user.isVerified === false && isOnboardingDone === true)
         throw new HttpException(400, 'Waiting for Approval')
 
-      const _userResponse: userResponseDTO = {
+      const _userResponse: userResponse = {
         id: _user.id,
         email: _user.email,
         isVerified: _user.isVerified,
@@ -265,7 +265,7 @@ class AuthService implements IAuthService {
       if (user.isVerified === false && isOnboardingDone === true)
         throw new HttpException(400, 'Waiting for Approval!!')
 
-      const _userResponse: userResponseDTO = {
+      const _userResponse: userResponse = {
         id: user.id,
         email: user.email,
         isVerified: user.isVerified,

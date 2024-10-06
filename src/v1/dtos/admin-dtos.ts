@@ -1,5 +1,6 @@
 import { IAdminProfile, IEmployeeProfile } from '../modules/admin/interface'
 import { IUser } from '../modules/user/interface'
+import { userStats } from '../modules/user/types'
 
 export class AdminDTO {
   static transformationForAdminAndEmployee(data: IUser) {
@@ -19,5 +20,28 @@ export class AdminDTO {
       profileId: profile.id,
       role: data.role.name,
     }
+  }
+
+  static transformationForUserStats(data: userStats) {
+    return [
+      {
+        label: 'Accepted Requests',
+        value: parseInt(data.approved),
+        subValue: '',
+        iconName: 'FaceSmileIcon',
+      },
+      {
+        label: 'Pending Requests',
+        value: parseInt(data.pending),
+        subValue: '',
+        iconName: 'ExclamationCircleIcon',
+      },
+      {
+        label: 'Declined Requests',
+        value: parseInt(data.rejected),
+        subValue: '',
+        iconName: 'FaceFrownIcon',
+      },
+    ]
   }
 }

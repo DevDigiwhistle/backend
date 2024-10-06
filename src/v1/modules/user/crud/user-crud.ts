@@ -1,7 +1,7 @@
 import { CRUDBase, HttpException } from '../../../../utils'
 import { EntityTarget } from 'typeorm'
 import { IUser, IUserCRUD } from '../interface'
-import { userStatsDTO } from '../types'
+import { userStats } from '../types'
 
 export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
   private static instance: IUserCRUD | null = null
@@ -106,7 +106,7 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
     }
   }
 
-  async findOverallUserStats(): Promise<userStatsDTO> {
+  async findOverallUserStats(): Promise<userStats> {
     try {
       const result = await this.repository
         .createQueryBuilder('user')

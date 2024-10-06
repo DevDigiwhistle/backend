@@ -10,7 +10,7 @@ import { responseHandler } from '../../utils/response-handler'
 import { IUser, IUserService } from '../modules/user/interface'
 import { PaginatedResponse } from '../../utils/base-service'
 import { IAdminAndEmployeeDTO } from '../modules/user/types'
-import { AdminDTO } from '../dtos/admin-dtos'
+import { AdminDTO } from '../dtos'
 
 class AdminController {
   private readonly adminService: IAdminService
@@ -96,26 +96,8 @@ class AdminController {
     try {
       const data = await this.userService.findOverallUserStats()
 
-      const _data = [
-        {
-          label: 'Accepted Requests',
-          value: parseInt(data.approved),
-          subValue: '',
-          iconName: 'FaceSmileIcon',
-        },
-        {
-          label: 'Pending Requests',
-          value: parseInt(data.pending),
-          subValue: '',
-          iconName: 'ExclamationCircleIcon',
-        },
-        {
-          label: 'Declined Requests',
-          value: parseInt(data.rejected),
-          subValue: '',
-          iconName: 'FaceFrownIcon',
-        },
-      ]
+      const _data = AdminDTO.transformationForUserStats(data)
+
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res, req)

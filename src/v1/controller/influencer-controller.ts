@@ -9,7 +9,7 @@ import {
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 import { IUserService } from '../modules/user/interface'
-import { InfluencerDTO } from '../dtos/influencer-dtos'
+import { InfluencerDTO } from '../dtos'
 import { Enum } from '../../constants'
 
 class InfluencerController {
@@ -157,20 +157,9 @@ class InfluencerController {
   ): Promise<Response> {
     try {
       const data = await this.influencerService.getInfluencerStats()
-      const _data = [
-        {
-          label: 'Total Influencers',
-          value: parseInt(data.exclusive) + parseInt(data.nonexclusive),
-          subValue: '',
-          iconName: 'UsersIcon',
-        },
-        {
-          label: 'Exclusive Influencers',
-          value: parseInt(data.exclusive),
-          subValue: '',
-          iconName: 'StarIcon',
-        },
-      ]
+
+      const _data = InfluencerDTO.transformationForInfluencerStats(data)
+
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res, req)

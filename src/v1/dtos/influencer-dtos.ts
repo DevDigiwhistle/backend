@@ -2,6 +2,7 @@ import millify from 'millify'
 import { Enum } from '../../constants'
 import { IInfluencerProfile } from '../modules/influencer/interface'
 import {
+  InfluencerStats,
   InstagramProfileStats,
   TwitterProfileStats,
   YoutubeProfileStats,
@@ -263,5 +264,22 @@ export class InfluencerDTO {
       desc: data.description,
       profileUrl: url,
     }
+  }
+
+  static transformationForInfluencerStats(data: InfluencerStats) {
+    return [
+      {
+        label: 'Total Influencers',
+        value: parseInt(data.exclusive) + parseInt(data.nonexclusive),
+        subValue: '',
+        iconName: 'UsersIcon',
+      },
+      {
+        label: 'Exclusive Influencers',
+        value: parseInt(data.exclusive),
+        subValue: '',
+        iconName: 'StarIcon',
+      },
+    ]
   }
 }

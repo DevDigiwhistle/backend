@@ -3,7 +3,7 @@ import { BaseService, HttpException } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
-import { userStatsDTO } from '../types'
+import { userStats } from '../types'
 import { Enum } from '../../../../constants'
 
 class UserService
@@ -97,7 +97,7 @@ class UserService
     }
   }
 
-  async findOverallUserStats(): Promise<userStatsDTO> {
+  async findOverallUserStats(): Promise<userStats> {
     try {
       return await this.crudBase.findOverallUserStats()
     } catch (e) {

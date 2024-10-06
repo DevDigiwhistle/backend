@@ -1,3 +1,4 @@
+import { DeepPartial } from 'typeorm'
 import { Enum } from '../../constants'
 import {
   ICampaign,
@@ -5,6 +6,11 @@ import {
   ICampaignParticipants,
 } from '../modules/campaign/interface'
 import { v4 as uuidv4 } from 'uuid'
+import {
+  IAgencyDTO,
+  ICampaignDTO,
+  IInfluencerDTO,
+} from '../modules/campaign/types'
 
 export class CampaignDTO {
   private static groupDeliverableByInfluencerName(
@@ -325,6 +331,71 @@ export class CampaignDTO {
           )
         })[0].deliverables
       ),
+    }
+  }
+
+  static transformationForParticipantsAndDeliverablesFromCampaigns(
+    data: ICampaignDTO
+  ) {
+    const participantData: Partial<ICampaignParticipants>[] = []
+    const deliverableData: DeepPartial<ICampaignDeliverables>[] = []
+    const participants = data.participants
+    participants.map((value) => {
+      participantData.push({
+        id: value.id,
+        commercialBrand: value.commercialBrand,
+        commercialCreator: value.commercialCreator,
+        paymentStatus: value.paymentStatus,
+        invoiceStatus: value.invoiceStatus,
+        toBePaid: value.toBeGiven,
+        margin: value.margin,
+        invoice: value.invoice,
+      })
+
+      if (value.type === 'influencer') {
+        const participant = value as IInfluencerDTO
+        participant.deliverables.map((deliverable) => {
+          deliverableData.push({
+            id: deliverable.id,
+            cpv: deliverable.cpv,
+            engagementRate: deliverable.er,
+            platform: deliverable.platform,
+            status: deliverable.campaignStatus,
+            link: deliverable.deliverableLink,
+            title: deliverable.title,
+            name: value.name,
+            desc: deliverable.desc,
+            campaignParticipant: {
+              id: value.id,
+            },
+          })
+        })
+      } else if (value.type === 'agency') {
+        const participant = value as IAgencyDTO
+        participant.influencer.map((influencer) => {
+          influencer.deliverables.map((deliverable) => {
+            deliverableData.push({
+              id: deliverable.id,
+              cpv: deliverable.cpv,
+              engagementRate: deliverable.er,
+              platform: deliverable.platform,
+              status: deliverable.campaignStatus,
+              link: deliverable.deliverableLink,
+              title: deliverable.title,
+              name: value.name,
+              desc: deliverable.desc,
+              campaignParticipant: {
+                id: value.id,
+              },
+            })
+          })
+        })
+      }
+    })
+
+    return {
+      participants: participantData,
+      deliverables: deliverableData,
     }
   }
 }

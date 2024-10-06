@@ -23,7 +23,7 @@ export type resetPassDTO = {
 
 export type loginResponseDTO = {
   token: string
-  user: userResponseDTO
+  user: userResponse
 }
 
 export type signUpResponseDTO = {
@@ -42,7 +42,7 @@ export type verifyMobileDTO = {
   otp: string
 }
 
-export type userResponseDTO = {
+export type userResponse = {
   id: string
   email: string
   role: string

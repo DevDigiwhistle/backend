@@ -19,7 +19,7 @@ import {
   ICampaignDTO,
   IInfluencerDTO,
 } from '../modules/campaign/types'
-import { CampaignDTO } from '../dtos/camapaign-dtos'
+import { CampaignDTO } from '../dtos'
 
 class CampaignController extends BaseController<
   ICampaign,
@@ -506,66 +506,14 @@ class CampaignController extends BaseController<
   async updateCardsController(req: Request, res: Response): Promise<Response> {
     try {
       const data = req.body as ICampaignDTO
-      const participants = data.participants
-      const participantData: Partial<ICampaignParticipants>[] = []
-      const deliverableData: DeepPartial<ICampaignDeliverables>[] = []
-
-      participants.map((value) => {
-        participantData.push({
-          id: value.id,
-          commercialBrand: value.commercialBrand,
-          commercialCreator: value.commercialCreator,
-          paymentStatus: value.paymentStatus,
-          invoiceStatus: value.invoiceStatus,
-          toBePaid: value.toBeGiven,
-          margin: value.margin,
-          invoice: value.invoice,
-        })
-
-        if (value.type === 'influencer') {
-          const participant = value as IInfluencerDTO
-          participant.deliverables.map((deliverable) => {
-            deliverableData.push({
-              id: deliverable.id,
-              cpv: deliverable.cpv,
-              engagementRate: deliverable.er,
-              platform: deliverable.platform,
-              status: deliverable.campaignStatus,
-              link: deliverable.deliverableLink,
-              title: deliverable.title,
-              name: value.name,
-              desc: deliverable.desc,
-              campaignParticipant: {
-                id: value.id,
-              },
-            })
-          })
-        } else if (value.type === 'agency') {
-          const participant = value as IAgencyDTO
-          participant.influencer.map((influencer) => {
-            influencer.deliverables.map((deliverable) => {
-              deliverableData.push({
-                id: deliverable.id,
-                cpv: deliverable.cpv,
-                engagementRate: deliverable.er,
-                platform: deliverable.platform,
-                status: deliverable.campaignStatus,
-                link: deliverable.deliverableLink,
-                title: deliverable.title,
-                name: value.name,
-                desc: deliverable.desc,
-                campaignParticipant: {
-                  id: value.id,
-                },
-              })
-            })
-          })
-        }
-      })
+      const { participants, deliverables } =
+        CampaignDTO.transformationForParticipantsAndDeliverablesFromCampaigns(
+          data
+        )
 
       await Promise.all([
-        this.campaignParticipantsService.updateMany(participantData),
-        this.campaignDeliverableService.insertMany(deliverableData),
+        this.campaignParticipantsService.updateMany(participants),
+        this.campaignDeliverableService.insertMany(deliverables),
       ])
 
       return responseHandler(200, res, 'Updated Successfully', {}, req)

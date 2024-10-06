@@ -1,7 +1,7 @@
 import { EntityTarget, ILike } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { IInfluencerProfile, IInfluencerProfileCRUD } from '../interface'
-import { InfluencerStatsDTO } from '../types'
+import { InfluencerStats } from '../types'
 import { InfluencerProfile } from '../models'
 
 class InfluencerProfileCRUD
@@ -23,7 +23,7 @@ class InfluencerProfileCRUD
     super(influencerProfile)
   }
 
-  async getInfluencerStats(): Promise<InfluencerStatsDTO> {
+  async getInfluencerStats(): Promise<InfluencerStats> {
     try {
       const result = await this.repository
         .createQueryBuilder('influencerProfile')
