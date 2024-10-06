@@ -5,6 +5,7 @@ import {
   IBaseController,
 } from '../../utils'
 import { responseHandler } from '../../utils/response-handler'
+import { RemarksDTO } from '../dtos/remarks-dtos'
 import { IExtendedRequest } from '../interface'
 import {
   IRemarks,
@@ -44,8 +45,17 @@ export class RemarksController extends BaseController<
       if (typeof userId !== 'string')
         throw new HttpException(400, 'Invalid UserId')
 
-      const data = await this.service.findAllRemarksByUserId(userId)
-      return responseHandler(200, res, 'Fetched Successfully', data, req)
+      const data = await this.service.findAll(
+        {
+          userId: userId,
+        },
+        ['remarker', 'remarker.employeeProfile', 'remarker.adminProfile'],
+        { createdAt: 'DESC' }
+      )
+
+      const _data = RemarksDTO.transformationForRemarksByUserId(data)
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
       return errorHandler(e, res, req)
     }

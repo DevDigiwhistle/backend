@@ -25,7 +25,24 @@ class UserService
 
   async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserByMobileNo(mobileNo)
+      const query: FindOptionsWhere<IUser> = [
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+        'role',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -36,10 +53,29 @@ class UserService
     userId: string
   ): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserProfileByMobileNoOrUserId(
-        mobileNo,
-        userId
-      )
+      const query: FindOptionsWhere<IUser> = [
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+        { adminProfile: { user: { id: userId } } },
+        { employeeProfile: { user: { id: userId } } },
+        { influencerProfile: { user: { id: userId } } },
+        { brandProfile: { user: { id: userId } } },
+        { agencyProfile: { user: { id: userId } } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+        'role',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -110,7 +146,24 @@ class UserService
     email: string
   ): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserByMobileNoAndEmail(mobileNo, email)
+      const query: FindOptionsWhere<IUser> = [
+        { email: email },
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

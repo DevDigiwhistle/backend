@@ -27,16 +27,7 @@ export interface IRole extends ObjectLiteral {
 }
 
 export interface IUserCRUD extends ICRUDBase<IUser> {
-  findUserByMobileNo(mobileNo: string): Promise<IUser | null>
-  findUserProfileByMobileNoOrUserId(
-    mobileNo: string,
-    userId: string
-  ): Promise<IUser | null>
   findOverallUserStats(): Promise<userStats>
-  findUserByMobileNoAndEmail(
-    mobileNo: string,
-    email: string
-  ): Promise<IUser | null>
 }
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}

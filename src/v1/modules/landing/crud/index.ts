@@ -1,3 +1,3 @@
-import { ContactUsFormCRUD } from './contactUs.crud'
+import { ContactUsFormCRUD } from './contactus-crud'
 
 export { ContactUsFormCRUD }

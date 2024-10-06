@@ -1,4 +1,4 @@
-import { HttpException } from '../../../../utils'
+import { AppLogger, HttpException } from '../../../../utils'
 import { IAxiosService } from '../../../utils'
 import querystring from 'querystring'
 import { IWhatsappService } from '../interface'
@@ -40,10 +40,8 @@ class WhatsappService implements IWhatsappService {
           apikey: `${process.env.GUPSHUP_API_KEY}`,
         }
       )
-
-      console.log(resp)
     } catch (e) {
-      console.log('error in whatsapp service: ', e)
+      AppLogger.getInstance().error(`Error in whatsapp service: ${e}`)
     }
   }
 }
