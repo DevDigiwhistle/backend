@@ -4,6 +4,7 @@ export type AgencyFilters = {
   id: string
   paymentStatus?: Enum.CampaignPaymentStatus
   platform?: Enum.Platform
+  campaignStatus?: Enum.CampaignDeliverableStatus
 }
 
 export type AdminFilters = {

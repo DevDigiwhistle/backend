@@ -3,7 +3,6 @@ import { BaseController, errorHandler, HttpException } from '../../utils'
 import {
   ICampaign,
   ICampaignCRUD,
-  ICampaignDeliverables,
   ICampaignDeliverablesService,
   ICampaignParticipants,
   ICampaignParticipantsService,
@@ -14,11 +13,7 @@ import { IUserService } from '../modules/user/interface'
 import { DeepPartial } from 'typeorm'
 import { IExtendedRequest } from '../interface'
 import { Enum } from '../../constants'
-import {
-  ICampaignAgencyData,
-  ICampaignCardsRequest,
-  ICampaignInfluencerData,
-} from '../modules/campaign/types'
+import { ICampaignCardsRequest } from '../modules/campaign/types'
 import { CampaignDTO } from '../dtos'
 
 class CampaignController extends BaseController<
@@ -233,7 +228,7 @@ class CampaignController extends BaseController<
         if (agencyProfileId === undefined)
           throw new HttpException(404, 'Agency Not Found')
 
-        const { name, payment, platform } = req.query
+        const { name, payment, platform, campaignStatus } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -246,6 +241,7 @@ class CampaignController extends BaseController<
             id: agencyProfileId,
             paymentStatus: payment as Enum.CampaignPaymentStatus,
             platform: platform as Enum.Platform,
+            campaignStatus: campaignStatus as Enum.CampaignDeliverableStatus,
           }
         )
 
@@ -266,8 +262,6 @@ class CampaignController extends BaseController<
           req
         )
       } else if (roleId === Enum.ROLES.BRAND) {
-        const { payment, campaignStatus, platform } = req.query
-
         const user = await this.userService.findOne({ id: req.user.id }, [
           'brandProfile',
         ])
@@ -275,6 +269,8 @@ class CampaignController extends BaseController<
 
         if (brandProfileId === undefined)
           throw new HttpException(404, 'Brand Not Found')
+
+        const { name, payment, platform, campaignStatus } = req.query
 
         const data = await this.service.getAllCampaigns(
           parseInt(page),
@@ -393,20 +389,7 @@ class CampaignController extends BaseController<
           lowerBound,
           upperBound
         )
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Comm.Brand',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
 
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.BRAND) {
@@ -420,20 +403,8 @@ class CampaignController extends BaseController<
           upperBound,
           brandProfileId
         )
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Capital',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
+
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.AGENCY) {
         const user = await this.userService.findOne({ id: req.user.id }, [
@@ -448,20 +419,8 @@ class CampaignController extends BaseController<
           agencyProfileId
         )
 
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Capital',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
+
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.INFLUENCER) {
         const user = await this.userService.findOne({ id: req.user.id }, [
@@ -480,20 +439,7 @@ class CampaignController extends BaseController<
           influencerProfileId
         )
 
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Revenue',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
 
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       }
@@ -539,54 +485,7 @@ class CampaignController extends BaseController<
 
       if (data === null) throw new HttpException(404, 'Campaign Not Found')
 
-      const _participants = data.participants.map((value) => {
-        if (value.influencerProfile !== null) {
-          return {
-            profileId: value.influencerProfile?.id,
-            email: value.email,
-            id: value.id,
-            roleId: Enum.ROLES.INFLUENCER,
-            profilePic: value.influencerProfile?.profilePic,
-          }
-        } else {
-          return {
-            profileId: value.agencyProfile?.id,
-            email: value.email,
-            id: value.id,
-            roleId: Enum.ROLES.AGENCY,
-            profilePic: null,
-          }
-        }
-      })
-
-      const _manager = {
-        id: data.manager?.id,
-        name:
-          data.manager?.firstName +
-          (data.manager?.lastName === null ? '' : ' ' + data.manager?.lastName),
-      }
-
-      const _incentiveWinner = {
-        id: data.incentiveWinner?.id,
-        name:
-          data.incentiveWinner?.firstName +
-          (data.incentiveWinner?.lastName === null
-            ? ''
-            : ' ' + data.incentiveWinner?.lastName),
-      }
-
-      const _brand = {
-        id: data.brand?.id,
-        name: data.brand?.name,
-      }
-
-      const _data = {
-        ...data,
-        participants: _participants,
-        manager: _manager,
-        incentiveWinner: _incentiveWinner,
-        brand: _brand,
-      }
+      const _data = CampaignDTO.transformationForCampaignData(data)
 
       return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {

@@ -7,10 +7,12 @@ import {
 } from '../modules/campaign/interface'
 import { v4 as uuidv4 } from 'uuid'
 import {
+  CampaignStats,
   ICampaignAgencyData,
   ICampaignCardsRequest,
   ICampaignInfluencerData,
 } from '../modules/campaign/types'
+import millify from 'millify'
 
 export class CampaignDTO {
   private static groupDeliverableByInfluencerName(
@@ -396,6 +398,111 @@ export class CampaignDTO {
     return {
       participants: participantData,
       deliverables: deliverableData,
+    }
+  }
+
+  static transformationForCampaignData(data: ICampaign) {
+    const _participants = data.participants.map((value) => {
+      if (value.influencerProfile !== null) {
+        return {
+          profileId: value.influencerProfile?.id,
+          email: value.email,
+          id: value.id,
+          roleId: Enum.ROLES.INFLUENCER,
+          profilePic: value.influencerProfile?.profilePic,
+        }
+      } else {
+        return {
+          profileId: value.agencyProfile?.id,
+          email: value.email,
+          id: value.id,
+          roleId: Enum.ROLES.AGENCY,
+          profilePic: null,
+        }
+      }
+    })
+
+    const _manager = {
+      id: data.manager?.id,
+      name:
+        data.manager?.firstName +
+        (data.manager?.lastName === null ? '' : ' ' + data.manager?.lastName),
+    }
+
+    const _incentiveWinner = {
+      id: data.incentiveWinner?.id,
+      name:
+        data.incentiveWinner?.firstName +
+        (data.incentiveWinner?.lastName === null
+          ? ''
+          : ' ' + data.incentiveWinner?.lastName),
+    }
+
+    const _brand = {
+      id: data.brand?.id,
+      name: data.brand?.name,
+    }
+
+    const _data = {
+      ...data,
+      participants: _participants,
+      manager: _manager,
+      incentiveWinner: _incentiveWinner,
+      brand: _brand,
+    }
+
+    return _data
+  }
+
+  static transformationForCampaignStats(
+    data: CampaignStats,
+    roleId: Enum.ROLES
+  ) {
+    if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
+      return [
+        {
+          label: 'Total Campaigns',
+          value: millify(parseInt(data.totalCampaign)),
+          subValue: '',
+          iconName: 'UsersIcon',
+        },
+        {
+          label: 'Total Comm.Brand',
+          value: millify(data.totalRevenue === null ? 0 : data.totalRevenue),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+      ]
+    } else if (roleId === Enum.ROLES.BRAND || roleId === Enum.ROLES.AGENCY) {
+      return [
+        {
+          label: 'Total Campaigns',
+          value: millify(parseInt(data.totalCampaign)),
+          subValue: '',
+          iconName: 'UsersIcon',
+        },
+        {
+          label: 'Total Capital',
+          value: millify(data.totalRevenue === null ? 0 : data.totalRevenue),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+      ]
+    } else if (roleId === Enum.ROLES.INFLUENCER) {
+      return [
+        {
+          label: 'Total Campaigns',
+          value: millify(parseInt(data.totalCampaign)),
+          subValue: '',
+          iconName: 'UsersIcon',
+        },
+        {
+          label: 'Total Revenue',
+          value: millify(data.totalRevenue === null ? 0 : data.totalRevenue),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+      ]
     }
   }
 }
