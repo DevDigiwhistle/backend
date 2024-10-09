@@ -13,6 +13,7 @@ import { IUser } from '../../user/interface'
 import { IBrandProfile } from '../interface'
 import { Campaign, CampaignParticipants } from '../../campaign/models'
 import { ICampaign, ICampaignParticipants } from '../../campaign/interface'
+import { PurchaseInvoice } from '../../invoice/models'
 
 @Entity()
 export class BrandProfile implements IBrandProfile {
@@ -87,6 +88,12 @@ export class AgencyProfile implements IBrandProfile {
     (campaignParticipant) => campaignParticipant.influencerProfile
   )
   campaignParticipant: ICampaignParticipants
+
+  @OneToMany(
+    () => PurchaseInvoice,
+    (purchaseInvoice) => purchaseInvoice.agencyProfile
+  )
+  purchaseInvoices: PurchaseInvoice[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

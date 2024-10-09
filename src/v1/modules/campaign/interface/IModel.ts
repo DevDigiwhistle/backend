@@ -2,6 +2,7 @@ import { Enum } from '../../../../constants'
 import { IEmployeeProfile } from '../../admin/interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
+import { IPurchaseInvoice, ISaleInvoice } from '../../invoice/interface'
 
 export interface ICampaign {
   id: string
@@ -19,6 +20,8 @@ export interface ICampaign {
   manager: IEmployeeProfile
   incentiveWinner: IEmployeeProfile | null
   participants: ICampaignParticipants[]
+  saleInvoices?: ISaleInvoice[]
+  purchaseInvoices?: IPurchaseInvoice[]
   cpv: number | null
   createdAt: Date
   updatedAt: Date

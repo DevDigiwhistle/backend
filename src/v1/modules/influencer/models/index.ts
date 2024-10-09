@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm'
 import { IUser } from '../../user/interface'
 import {
@@ -18,6 +19,8 @@ import {
 import { User } from '../../user/models'
 import { Campaign, CampaignParticipants } from '../../campaign/models'
 import { ICampaignParticipants } from '../../campaign/interface'
+import { PurchaseInvoice } from '../../invoice/models'
+import { IPurchaseInvoice } from '../../invoice/interface'
 
 @Entity()
 export class InfluencerProfile implements IInfluencerProfile {
@@ -92,6 +95,9 @@ export class InfluencerProfile implements IInfluencerProfile {
     (campaignParticipant) => campaignParticipant.influencerProfile
   )
   campaignParticipant: ICampaignParticipants
+
+  @ManyToOne(() => PurchaseInvoice, (invoice) => invoice.influencerProfile)
+  purchaseInvoices: IPurchaseInvoice[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
