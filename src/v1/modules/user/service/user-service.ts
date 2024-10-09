@@ -3,7 +3,7 @@ import { BaseService, HttpException } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { IUser, IUserService } from '../interface'
 import { IUserCRUD } from '../interface'
-import { userStatsDTO } from '../types'
+import { userStats } from '../types'
 import { Enum } from '../../../../constants'
 
 class UserService
@@ -25,7 +25,24 @@ class UserService
 
   async findUserByMobileNo(mobileNo: string): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserByMobileNo(mobileNo)
+      const query: FindOptionsWhere<IUser> = [
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+        'role',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -36,10 +53,29 @@ class UserService
     userId: string
   ): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserProfileByMobileNoOrUserId(
-        mobileNo,
-        userId
-      )
+      const query: FindOptionsWhere<IUser> = [
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+        { adminProfile: { user: { id: userId } } },
+        { employeeProfile: { user: { id: userId } } },
+        { influencerProfile: { user: { id: userId } } },
+        { brandProfile: { user: { id: userId } } },
+        { agencyProfile: { user: { id: userId } } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+        'role',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -97,7 +133,7 @@ class UserService
     }
   }
 
-  async findOverallUserStats(): Promise<userStatsDTO> {
+  async findOverallUserStats(): Promise<userStats> {
     try {
       return await this.crudBase.findOverallUserStats()
     } catch (e) {
@@ -110,7 +146,24 @@ class UserService
     email: string
   ): Promise<IUser | null> {
     try {
-      return await this.crudBase.findUserByMobileNoAndEmail(mobileNo, email)
+      const query: FindOptionsWhere<IUser> = [
+        { email: email },
+        { adminProfile: { mobileNo: mobileNo } },
+        { employeeProfile: { mobileNo: mobileNo } },
+        { influencerProfile: { mobileNo: mobileNo } },
+        { brandProfile: { mobileNo: mobileNo } },
+        { agencyProfile: { mobileNo: mobileNo } },
+      ]
+
+      const user = await this.findOne(query, [
+        'adminProfile',
+        'employeeProfile',
+        'influencerProfile',
+        'brandProfile',
+        'agencyProfile',
+      ])
+
+      return user
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -134,58 +187,6 @@ class UserService
           },
         ],
         ['agencyProfile', 'influencerProfile']
-      )
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
-  async findBrandsByName(name: string): Promise<IUser[]> {
-    try {
-      const data = await this.crudBase.findAll(
-        [
-          {
-            role: {
-              id: Enum.ROLES.BRAND,
-            },
-            brandProfile: {
-              name: ILike(`%${name}%`),
-            },
-          },
-        ],
-        ['brandProfile']
-      )
-
-      return data
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
-  async findEmployeeByName(name: string): Promise<IUser[]> {
-    try {
-      const data = await this.crudBase.findAll(
-        [
-          {
-            role: {
-              id: Enum.ROLES.EMPLOYEE,
-            },
-            employeeProfile: {
-              firstName: ILike(`%${name}%`),
-            },
-          },
-          {
-            role: {
-              id: Enum.ROLES.EMPLOYEE,
-            },
-            employeeProfile: {
-              lastName: ILike(`%${name}%`),
-            },
-          },
-        ],
-        ['employeeProfile']
       )
 
       return data

@@ -1,6 +1,7 @@
 import { Enum } from '../../../../constants'
 import { ICRUDBase } from '../../../../utils'
 import { IBaseService } from '../../../../utils'
+import { PaginatedResponse } from '../../../../utils/base-service'
 
 export interface IContactUsForm {
   id: number
@@ -17,4 +18,12 @@ export interface IContactUsForm {
 export interface IContactUsFormCRUD extends ICRUDBase<IContactUsForm> {}
 
 export interface IContactUsService
-  extends IBaseService<IContactUsForm, IContactUsFormCRUD> {}
+  extends IBaseService<IContactUsForm, IContactUsFormCRUD> {
+  findAllContactUs(
+    page: number,
+    limit: number,
+    name?: string,
+    brands?: string,
+    influencer?: string
+  ): Promise<PaginatedResponse<IContactUsForm>>
+}

@@ -1,5 +1,5 @@
 import { channelId, videoId } from '@gonetone/get-youtube-id-by-url'
-import { HttpException } from '../../../../utils'
+import { AppLogger, HttpException } from '../../../../utils'
 import { IAxiosService } from '../../../utils'
 import { IYoutubeService } from '../interface'
 import { YoutubePostStats, YoutubeProfileStats } from '../types'
@@ -59,6 +59,9 @@ class YoutubeService implements IYoutubeService {
         image: '',
       }
     } catch (e) {
+      AppLogger.getInstance().error(
+        `Error: ${e} in YoutubeService in Profile Section`
+      )
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }
@@ -92,6 +95,9 @@ class YoutubeService implements IYoutubeService {
         comments: 0,
       }
     } catch (e) {
+      AppLogger.getInstance().error(
+        `Error: ${e} in YoutubeService in Post Section`
+      )
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }

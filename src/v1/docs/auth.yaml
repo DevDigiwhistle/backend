@@ -13,7 +13,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthDTO'
+              $ref: '#/components/schemas/authRequest'
       responses:
         '200':
           description: Successful sign up
@@ -83,7 +83,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/loginDTO'
+                    $ref: '#/components/schemas/loginRequest'
 
         '400':
           description: Bad request
@@ -104,7 +104,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/auth/reset-password:
+  /v1/auth/reset/password:
     post:
       summary: Reset user password
       tags:
@@ -146,7 +146,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/auth/reset-password-email:
+  /v1/auth/reset/password/email:
     post:
       summary: Send reset password email
       tags:
@@ -189,7 +189,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/auth/generate-mobile-otp:
+  /v1/auth/otp:
     post:
       summary: Send otp to whatsapp number
       tags:
@@ -199,7 +199,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MobileDTO'
+              $ref: '#/components/schemas/mobileRequest'
       responses:
         '200':
           description: otp sent to mobile no successfully!!
@@ -232,7 +232,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/auth/verify-mobile-otp:
+  /v1/auth/verify/otp:
     post:
       summary: verify otp sent to whatsapp number
       tags:
@@ -242,7 +242,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/verifyMobileDTO'
+              $ref: '#/components/schemas/verifyMobileRequest'
       responses:
         '200':
           description: otp verified successfully!!
@@ -256,7 +256,7 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/loginDTO'
+                    $ref: '#/components/schemas/loginRequest'
 
         '400':
           description: Bad request
@@ -302,7 +302,7 @@ components:
             - $ref: '#/components/schemas/EmployeeProfileInput'
             - $ref: '#/components/schemas/InfluencerProfileInput'
 
-    AuthDTO:
+    authRequest:
       type: object
       properties:
         idToken:
@@ -333,7 +333,7 @@ components:
         - oobCode
         - password
 
-    MobileDTO:
+    mobileRequest:
       type: object
       properties:
         mobileNo:
@@ -341,7 +341,7 @@ components:
       required:
         - mobileNo
 
-    verifyMobileDTO:
+    verifyMobileRequest:
       type: object
       properties:
         mobileNo:
@@ -352,7 +352,7 @@ components:
         - mobileNo
         - otp
 
-    loginDTO:
+    loginRequest:
       type: object
       properties:
         token:

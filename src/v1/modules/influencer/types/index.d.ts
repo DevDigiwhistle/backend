@@ -69,12 +69,12 @@ export type TwitterPostStats = {
   retweets: number
 }
 
-export type InfluencerByEmailDTO = {
+export type InfluencerByEmailResponse = {
   email: string
   profile: string
 }
 
-export type InfluencerStatsDTO = {
+export type InfluencerStats = {
   nonexclusive: string
   exclusive: string
 }

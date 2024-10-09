@@ -3,7 +3,6 @@ import { BaseController, errorHandler, HttpException } from '../../utils'
 import {
   ICampaign,
   ICampaignCRUD,
-  ICampaignDeliverables,
   ICampaignDeliverablesService,
   ICampaignParticipants,
   ICampaignParticipantsService,
@@ -11,15 +10,11 @@ import {
 } from '../modules/campaign/interface'
 import { responseHandler } from '../../utils/response-handler'
 import { IUserService } from '../modules/user/interface'
-import { v4 as uuidv4 } from 'uuid'
 import { DeepPartial } from 'typeorm'
 import { IExtendedRequest } from '../interface'
 import { Enum } from '../../constants'
-import {
-  IAgencyDTO,
-  ICampaignDTO,
-  IInfluencerDTO,
-} from '../modules/campaign/types'
+import { ICampaignCardsRequest } from '../modules/campaign/types'
+import { CampaignDTO } from '../dtos'
 
 class CampaignController extends BaseController<
   ICampaign,
@@ -40,376 +35,6 @@ class CampaignController extends BaseController<
     this.campaignParticipantsService = campaignParticipantsService
     this.campaignDeliverableService = campaignDeliverableService
     this.userService = userService
-  }
-
-  private groupDeliverableByInfluencerName(
-    deliverables: ICampaignDeliverables[]
-  ) {
-    const mp: Map<
-      string,
-      Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-        desc: string | null
-      }>
-    > = new Map()
-
-    deliverables.map((deliverable: ICampaignDeliverables) => {
-      let value = mp.get(deliverable.name)
-
-      if (value === undefined) {
-        mp.set(deliverable.name, [
-          {
-            id: deliverable.id,
-            title: deliverable.title,
-            platform: deliverable.platform,
-            status: deliverable.status,
-            deliverableLink: deliverable.link,
-            er: deliverable.engagementRate,
-            cpv: deliverable.cpv,
-            desc: deliverable.desc,
-          },
-        ])
-      } else {
-        value = [
-          ...value,
-          {
-            id: deliverable.id,
-            title: deliverable.title,
-            platform: deliverable.platform,
-            status: deliverable.status,
-            deliverableLink: deliverable.link,
-            er: deliverable.engagementRate,
-            cpv: deliverable.cpv,
-            desc: deliverable.desc,
-          },
-        ]
-        mp.set(deliverable.name, value)
-      }
-    })
-
-    const influencer: Array<{
-      id: string
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    for (const [key, value] of mp) {
-      influencer.push({
-        name: key,
-        id: uuidv4(),
-        deliverables: value,
-      })
-    }
-
-    return influencer
-  }
-
-  private getAllDeliverablesForParticipants(
-    participants: ICampaignParticipants[],
-    agencyProfileId: string
-  ) {
-    let _data: Array<{
-      id: string
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    participants.forEach((value) => {
-      if (value.agencyProfile?.id === agencyProfileId) {
-        _data = this.groupDeliverableByInfluencerName(value.deliverables)
-      }
-    })
-
-    return _data
-  }
-
-  private groupDeliverablesByInfluencers(data: ICampaignParticipants[]) {
-    const mp: Map<
-      string,
-      Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    > = new Map()
-
-    const influencer: Array<{
-      name: string
-      deliverables: Array<{
-        id: string
-        title: string
-        platform: Enum.Platform
-        status: Enum.CampaignDeliverableStatus
-        deliverableLink: string | null
-        er: number | null
-        cpv: number | null
-      }>
-    }> = []
-
-    data.forEach((value: ICampaignParticipants) => {
-      value.deliverables.forEach((deliverable: ICampaignDeliverables) => {
-        let value = mp.get(deliverable.name)
-
-        if (value === undefined) {
-          mp.set(deliverable.name, [
-            {
-              id: deliverable.id,
-              title: deliverable.title,
-              platform: deliverable.platform,
-              status: deliverable.status,
-              deliverableLink: deliverable.link,
-              er: deliverable.engagementRate,
-              cpv: deliverable.cpv,
-            },
-          ])
-        } else {
-          value = [
-            ...value,
-            {
-              id: deliverable.id,
-              title: deliverable.title,
-              platform: deliverable.platform,
-              status: deliverable.status,
-              deliverableLink: deliverable.link,
-              er: deliverable.engagementRate,
-              cpv: deliverable.cpv,
-            },
-          ]
-          mp.set(deliverable.name, value)
-        }
-      })
-    })
-
-    for (const [key, value] of mp) {
-      influencer.push({
-        name: key,
-        deliverables: value,
-      })
-    }
-
-    return influencer
-  }
-
-  private campaignsAdminAndEmployeeDTO(data: ICampaign[]) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        commercial: value.commercial,
-        incentiveWinner:
-          value.manager?.firstName +
-          (value.manager?.lastName === null
-            ? ''
-            : ' ' + value.manager?.lastName) +
-          ' 5% (incentive)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: value.participants.map((participant) => {
-          if (participant.influencerProfile !== null) {
-            return {
-              type: 'influencer',
-              id: participant.id,
-              name:
-                participant.influencerProfile.firstName +
-                (participant.influencerProfile.lastName === null
-                  ? ''
-                  : ' ' + participant.influencerProfile.lastName),
-              exclusive: participant.influencerProfile.exclusive,
-              invoice: participant.invoice,
-              commercialBrand: participant.commercialBrand,
-              commercialCreator: participant.commercialCreator,
-              toBeGiven: participant.toBePaid,
-              margin: participant.margin,
-              paymentStatus: participant.paymentStatus,
-              invoiceStatus: participant.invoiceStatus,
-              deliverables:
-                participant.deliverables.length > 0
-                  ? participant.deliverables.map((deliverable) => {
-                      return {
-                        id: deliverable.id,
-                        title: deliverable.title,
-                        platform: deliverable.platform,
-                        status: deliverable.status,
-                        deliverableLink: deliverable.link,
-                        er: deliverable.engagementRate,
-                        cpv: deliverable.cpv,
-                        desc: deliverable.desc,
-                      }
-                    })
-                  : [
-                      {
-                        id: null,
-                        title: null,
-                        platform: Enum.Platform.INSTAGRAM,
-                        status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                        deliverableLink: null,
-                        er: null,
-                        cpv: null,
-                      },
-                    ],
-            }
-          } else {
-            const influencerGroupedData = this.groupDeliverableByInfluencerName(
-              participant.deliverables
-            )
-            return {
-              type: 'agency',
-              id: participant.id,
-              name: participant?.agencyProfile?.name,
-              invoice: participant.invoice,
-              commercialBrand: participant.commercialBrand,
-              commercialCreator: participant.commercialCreator,
-              toBeGiven: participant.toBePaid,
-              margin: participant.margin,
-              paymentStatus: participant.paymentStatus,
-              invoiceStatus: participant.invoiceStatus,
-              influencer:
-                influencerGroupedData.length > 0
-                  ? influencerGroupedData
-                  : [
-                      {
-                        id: null,
-                        name: null,
-                        deliverables: [
-                          {
-                            id: null,
-                            title: null,
-                            platform: Enum.Platform.INSTAGRAM,
-                            status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                            deliverableLink: null,
-                            er: null,
-                            cpv: null,
-                          },
-                        ],
-                      },
-                    ],
-            }
-          }
-        }),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsAgencyDTO(data: ICampaign[], agencyProfileId: string) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        commercial: value.commercial,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: this.getAllDeliverablesForParticipants(
-          value.participants,
-          agencyProfileId
-        ),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsBrandDTO(data: ICampaign[]) {
-    const _data = data.map((value) => {
-      return {
-        id: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        capital: value.commercial,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        status: value.status,
-        paymentStatus: value.paymentStatus,
-        participants: this.groupDeliverablesByInfluencers(value.participants),
-      }
-    })
-
-    return _data
-  }
-
-  private campaignsInfluencerDTO(
-    data: ICampaign[],
-    influencerProfileId: string
-  ) {
-    const _data = data.map((value) => {
-      const influencerDetails = value.participants.filter((participant) => {
-        return (
-          participant.influencerProfile !== null &&
-          participant.influencerProfile.id === influencerProfileId
-        )
-      })
-
-      return {
-        campaignId: value.id,
-        name: value.name,
-        code: value.code,
-        brandName: value.brandName,
-        startDate: value.startDate,
-        endDate: value.endDate,
-        poc:
-          value.manager.firstName +
-          (value.manager.lastName === null
-            ? ''
-            : ' ' + value.manager.lastName) +
-          ' DW (POC)',
-        paymentStatus: influencerDetails[0].paymentStatus,
-        commercial: influencerDetails[0].commercialCreator,
-        toBeGiven: influencerDetails[0].toBePaid,
-        invoice: influencerDetails[0].invoice,
-        deliverable: influencerDetails[0].deliverables,
-        participantId: influencerDetails[0].id,
-      }
-    })
-
-    return _data
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -466,101 +91,11 @@ class CampaignController extends BaseController<
         201,
         res,
         'Campaign created successfully',
-        campaign
+        campaign,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
-    }
-  }
-
-  async findInfluencerAndAgencyController(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    try {
-      if (!req.query?.email) {
-        throw new HttpException(400, 'Email is required')
-      }
-
-      const data = await this.userService.findInfluencerAndAgencyByEmail(
-        req.query.email as string
-      )
-
-      const _data: any[] = []
-
-      data.forEach((value) => {
-        const profile =
-          value.agencyProfile === null
-            ? value.influencerProfile
-            : value.agencyProfile
-
-        const roleId = value.agencyProfile === null ? 4 : 5
-
-        if (profile !== null && profile !== undefined) {
-          _data.push({
-            profileId: profile.id,
-            email: value.email,
-            profilePic: profile.profilePic,
-            roleId: roleId,
-            id: uuidv4(),
-          })
-        }
-      })
-
-      return responseHandler(200, res, 'Campaigns fetched successfully', _data)
-    } catch (e) {
-      return errorHandler(e, res)
-    }
-  }
-
-  async findEmployeesController(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    try {
-      const { name } = req.query
-
-      if (typeof name !== 'string')
-        throw new HttpException(400, 'Invalid Email')
-
-      const data = await this.userService.findEmployeeByName(name)
-
-      const _data = data.map((value) => {
-        return {
-          name:
-            value?.employeeProfile?.firstName +
-            (value?.employeeProfile?.lastName === null
-              ? ''
-              : ' ' + value?.employeeProfile?.lastName),
-          id: value.employeeProfile?.id,
-        }
-      })
-
-      return responseHandler(200, res, 'Fetched Successfully', _data)
-    } catch (e) {
-      return errorHandler(e, res)
-    }
-  }
-
-  async findBrandsController(req: Request, res: Response): Promise<Response> {
-    try {
-      const { name } = req.query
-
-      if (typeof name !== 'string')
-        throw new HttpException(400, 'Invalid Email')
-
-      const data = await this.userService.findBrandsByName(name)
-
-      const _data = data.map((value) => {
-        return {
-          id: value?.brandProfile?.id,
-          name: value?.brandProfile?.name,
-        }
-      })
-
-      return responseHandler(200, res, 'Fetched Successfully', _data)
-    } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -614,9 +149,9 @@ class CampaignController extends BaseController<
 
       await this.campaignParticipantsService.insertMany(campaignParticipants)
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -669,14 +204,22 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsAdminAndEmployeeDTO(data.data)
-
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForAdminAndEmployee(value)
         })
+
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.AGENCY) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'agencyProfile',
@@ -702,13 +245,22 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsAgencyDTO(data.data, agencyProfileId)
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForAgency(value, agencyProfileId)
         })
+
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.BRAND) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'brandProfile',
@@ -737,14 +289,22 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsBrandDTO(data.data)
-
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForBrands(value)
         })
+
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       } else if (roleId === Enum.ROLES.INFLUENCER) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'influencerProfile',
@@ -773,22 +333,30 @@ class CampaignController extends BaseController<
           }
         )
 
-        const _data = this.campaignsInfluencerDTO(
-          data.data,
-          influencerProfileId
-        )
-
-        return responseHandler(200, res, 'Fetched Successfully', {
-          data: _data,
-          currentPage: data.currentPage,
-          totalPages: data.totalPages,
-          totalCount: data.totalCount,
+        const _data = data.data.map((value) => {
+          return CampaignDTO.transformationForInfluencer(
+            value,
+            influencerProfileId
+          )
         })
+
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalCount: data.totalCount,
+          },
+          req
+        )
       }
 
-      return responseHandler(200, res, 'Fetched Successfully', {})
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -821,22 +389,9 @@ class CampaignController extends BaseController<
           lowerBound,
           upperBound
         )
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Comm.Brand',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
 
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.BRAND) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'brandProfile',
@@ -848,21 +403,9 @@ class CampaignController extends BaseController<
           upperBound,
           brandProfileId
         )
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Capital',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
+
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.AGENCY) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'agencyProfile',
@@ -876,21 +419,9 @@ class CampaignController extends BaseController<
           agencyProfileId
         )
 
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Capital',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
+
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (roleId === Enum.ROLES.INFLUENCER) {
         const user = await this.userService.findOne({ id: req.user.id }, [
           'influencerProfile',
@@ -908,24 +439,11 @@ class CampaignController extends BaseController<
           influencerProfileId
         )
 
-        const _data = [
-          {
-            label: 'Total Campaigns',
-            value: parseInt(data.totalCampaign),
-            subValue: '',
-            iconName: 'UsersIcon',
-          },
-          {
-            label: 'Total Revenue',
-            value: data.totalRevenue === null ? 0 : data.totalRevenue,
-            subValue: '',
-            iconName: 'CurrencyRupeeIcon',
-          },
-        ]
+        const _data = CampaignDTO.transformationForCampaignStats(data, roleId)
 
-        return responseHandler(200, res, 'Fetched Successfully', _data)
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
       }
-      return responseHandler(200, res, 'Fetched Successfully', {})
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -933,72 +451,20 @@ class CampaignController extends BaseController<
 
   async updateCardsController(req: Request, res: Response): Promise<Response> {
     try {
-      const data = req.body as ICampaignDTO
-      const participants = data.participants
-      const participantData: Partial<ICampaignParticipants>[] = []
-      const deliverableData: DeepPartial<ICampaignDeliverables>[] = []
-
-      participants.map((value) => {
-        participantData.push({
-          id: value.id,
-          commercialBrand: value.commercialBrand,
-          commercialCreator: value.commercialCreator,
-          paymentStatus: value.paymentStatus,
-          invoiceStatus: value.invoiceStatus,
-          toBePaid: value.toBeGiven,
-          margin: value.margin,
-          invoice: value.invoice,
-        })
-
-        if (value.type === 'influencer') {
-          const participant = value as IInfluencerDTO
-          participant.deliverables.map((deliverable) => {
-            deliverableData.push({
-              id: deliverable.id,
-              cpv: deliverable.cpv,
-              engagementRate: deliverable.er,
-              platform: deliverable.platform,
-              status: deliverable.campaignStatus,
-              link: deliverable.deliverableLink,
-              title: deliverable.title,
-              name: value.name,
-              desc: deliverable.desc,
-              campaignParticipant: {
-                id: value.id,
-              },
-            })
-          })
-        } else if (value.type === 'agency') {
-          const participant = value as IAgencyDTO
-          participant.influencer.map((influencer) => {
-            influencer.deliverables.map((deliverable) => {
-              deliverableData.push({
-                id: deliverable.id,
-                cpv: deliverable.cpv,
-                engagementRate: deliverable.er,
-                platform: deliverable.platform,
-                status: deliverable.campaignStatus,
-                link: deliverable.deliverableLink,
-                title: deliverable.title,
-                name: influencer.name,
-                desc: deliverable.desc,
-                campaignParticipant: {
-                  id: value.id,
-                },
-              })
-            })
-          })
-        }
-      })
+      const data = req.body as ICampaignCardsRequest
+      const { participants, deliverables } =
+        CampaignDTO.transformationForParticipantsAndDeliverablesFromCampaigns(
+          data
+        )
 
       await Promise.all([
-        this.campaignParticipantsService.updateMany(participantData),
-        this.campaignDeliverableService.insertMany(deliverableData),
+        this.campaignParticipantsService.updateMany(participants),
+        this.campaignDeliverableService.insertMany(deliverables),
       ])
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -1019,58 +485,11 @@ class CampaignController extends BaseController<
 
       if (data === null) throw new HttpException(404, 'Campaign Not Found')
 
-      const _participants = data.participants.map((value) => {
-        if (value.influencerProfile !== null) {
-          return {
-            profileId: value.influencerProfile?.id,
-            email: value.email,
-            id: value.id,
-            roleId: Enum.ROLES.INFLUENCER,
-            profilePic: value.influencerProfile?.profilePic,
-          }
-        } else {
-          return {
-            profileId: value.agencyProfile?.id,
-            email: value.email,
-            id: value.id,
-            roleId: Enum.ROLES.AGENCY,
-            profilePic: null,
-          }
-        }
-      })
+      const _data = CampaignDTO.transformationForCampaignData(data)
 
-      const _manager = {
-        id: data.manager?.id,
-        name:
-          data.manager?.firstName +
-          (data.manager?.lastName === null ? '' : ' ' + data.manager?.lastName),
-      }
-
-      const _incentiveWinner = {
-        id: data.incentiveWinner?.id,
-        name:
-          data.incentiveWinner?.firstName +
-          (data.incentiveWinner?.lastName === null
-            ? ''
-            : ' ' + data.incentiveWinner?.lastName),
-      }
-
-      const _brand = {
-        id: data.brand?.id,
-        name: data.brand?.name,
-      }
-
-      const _data = {
-        ...data,
-        participants: _participants,
-        manager: _manager,
-        incentiveWinner: _incentiveWinner,
-        brand: _brand,
-      }
-
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

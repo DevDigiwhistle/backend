@@ -3,7 +3,7 @@ import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { ICRUDBase } from '../../../../utils'
-import { IAdminAndEmployeeDTO, userStatsDTO } from '../types'
+import { userStats } from '../types'
 import { IBaseService, PaginatedResponse } from '../../../../utils/base-service'
 
 export interface IUser extends ObjectLiteral {
@@ -27,16 +27,7 @@ export interface IRole extends ObjectLiteral {
 }
 
 export interface IUserCRUD extends ICRUDBase<IUser> {
-  findUserByMobileNo(mobileNo: string): Promise<IUser | null>
-  findUserProfileByMobileNoOrUserId(
-    mobileNo: string,
-    userId: string
-  ): Promise<IUser | null>
-  findOverallUserStats(): Promise<userStatsDTO>
-  findUserByMobileNoAndEmail(
-    mobileNo: string,
-    email: string
-  ): Promise<IUser | null>
+  findOverallUserStats(): Promise<userStats>
 }
 
 export interface IRoleCRUD extends ICRUDBase<IRole> {}
@@ -52,14 +43,12 @@ export interface IUserService extends IBaseService<IUser, IUserCRUD> {
     limit: number,
     name?: string
   ): Promise<PaginatedResponse<IUser>>
-  findOverallUserStats(): Promise<userStatsDTO>
+  findOverallUserStats(): Promise<userStats>
   findUserByMobileNoAndEmail(
     mobileNo: string,
     email: string
   ): Promise<IUser | null>
   findInfluencerAndAgencyByEmail(email: string): Promise<IUser[]>
-  findBrandsByName(name: string): Promise<IUser[]>
-  findEmployeeByName(name: string): Promise<IUser[]>
 }
 
 export interface IRoleService extends IBaseService<IRole, IRoleCRUD> {}

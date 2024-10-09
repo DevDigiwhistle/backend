@@ -64,7 +64,7 @@ influencerRouter.get(
 )
 
 influencerRouter.get(
-  '/explore-influencer',
+  '/explore',
   verifyToken,
   influencerController.exploreInfluencerController.bind(influencerController)
 )

@@ -1,25 +1,24 @@
 tags:
-  name: Campaign Participants
-  description: Endpoints for campaign participants
+  - name: Employee
+    description: Endpoints for employees
 
 paths:
-  /v1/campaign/participants/{id}:
-    delete:
-      summary: delete a participant
-      tags:
-        - Campaign Participants
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: Campaign Participant ID i.e the id assigned to each participant object
+  /v1/employee/search:
+    get:
+      summary: Search employee profiles
       security:
         - bearerAuth: []
+      tags:
+        - Employee
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: The name of the employee
       responses:
         '200':
-          description: Campaign Participant deleted successfully
+          description: Employee profile fetched successfully
           content:
             application/json:
               schema:
@@ -29,6 +28,10 @@ paths:
                     type: string
                   status:
                     type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EmployeeProfile'
         '400':
           description: Bad Request
           content:
@@ -37,12 +40,6 @@ paths:
                 $ref: '#/components/schemas/messageModel'
         '401':
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        '404':
-          description: not found
           content:
             application/json:
               schema:

@@ -32,10 +32,17 @@ userRouter.post(
 )
 
 userRouter.post(
-  '/revertAction',
+  '/revert',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   userController.revertAction.bind(userController)
+)
+
+userRouter.get(
+  '/search',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  userController.findUsersController.bind(userController)
 )
 
 userRouter.delete(

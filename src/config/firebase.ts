@@ -14,6 +14,7 @@ const firebaseConfig: FirebaseConfig = {
 
 firebase.initializeApp({
   credential: firebase.credential.cert(firebaseConfig),
+  storageBucket: process.env.FB_STORAGE_BUCKET ?? '',
 })
 
 export default firebase

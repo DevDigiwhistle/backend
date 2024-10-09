@@ -7,14 +7,14 @@ import {
   IAuthTokenService,
 } from '../interface'
 import {
-  authDTO,
-  loginDTO,
-  loginResponseDTO,
-  mobileDTO,
-  resetPassDTO,
-  signUpResponseDTO,
-  userResponseDTO,
-  verifyMobileDTO,
+  authRequest,
+  loginRequest,
+  loginResponse,
+  mobileRequest,
+  resetPassRequest,
+  signUpResponse,
+  userResponse,
+  verifyMobileRequest,
 } from '../types'
 import { IMailerService } from '../../../utils'
 import OTPgenerator from 'otp-generator'
@@ -71,7 +71,7 @@ class AuthService implements IAuthService {
     this.authTokenService = authTokenService
   }
 
-  async signUp(signUpData: authDTO): Promise<signUpResponseDTO> {
+  async signUp(signUpData: authRequest): Promise<signUpResponse> {
     try {
       const { idToken, role } = signUpData
 
@@ -114,7 +114,7 @@ class AuthService implements IAuthService {
     }
   }
 
-  async logIn(loginData: loginDTO): Promise<loginResponseDTO> {
+  async logIn(loginData: loginRequest): Promise<loginResponse> {
     try {
       const { idToken } = loginData
 
@@ -144,7 +144,7 @@ class AuthService implements IAuthService {
       if (_user.isVerified === false && isOnboardingDone === true)
         throw new HttpException(400, 'Waiting for Approval')
 
-      const _userResponse: userResponseDTO = {
+      const _userResponse: userResponse = {
         id: _user.id,
         email: _user.email,
         isVerified: _user.isVerified,
@@ -184,7 +184,7 @@ class AuthService implements IAuthService {
     }
   }
 
-  async resetPassword(resetPassData: resetPassDTO): Promise<void> {
+  async resetPassword(resetPassData: resetPassRequest): Promise<void> {
     try {
       await this.googleAuthService.resetPassword(
         resetPassData.password,
@@ -195,7 +195,7 @@ class AuthService implements IAuthService {
     }
   }
 
-  async sendMobileOTP(mobileData: mobileDTO): Promise<void> {
+  async sendMobileOTP(mobileData: mobileRequest): Promise<void> {
     try {
       const { mobileNo } = mobileData
 
@@ -232,8 +232,8 @@ class AuthService implements IAuthService {
   }
 
   async verifyMobileOTP(
-    verifyMobileData: verifyMobileDTO
-  ): Promise<loginResponseDTO> {
+    verifyMobileData: verifyMobileRequest
+  ): Promise<loginResponse> {
     try {
       const { mobileNo, otp } = verifyMobileData
 
@@ -265,7 +265,7 @@ class AuthService implements IAuthService {
       if (user.isVerified === false && isOnboardingDone === true)
         throw new HttpException(400, 'Waiting for Approval!!')
 
-      const _userResponse: userResponseDTO = {
+      const _userResponse: userResponse = {
         id: user.id,
         email: user.email,
         isVerified: user.isVerified,

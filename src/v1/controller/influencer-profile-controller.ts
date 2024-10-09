@@ -1,6 +1,4 @@
-import { FindOptionsWhere } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
-import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
 import { IUserService } from '../modules/user/interface'
@@ -12,23 +10,11 @@ import {
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 
-interface IInfluencerProfileController
-  extends IBaseController<
-    IInfluencerProfile,
-    IInfluencerProfileCRUD,
-    IInfluencerProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-}
-
-export class InfluencerProfileController
-  extends BaseController<
-    IInfluencerProfile,
-    IInfluencerProfileCRUD,
-    IInfluencerProfileService
-  >
-  implements IInfluencerProfileController
-{
+export class InfluencerProfileController extends BaseController<
+  IInfluencerProfile,
+  IInfluencerProfileCRUD,
+  IInfluencerProfileService
+> {
   private readonly userService: IUserService
   private readonly influencerStatsService: IInfluencerStatsService
   constructor(
@@ -66,9 +52,15 @@ export class InfluencerProfileController
         linkedInURL
       )
 
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -83,10 +75,11 @@ export class InfluencerProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -149,9 +142,9 @@ export class InfluencerProfileController
         _linkedInURL
       )
 
-      return responseHandler(200, res, 'Updated Successfully', data)
+      return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

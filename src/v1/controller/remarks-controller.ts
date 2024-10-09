@@ -5,6 +5,7 @@ import {
   IBaseController,
 } from '../../utils'
 import { responseHandler } from '../../utils/response-handler'
+import { RemarksDTO } from '../dtos/remarks-dtos'
 import { IExtendedRequest } from '../interface'
 import {
   IRemarks,
@@ -13,15 +14,11 @@ import {
 } from '../modules/admin/interface'
 import { Request, Response } from 'express'
 
-interface IRemarksController
-  extends IBaseController<IRemarks, IRemarksCRUD, IRemarksService> {
-  getRemarksByUserIdController(req: Request, res: Response): Promise<Response>
-}
-
-class RemarksController
-  extends BaseController<IRemarks, IRemarksCRUD, IRemarksService>
-  implements IRemarksController
-{
+export class RemarksController extends BaseController<
+  IRemarks,
+  IRemarksCRUD,
+  IRemarksService
+> {
   private readonly remarksService: IRemarksService
 
   constructor(remarksService: IRemarksService) {
@@ -32,9 +29,9 @@ class RemarksController
     try {
       const userId = req.user.id
       const data = await this.service.add({ remarker: userId, ...req.body })
-      return responseHandler(201, res, 'Added Successfully', data)
+      return responseHandler(201, res, 'Added Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -48,10 +45,19 @@ class RemarksController
       if (typeof userId !== 'string')
         throw new HttpException(400, 'Invalid UserId')
 
-      const data = await this.service.findAllRemarksByUserId(userId)
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      const data = await this.service.findAll(
+        {
+          userId: userId,
+        },
+        ['remarker', 'remarker.employeeProfile', 'remarker.adminProfile'],
+        { createdAt: 'DESC' }
+      )
+
+      const _data = RemarksDTO.transformationForRemarksByUserId(data)
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -64,11 +70,9 @@ class RemarksController
       else if (typeof userId === 'string')
         await this.service.clearAllRemarksByUserId(userId)
 
-      return responseHandler(200, res, 'Deleted Successfully', {})
+      return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }
-
-export { RemarksController }

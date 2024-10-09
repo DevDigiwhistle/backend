@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { AppLogger } from '../../utils'
 
 interface IMailerService {
   sendMail(
@@ -21,29 +22,33 @@ class MailerService implements IMailerService {
   private constructor() {}
 
   async sendMail(to: string, subject: string, message: string): Promise<void> {
-    const port: number = parseInt(process.env.MAIL_PORT as string) ?? 0
-    const user: string = process.env.MAIL_USER ?? ''
-    const pass: string = process.env.MAIL_PASS ?? ''
-    const host: string = process.env.MAIL_HOST ?? ''
+    try {
+      const port: number = parseInt(process.env.MAIL_PORT as string) ?? 0
+      const user: string = process.env.MAIL_USER ?? ''
+      const pass: string = process.env.MAIL_PASS ?? ''
+      const host: string = process.env.MAIL_HOST ?? ''
 
-    const transporter: any = nodemailer.createTransport({
-      host,
-      port,
-      secure: false,
-      auth: {
-        user,
-        pass,
-      },
-    })
+      const transporter: any = nodemailer.createTransport({
+        host,
+        port,
+        secure: false,
+        auth: {
+          user,
+          pass,
+        },
+      })
 
-    const mailOptions = {
-      from: `"digiwhistle" <${user}>`,
-      to,
-      subject,
-      html: message,
+      const mailOptions = {
+        from: `"digiwhistle" <${user}>`,
+        to,
+        subject,
+        html: message,
+      }
+
+      await transporter.sendMail(mailOptions)
+    } catch (e) {
+      AppLogger.getInstance().error(`Error in mailer service: ${e}`)
     }
-
-    await transporter.sendMail(mailOptions)
   }
 }
 

@@ -4,19 +4,7 @@ import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/response-handler'
 import { IAuthService } from '../modules/auth/interface'
 
-interface IAuthController {
-  signUpController: (req: Request, res: Response) => Promise<Response>
-  logInController: (req: Request, res: Response) => Promise<Response>
-  resetPasswordController(req: Request, res: Response): Promise<Response>
-  sendResetPasswordEmailController(
-    req: Request,
-    res: Response
-  ): Promise<Response>
-  sendMobileOTPController(req: Request, res: Response): Promise<Response>
-  verifyMobileOTPController(req: Request, res: Response): Promise<Response>
-}
-
-class AuthController implements IAuthController {
+export class AuthController {
   private readonly authService: IAuthService
 
   constructor(authService: IAuthService) {
@@ -31,10 +19,11 @@ class AuthController implements IAuthController {
         Enum.RESPONSE_CODES.CREATED,
         res,
         'Request Submitted Successfully',
-        data
+        data,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -46,10 +35,11 @@ class AuthController implements IAuthController {
         Enum.RESPONSE_CODES.OK,
         res,
         'Log in Successfully',
-        data
+        data,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -64,10 +54,11 @@ class AuthController implements IAuthController {
         Enum.RESPONSE_CODES.OK,
         res,
         'Email Sent Successfully',
-        {}
+        {},
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -82,10 +73,11 @@ class AuthController implements IAuthController {
         Enum.RESPONSE_CODES.OK,
         res,
         'Password Updated Successfully',
-        {}
+        {},
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -96,9 +88,9 @@ class AuthController implements IAuthController {
     try {
       await this.authService.sendMobileOTP(req.body)
 
-      return responseHandler(200, res, 'OTP sent successfully', {})
+      return responseHandler(200, res, 'OTP sent successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -108,11 +100,9 @@ class AuthController implements IAuthController {
   ): Promise<Response> {
     try {
       const data = await this.authService.verifyMobileOTP(req.body)
-      return responseHandler(200, res, 'OTP verified successfully', data)
+      return responseHandler(200, res, 'OTP verified successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }
-
-export { type IAuthController, AuthController }

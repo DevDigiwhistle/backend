@@ -11,20 +11,11 @@ import {
 } from '../modules/brands/interface'
 import { Request, Response } from 'express'
 
-interface IBrandProfileController
-  extends IBaseController<
-    IBrandProfile,
-    IBrandProfileCRUD,
-    IBrandProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-  getAllBrandsController(req: Request, res: Response): Promise<Response>
-}
-
-export class BrandProfileController
-  extends BaseController<IBrandProfile, IBrandProfileCRUD, IBrandProfileService>
-  implements IBrandProfileController
-{
+export class BrandProfileController extends BaseController<
+  IBrandProfile,
+  IBrandProfileCRUD,
+  IBrandProfileService
+> {
   private readonly userService: IUserService
 
   constructor(
@@ -49,9 +40,15 @@ export class BrandProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -66,10 +63,11 @@ export class BrandProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -88,9 +86,30 @@ export class BrandProfileController
         name as string
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async findBrandsController(req: Request, res: Response): Promise<Response> {
+    try {
+      const { name } = req.query
+
+      if (typeof name !== 'string') throw new HttpException(400, 'Invalid name')
+
+      const data = await this.service.findBrandsByName(name)
+
+      const _data = data.map((value) => {
+        return {
+          name: value.name,
+          id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
     }
   }
 }

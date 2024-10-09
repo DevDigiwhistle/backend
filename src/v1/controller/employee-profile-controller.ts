@@ -1,5 +1,4 @@
 import { BaseController, errorHandler, HttpException } from '../../utils'
-import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
 import {
@@ -10,23 +9,11 @@ import {
 import { Request, Response } from 'express'
 import { IUserService } from '../modules/user/interface'
 
-interface IEmployeeProfileController
-  extends IBaseController<
-    IEmployeeProfile,
-    IEmployeeProfileCRUD,
-    IEmployeeProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-}
-
-export class EmployeeProfileController
-  extends BaseController<
-    IEmployeeProfile,
-    IEmployeeProfileCRUD,
-    IEmployeeProfileService
-  >
-  implements IEmployeeProfileController
-{
+export class EmployeeProfileController extends BaseController<
+  IEmployeeProfile,
+  IEmployeeProfileCRUD,
+  IEmployeeProfileService
+> {
   private readonly userService: IUserService
 
   constructor(
@@ -51,9 +38,15 @@ export class EmployeeProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -71,12 +64,18 @@ export class EmployeeProfileController
       let user: any = req.user
       delete user.role
 
-      return responseHandler(200, res, 'Profile Fetched!!', {
-        ...profile,
-        user: req.user,
-      })
+      return responseHandler(
+        200,
+        res,
+        'Profile Fetched!!',
+        {
+          ...profile,
+          user: req.user,
+        },
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -88,9 +87,35 @@ export class EmployeeProfileController
 
       const data = await this.service.update({ id: id }, req.body, ['user'])
 
-      return responseHandler(200, res, 'Updated Successfully', data)
+      return responseHandler(200, res, 'Updated Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async findEmployeesController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { name } = req.query
+
+      if (typeof name !== 'string') throw new HttpException(400, 'Invalid name')
+
+      const data = await this.service.findEmployeesByName(name)
+
+      const _data = data.map((value) => {
+        return {
+          name:
+            value.firstName +
+            (value.lastName === null ? '' : ' ' + value.lastName),
+          id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
     }
   }
 }

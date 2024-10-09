@@ -1,15 +1,9 @@
 import { Request, Response } from 'express'
 import { errorHandler, HttpException } from '../../utils'
-import {
-  IAdminProfile,
-  IAdminService,
-  IEmployeeProfile,
-  IEmployeeService,
-} from '../modules/admin/interface'
+import { IAdminService, IEmployeeService } from '../modules/admin/interface'
 import { responseHandler } from '../../utils/response-handler'
-import { IUser, IUserService } from '../modules/user/interface'
-import { PaginatedResponse } from '../../utils/base-service'
-import { IAdminAndEmployeeDTO } from '../modules/user/types'
+import { IUserService } from '../modules/user/interface'
+import { AdminDTO } from '../dtos'
 
 class AdminController {
   private readonly adminService: IAdminService
@@ -24,36 +18,6 @@ class AdminController {
     this.adminService = adminService
     this.employeeService = employeeService
     this.userService = userService
-  }
-
-  private adminAndEmployeeDTO(
-    data: PaginatedResponse<IUser>
-  ): PaginatedResponse<IAdminAndEmployeeDTO> {
-    const _data = data.data.map((item) => {
-      const profile: IEmployeeProfile | IAdminProfile =
-        item[`${item.role.name}Profile`]
-
-      return {
-        userId: item.id,
-        email: item.email,
-        mobileNo: profile.mobileNo,
-        designation: item.role.name === 'admin' ? 'admin' : profile.designation,
-        isPaused: item.isPaused,
-        isApproved: item.isApproved,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        profilePic: profile.profilePic,
-        profileId: profile.id,
-        role: item.role.name,
-      }
-    })
-
-    return {
-      data: _data,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalCount: data.totalCount,
-    }
   }
 
   async addAdminOrEmployeeController(
@@ -78,9 +42,9 @@ class AdminController {
       if (data.role === 'employee')
         await this.employeeService.addEmployee(req.body)
 
-      return responseHandler(200, res, 'Added Successfully', {})
+      return responseHandler(200, res, 'Added Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -100,11 +64,24 @@ class AdminController {
         name as string
       )
 
-      const _data = this.adminAndEmployeeDTO(data)
+      const _data = data.data.map((value) => {
+        return AdminDTO.transformationForAdminAndEmployee(value)
+      })
 
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      return responseHandler(
+        200,
+        res,
+        'Fetched Successfully',
+        {
+          data: _data,
+          currentPage: data.currentPage,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+        },
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -112,29 +89,11 @@ class AdminController {
     try {
       const data = await this.userService.findOverallUserStats()
 
-      const _data = [
-        {
-          label: 'Accepted Requests',
-          value: parseInt(data.approved),
-          subValue: '',
-          iconName: 'FaceSmileIcon',
-        },
-        {
-          label: 'Pending Requests',
-          value: parseInt(data.pending),
-          subValue: '',
-          iconName: 'ExclamationCircleIcon',
-        },
-        {
-          label: 'Declined Requests',
-          value: parseInt(data.rejected),
-          subValue: '',
-          iconName: 'FaceFrownIcon',
-        },
-      ]
-      return responseHandler(200, res, 'Fetched Successfully', _data)
+      const _data = AdminDTO.transformationForUserStats(data)
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

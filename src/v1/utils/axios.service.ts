@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { AppLogger } from '../../utils'
 
 interface IAxiosService {
   post(url: string, data: any, headers?: any): Promise<any>
@@ -27,6 +28,7 @@ class AxiosService implements IAxiosService {
           resolve(res.data)
         })
         .catch((e) => {
+          AppLogger.getInstance().error(`Error: ${e} in url: ${url}`)
           reject(e.response)
         })
     })
@@ -43,7 +45,8 @@ class AxiosService implements IAxiosService {
           resolve(res.data)
         })
         .catch((e) => {
-          reject(e)
+          AppLogger.getInstance().error(`Error: ${e} in url: ${url}`)
+          reject(e.response)
         })
     })
   }

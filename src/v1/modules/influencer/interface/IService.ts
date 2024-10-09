@@ -4,8 +4,8 @@ import { PaginatedResponse } from '../../../../utils/base-service'
 import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
-  InfluencerByEmailDTO,
-  InfluencerStatsDTO,
+  InfluencerByEmailResponse,
+  InfluencerStats,
   InstagramPostStats,
   InstagramProfileStats,
   TwitterPostStats,
@@ -28,8 +28,8 @@ import {
 
 export interface IInfluencerProfileService
   extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {
-  findInfluencerByEmail(email: string): Promise<InfluencerByEmailDTO[]>
-  getInfluencerStats(): Promise<InfluencerStatsDTO>
+  findInfluencerByEmail(email: string): Promise<InfluencerByEmailResponse[]>
+  getInfluencerStats(): Promise<InfluencerStats>
 }
 
 export interface IYoutubeProfileStatsService
@@ -50,7 +50,7 @@ export interface ITwitterProfileStatsService
 export interface IInfluencerService {
   addInfluencer(data: IAddInfluencerInput): Promise<IInfluencerProfile>
   inviteInfluencer(data: IInviteInfluencerInput): Promise<void>
-  getInfluencerStats(): Promise<InfluencerStatsDTO>
+  getInfluencerStats(): Promise<InfluencerStats>
   getAllInfluencer(
     page: number,
     limit: number,

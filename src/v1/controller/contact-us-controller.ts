@@ -10,19 +10,11 @@ import { Request, Response } from 'express'
 import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/response-handler'
 
-interface IContactUsController
-  extends IBaseController<
-    IContactUsForm,
-    IContactUsFormCRUD,
-    IContactUsService
-  > {
-  getAllPaginated(req: Request, res: Response): Promise<Response>
-}
-
-export class ContactUsController
-  extends BaseController<IContactUsForm, IContactUsFormCRUD, IContactUsService>
-  implements IContactUsController
-{
+export class ContactUsController extends BaseController<
+  IContactUsForm,
+  IContactUsFormCRUD,
+  IContactUsService
+> {
   constructor(contactUsService: IContactUsService) {
     super(contactUsService)
   }
@@ -34,37 +26,17 @@ export class ContactUsController
       if (typeof page !== 'string' || typeof limit !== 'string')
         throw new HttpException(400, 'Invalid Page Details')
 
-      let query: FindOptionsWhere<IContactUsForm>[] = []
-
-      if (brands === 'true') {
-        query.push({
-          personType: Enum.PersonType.BRAND,
-        })
-      }
-
-      if (influencer === 'true') {
-        query.push({
-          personType: Enum.PersonType.INFLUENCER,
-        })
-      }
-
-      if (typeof name === 'string') {
-        query.push({
-          name: ILike(`%${name}%`),
-        })
-      }
-
-      const data = await this.service.findAllPaginated(
+      const data = await this.service.findAllContactUs(
         parseInt(page),
         parseInt(limit),
-        query,
-        [],
-        { id: 'DESC' }
+        name as string,
+        brands as string,
+        influencer as string
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -76,9 +48,9 @@ export class ContactUsController
 
       await this.service.update({ id: id }, { viewed: true })
 
-      return responseHandler(200, res, 'Updated Successfully', {})
+      return responseHandler(200, res, 'Updated Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

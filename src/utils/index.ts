@@ -4,6 +4,9 @@ import HttpException from './http-exception'
 import { errorHandler } from './error-handler'
 import { BaseValidator } from './base-validators'
 import { type IBaseService, BaseService } from './base-service'
+import AppLogger from './app-logger'
+import { logsScheduler } from './log-scheduler'
+import { uploadFileToFirebase } from './upload-file'
 
 export {
   BaseController,
@@ -14,5 +17,8 @@ export {
   BaseValidator,
   type IBaseService,
   BaseService,
-  type IBaseController
+  type IBaseController,
+  AppLogger,
+  logsScheduler,
+  uploadFileToFirebase,
 }

@@ -24,9 +24,9 @@ class CampaignDeliverablesController extends BaseController<
         throw new HttpException(400, 'Invalid Request Body')
 
       await this.service.deleteMany(ids)
-      return responseHandler(200, res, 'Deleted Successfully', {})
+      return responseHandler(200, res, 'Deleted Successfully', {}, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

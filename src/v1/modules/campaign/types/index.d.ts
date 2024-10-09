@@ -30,7 +30,7 @@ export type CampaignStats = {
   totalCampaign: string
 }
 
-export interface IInfluencerDTO {
+export interface ICampaignInfluencerData {
   id: string
   type: string
   name: string
@@ -56,7 +56,7 @@ export interface IInfluencerDTO {
   ]
 }
 
-export interface IAgencyDTO {
+export interface ICampaignAgencyData {
   id: string
   type: string
   name: string
@@ -86,7 +86,7 @@ export interface IAgencyDTO {
   ]
 }
 
-export interface ICampaignDTO {
+export interface ICampaignCardsRequest {
   id: string
   name: string
   code: string
@@ -97,5 +97,5 @@ export interface ICampaignDTO {
   commercial: number
   incentiveWinner: string
   status: string
-  participants: Array<IInfluencerDTO | IAgencyDTO>
+  participants: Array<ICampaignInfluencerData | ICampaignAgencyData>
 }

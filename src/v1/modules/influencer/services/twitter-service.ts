@@ -1,4 +1,4 @@
-import { HttpException } from '../../../../utils'
+import { AppLogger, HttpException } from '../../../../utils'
 import { IAxiosService } from '../../../utils'
 import { ITwitterService } from '../interface'
 import { TwitterPostStats, TwitterProfileStats } from '../types'
@@ -73,7 +73,9 @@ class TwitterService implements ITwitterService {
         description: description,
       }
     } catch (e) {
-      console.log(e)
+      AppLogger.getInstance().error(
+        `Error: ${e} in TwitterService in Profile Section`
+      )
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }
@@ -100,6 +102,9 @@ class TwitterService implements ITwitterService {
         views: views,
       }
     } catch (e) {
+      AppLogger.getInstance().error(
+        `Error :${e} in TwitterService in Post Section`
+      )
       throw new HttpException(e?.errorCode, e?.errorMessage)
     }
   }

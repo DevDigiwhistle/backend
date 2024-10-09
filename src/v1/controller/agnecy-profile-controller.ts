@@ -11,24 +11,11 @@ import {
 } from '../modules/brands/interface'
 import { Response, Request } from 'express'
 
-interface IAgencyProfileController
-  extends IBaseController<
-    IAgencyProfile,
-    IAgencyProfileCRUD,
-    IAgencyProfileService
-  > {
-  getByUserIdController(req: IExtendedRequest, res: Response): Promise<Response>
-  getAllAgencyController(req: Request, res: Response): Promise<Response>
-}
-
-export class AgencyProfileController
-  extends BaseController<
-    IAgencyProfile,
-    IAgencyProfileCRUD,
-    IAgencyProfileService
-  >
-  implements IAgencyProfileController
-{
+export class AgencyProfileController extends BaseController<
+  IAgencyProfile,
+  IAgencyProfileCRUD,
+  IAgencyProfileService
+> {
   private readonly userService: IUserService
 
   constructor(
@@ -53,9 +40,15 @@ export class AgencyProfileController
         )
 
       const data = await this.service.add(req.body)
-      return responseHandler(201, res, 'Request Submitted Successfully', data)
+      return responseHandler(
+        201,
+        res,
+        'Request Submitted Successfully',
+        data,
+        req
+      )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -70,10 +63,11 @@ export class AgencyProfileController
         200,
         res,
         'Profile fetched Successfully!!',
-        profile
+        profile,
+        req
       )
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 
@@ -92,9 +86,9 @@ export class AgencyProfileController
         name as string
       )
 
-      return responseHandler(200, res, 'Fetched Successfully', data)
+      return responseHandler(200, res, 'Fetched Successfully', data, req)
     } catch (e) {
-      return errorHandler(e, res)
+      return errorHandler(e, res, req)
     }
   }
 }

@@ -23,7 +23,7 @@ import {
 import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
-  InfluencerStatsDTO,
+  InfluencerStats,
 } from '../types'
 import { PaginatedResponse } from '../../../../utils/base-service'
 
@@ -461,7 +461,7 @@ class InfluencerService implements IInfluencerService {
     }
   }
 
-  async getInfluencerStats(): Promise<InfluencerStatsDTO> {
+  async getInfluencerStats(): Promise<InfluencerStats> {
     try {
       return await this.influencerProfileService.getInfluencerStats()
     } catch (e) {
