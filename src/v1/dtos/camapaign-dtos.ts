@@ -275,7 +275,7 @@ export class CampaignDTO {
       campaignId: data.id,
       name: data.name,
       code: data.code,
-      brandName: data.brandName,
+      brandName: data.brand?.name,
       startDate: data.startDate,
       endDate: data.endDate,
       poc:
@@ -503,6 +503,17 @@ export class CampaignDTO {
           iconName: 'CurrencyRupeeIcon',
         },
       ]
+    }
+  }
+
+  static transformationForCampaignSearchByCode(data: ICampaign) {
+    const { id, name, code, brand } = data
+
+    return {
+      id,
+      name,
+      code,
+      brand: brand?.name,
     }
   }
 }

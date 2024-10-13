@@ -102,13 +102,22 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   tds!: number
 
   @Column({ nullable: false })
+  tdsPercentage!: number
+
+  @Column({ nullable: false, type: 'varchar' })
+  tdsSection: string
+
+  @Column({ nullable: false })
   finalAmount!: number
 
   @Column({ nullable: false })
   amountToBeReceived!: number
 
   @Column({ nullable: false })
-  paymentTerms!: string
+  balanceAmount: number
+
+  @Column({ type: 'enum', enum: Enum.PaymentTerms, nullable: false })
+  paymentTerms!: Enum.PaymentTerms
 
   @Column('enum', { enum: Enum.InvoiceStatus })
   paymentStatus!: Enum.InvoiceStatus
@@ -129,6 +138,9 @@ export class PurchaseInvoice implements IPurchaseInvoice {
     { nullable: true }
   )
   agencyProfile?: IAgencyProfile | null
+
+  @Column({ nullable: false, type: 'date', default: () => 'CURRENT_TIMESTAMP' })
+  invoiceDate!: Date
 
   @CreateDateColumn()
   createdAt: Date

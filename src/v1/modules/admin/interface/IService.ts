@@ -9,6 +9,7 @@ export interface IAdminProfileService
 export interface IEmployeeProfileService
   extends IBaseService<IEmployeeProfile, IEmployeeProfileCRUD> {
   findEmployeesByName(name: string): Promise<IEmployeeProfile[]>
+  findEmployeesByEmail(email: string): Promise<IEmployeeProfile[]>
 }
 
 export interface IAdminService {

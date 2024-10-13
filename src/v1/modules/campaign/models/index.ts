@@ -28,7 +28,7 @@ export class Campaign implements ICampaign {
   @Column({ type: 'varchar', nullable: false })
   name: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   code: string
 
   @ManyToOne(() => BrandProfile, (brandProfile) => brandProfile.campaign, {

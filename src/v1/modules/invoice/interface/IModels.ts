@@ -34,13 +34,17 @@ export interface IPurchaseInvoice {
   sgst: number
   totalAmount: number
   tds: number
+  tdsPercentage: number
+  tdsSection: string
   finalAmount: number
   amountToBeReceived: number
-  paymentTerms: string
+  balanceAmount: number
+  paymentTerms: Enum.PaymentTerms
   paymentStatus: Enum.InvoiceStatus
   file?: string | null
   influencerProfile?: IInfluencerProfile | null
   agencyProfile?: IAgencyProfile | null
+  invoiceDate: Date
   createdAt?: Date
   updatedAt?: Date
 }

@@ -42,6 +42,24 @@ class EmployeeProfileService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async findEmployeesByEmail(email: string): Promise<IEmployeeProfile[]> {
+    try {
+      const query: FindOptionsWhere<IEmployeeProfile>[] = [
+        {
+          user: {
+            email: ILike(`%${email}%`),
+          },
+        },
+      ]
+
+      const data = await this.crudBase.findAll(query)
+
+      return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 
 export { EmployeeProfileService }

@@ -1,4 +1,4 @@
-import { HttpException } from '../../utils'
+import { AppLogger, HttpException } from '../../utils'
 import { authTokenService } from '../modules/auth'
 import { userService } from '../modules/user'
 import { NextFunction, Response } from 'express'
@@ -25,7 +25,7 @@ export const verifyToken = async (
     req.user = user
     next()
   } catch (e) {
-    console.log(e)
+    AppLogger.getInstance().error(`Error: ${e}`)
     res.status(401).json({
       message: e?.message ?? 'You are not authorized!!',
       status: 'Authentication Failed!!',

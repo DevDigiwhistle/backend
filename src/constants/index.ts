@@ -1,3 +1,4 @@
 import * as Enum from './enum'
-
-export { Enum }
+import monthsToDays from './monthToDays'
+import monthIndexToName from './monthIndexToName'
+export { Enum, monthIndexToName, monthsToDays }

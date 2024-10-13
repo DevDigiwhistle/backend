@@ -23,6 +23,18 @@ export interface IAgencyProfile extends ObjectLiteral {
   profilePicURL?: string
   user: IUser
   mobileNo: string
+  aadharNo: string
+  panNo: string
+  gstNo: string
+  msmeNo: string
+  bankName: string
+  bankAccountNumber: string
+  bankIfscCode: string
+  bankAccountHolderName: string
+  address: string
+  city: string
+  state: string
+  pincode: string
   createdAt?: Date
   updatedAt?: Date
 }
