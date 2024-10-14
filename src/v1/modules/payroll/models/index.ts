@@ -18,7 +18,10 @@ export class Payroll implements IPayroll {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @OneToOne(() => EmployeeProfile, (employee) => employee.payroll)
+  @OneToOne(() => EmployeeProfile, (employee) => employee.payroll, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'employeeId' })
   employeeProfile: IEmployeeProfile
 
@@ -40,7 +43,7 @@ export class Payroll implements IPayroll {
     nullable: false,
     default: Enum.EmploymentType.NONE,
   })
-  EmploymentType: Enum.EmploymentType
+  employmentType: Enum.EmploymentType
 
   @Column({ nullable: false, default: 0 })
   tds: number
@@ -66,7 +69,10 @@ export class PayrollHistory implements IPayrollHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @ManyToOne(() => EmployeeProfile, (employee) => employee.payrollHistory)
+  @ManyToOne(() => EmployeeProfile, (employee) => employee.payrollHistory, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'employeeId' })
   employeeProfile: IEmployeeProfile
 

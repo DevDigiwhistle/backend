@@ -18,8 +18,9 @@ export class PayrollDTO {
       bankIfscCode: employeeProfile?.bankIfscCode,
       panNo: employeeProfile?.panNo,
       grossPay: payroll.ctc,
-      tds: payroll.tds * payroll.ctc,
-      finalPay: payroll.ctc - payroll.tds * payroll.ctc,
+      tds: (payroll.tds / 100) * payroll.ctc,
+      finalPay:
+        payroll.ctc - (payroll.tds / 100) * payroll.ctc + payroll.incentive,
     }
   }
 

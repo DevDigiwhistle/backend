@@ -8,7 +8,7 @@ export const addPayrollSchema = {
     hra: { type: 'number', nullable: false },
     others: { type: 'number', nullable: false },
     ctc: { type: 'number', nullable: false },
-    EmploymentType: {
+    employmentType: {
       type: 'string',
       enum: Object.values(Enum.EmploymentType),
       nullable: false,
@@ -22,7 +22,7 @@ export const addPayrollSchema = {
     'hra',
     'others',
     'ctc',
-    'EmploymentType',
+    'employmentType',
     'salaryMonth',
     'tds',
   ],
@@ -36,12 +36,14 @@ export const updatePayrollSchema = {
     hra: { type: 'number', nullable: false },
     others: { type: 'number', nullable: false },
     ctc: { type: 'number', nullable: false },
-    EmploymentType: {
+    employmentType: {
       type: 'string',
       enum: Object.values(Enum.EmploymentType),
       nullable: false,
     },
     tds: { type: 'number', nullable: false },
+    workingDays: { type: 'number', nullable: false },
+    incentive: { type: 'number', nullable: false },
   },
   additionalProperties: false,
 }

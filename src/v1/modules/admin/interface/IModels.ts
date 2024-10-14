@@ -8,12 +8,6 @@ export interface IAdminProfile extends ObjectLiteral {
   mobileNo: string
   user: IUser
   profilePic: string
-  aadharNo: string
-  panNo: string
-  bankName: string
-  bankAccountNumber: string
-  bankIfscCode: string
-  bankAccountHolderName: string
   createdAt?: Date
   updatedAt?: Date
 }

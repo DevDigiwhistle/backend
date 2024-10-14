@@ -20,7 +20,11 @@ export class SaleInvoice implements ISaleInvoice {
   @PrimaryGeneratedColumn('uuid')
   id!: string
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.saleInvoices)
+  @ManyToOne(() => Campaign, (campaign) => campaign.saleInvoices, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   campaign!: ICampaign
 
   @Column({ nullable: false, type: 'varchar' })
@@ -74,7 +78,11 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @PrimaryGeneratedColumn('uuid')
   id!: string
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.purchaseInvoices)
+  @ManyToOne(() => Campaign, (campaign) => campaign.purchaseInvoices, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   campaign!: ICampaign
 
   @Column({ nullable: false })
@@ -122,20 +130,20 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column('enum', { enum: Enum.InvoiceStatus })
   paymentStatus!: Enum.InvoiceStatus
 
-  @Column({ nullable: true })
-  file?: string | null
+  @Column({ nullable: true, type: 'varchar' })
+  file!: string | null
 
   @ManyToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.purchaseInvoices,
-    { nullable: true }
+    { nullable: true, eager: true }
   )
   influencerProfile?: IInfluencerProfile | null
 
   @ManyToOne(
     () => AgencyProfile,
     (agencyProfile) => agencyProfile.purchaseInvoices,
-    { nullable: true }
+    { nullable: true, eager: true }
   )
   agencyProfile?: IAgencyProfile | null
 

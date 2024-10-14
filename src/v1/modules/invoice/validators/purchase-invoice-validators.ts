@@ -72,8 +72,6 @@ export const updatePurchaseInvoiceSchema = {
       nullable: false,
     },
     file: { type: 'string', nullable: true },
-    influencerProfile: { type: 'string', format: 'uuid', nullable: true },
-    agencyProfile: { type: 'string', format: 'uuid', nullable: true },
   },
   required: [],
   additionalProperties: false,

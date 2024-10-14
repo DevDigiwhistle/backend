@@ -70,7 +70,8 @@ export class Campaign implements ICampaign {
 
   @ManyToOne(
     () => EmployeeProfile,
-    (employeeProfile) => employeeProfile.campaignManager
+    (employeeProfile) => employeeProfile.campaignManager,
+    { nullable: false }
   )
   manager: EmployeeProfile
 
@@ -88,12 +89,15 @@ export class Campaign implements ICampaign {
   )
   participants: ICampaignParticipants[]
 
-  @OneToMany(() => SaleInvoice, (saleInvoice) => saleInvoice.campaign)
+  @OneToMany(() => SaleInvoice, (saleInvoice) => saleInvoice.campaign, {
+    cascade: true,
+  })
   saleInvoices: ISaleInvoice[]
 
   @OneToMany(
     () => PurchaseInvoice,
-    (purchaseInvoice) => purchaseInvoice.campaign
+    (purchaseInvoice) => purchaseInvoice.campaign,
+    { cascade: true }
   )
   purchaseInvoices: IPurchaseInvoice[]
 
@@ -138,7 +142,11 @@ export class CampaignParticipants implements ICampaignParticipants {
   )
   agencyProfile: IAgencyProfile | null
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.participants)
+  @ManyToOne(() => Campaign, (campaign) => campaign.participants, {
+    onDelete: 'CASCADE',
+    eager: true,
+    nullable: false,
+  })
   campaign: ICampaign
 
   @Column({ type: 'float', nullable: true })
@@ -213,7 +221,8 @@ export class CampaignDeliverables implements ICampaignDeliverables {
 
   @ManyToOne(
     () => CampaignParticipants,
-    (participant) => participant.deliverables
+    (participant) => participant.deliverables,
+    { nullable: false, onDelete: 'CASCADE', eager: true }
   )
   campaignParticipant: ICampaignParticipants
 

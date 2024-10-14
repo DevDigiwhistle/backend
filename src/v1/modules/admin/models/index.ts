@@ -42,24 +42,6 @@ export class AdminProfile implements IAdminProfile {
   @JoinColumn({ name: 'userId' })
   user: IUser
 
-  @Column({ type: 'varchar', default: null, nullable: true })
-  aadharNo: string
-
-  @Column({ type: 'varchar', default: null, nullable: true })
-  panNo: string
-
-  @Column({ type: 'varchar', default: null, nullable: true })
-  bankName: string
-
-  @Column({ type: 'varchar', default: null, nullable: true })
-  bankAccountNumber: string
-
-  @Column({ type: 'varchar', default: null, nullable: true })
-  bankIfscCode: string
-
-  @Column({ type: 'varchar', default: null, nullable: true })
-  bankAccountHolderName: string
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
@@ -119,13 +101,14 @@ export class EmployeeProfile implements IEmployeeProfile {
   campaignIncentives: ICampaign[]
 
   @OneToOne(() => Payroll, (payroll) => payroll.employeeProfile, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   payroll: IPayroll
 
   @OneToMany(
     () => PayrollHistory,
-    (payrollHistory) => payrollHistory.employeeProfile
+    (payrollHistory) => payrollHistory.employeeProfile,
+    { cascade: true }
   )
   payrollHistory: IPayrollHistory[]
 

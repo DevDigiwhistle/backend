@@ -31,6 +31,15 @@ export class PayrollController extends BaseController<
       const data = req.body
       const workingDays = monthsToDays[data.salaryMonth]
 
+      const existingPayroll = await this.service.findOne({
+        employeeProfile: {
+          id: data.employeeProfile,
+        },
+      })
+
+      if (existingPayroll !== null)
+        throw new HttpException(400, 'Payroll for this employee already exists')
+
       const _data = await this.service.add({ ...data, workingDays })
 
       return responseHandler(201, res, 'Added Successfully', _data, req)

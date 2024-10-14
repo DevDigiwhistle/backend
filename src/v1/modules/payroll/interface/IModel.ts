@@ -8,7 +8,7 @@ export interface IPayroll {
   hra: number
   others: number
   ctc: number
-  EmploymentType: Enum.EmploymentType
+  employmentType: Enum.EmploymentType
   salaryMonth: number // set %12 after payroll done
   tds: number
   incentive: number // set 0 back after the payroll done

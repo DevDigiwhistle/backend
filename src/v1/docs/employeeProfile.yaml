@@ -162,6 +162,18 @@ components:
           type: string
         designation:
           type: string
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
+          type: string
 
     EmployeeProfileInput:
       type: object
@@ -193,6 +205,18 @@ components:
         profilePic:
           type: string
         designation:
+          type: string
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
           type: string
         user:
           $ref: '#/components/schemas/User'

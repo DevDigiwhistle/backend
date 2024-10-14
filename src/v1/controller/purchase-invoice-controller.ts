@@ -170,7 +170,7 @@ export class PurchaseInvoiceController extends BaseController<
     res: Response
   ): Promise<Response> {
     try {
-      const { startDate, endDate } = req.query
+      const { startDate, endDate } = req.body
 
       if (typeof startDate !== 'string' || typeof endDate !== 'string') {
         throw new HttpException(400, 'Invalid Date')

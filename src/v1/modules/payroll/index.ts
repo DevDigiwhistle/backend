@@ -4,10 +4,7 @@ import { PayrollService } from './service'
 import { PayrollHistoryService } from './service'
 
 const payrollService = PayrollService.getInstance(
-  PayrollCRUD.getInstance(Payroll),
-  PayrollHistoryService.getInstance(
-    PayrollHistoryCRUD.getInstance(PayrollHistory)
-  )
+  PayrollCRUD.getInstance(Payroll)
 )
 
 const payrollHistoryService = PayrollHistoryService.getInstance(
