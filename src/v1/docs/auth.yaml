@@ -232,7 +232,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
-  /v1/auth/verify/otp:
+  /v1/auth/otp/verify:
     post:
       summary: verify otp sent to whatsapp number
       tags:

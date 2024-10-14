@@ -20,12 +20,9 @@ export class UserDTO {
       const _response = {
         ..._user,
         profile: {
-          id: _user.profile.id,
+          ...profile,
           firstName: _user.profile.pocFirstName,
           lastName: _user.profile.pocLastName,
-          name: _user.profile.name,
-          websiteURL: _user.profile.websiteURL,
-          mobileNo: _user.profile.mobileNo,
         },
       }
 

@@ -98,22 +98,40 @@ export class EmployeeProfileController extends BaseController<
     res: Response
   ): Promise<Response> {
     try {
-      const { name } = req.query
+      const { name, email } = req.query
 
-      if (typeof name !== 'string') throw new HttpException(400, 'Invalid name')
+      if (typeof name === 'string') {
+        const data = await this.service.findEmployeesByName(name)
 
-      const data = await this.service.findEmployeesByName(name)
+        const _data = data.map((value) => {
+          return {
+            name:
+              value.firstName +
+              (value.lastName === null ? '' : ' ' + value.lastName),
+            id: value.id,
+          }
+        })
 
-      const _data = data.map((value) => {
-        return {
-          name:
-            value.firstName +
-            (value.lastName === null ? '' : ' ' + value.lastName),
-          id: value.id,
-        }
-      })
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      }
 
-      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      if (typeof email === 'string') {
+        const data = await this.service.findEmployeesByEmail(email)
+
+        const _data = data.map((value) => {
+          return {
+            name:
+              value.firstName +
+              (value.lastName === null ? '' : ' ' + value.lastName),
+            email: value.user.email,
+            id: value.id,
+          }
+        })
+
+        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+      }
+
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)
     }

@@ -17,6 +17,8 @@ import {
   ICampaignParticipants,
 } from '../interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { PurchaseInvoice, SaleInvoice } from '../../invoice/models'
+import { IPurchaseInvoice, ISaleInvoice } from '../../invoice/interface'
 
 @Entity()
 export class Campaign implements ICampaign {
@@ -26,7 +28,7 @@ export class Campaign implements ICampaign {
   @Column({ type: 'varchar', nullable: false })
   name: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   code: string
 
   @ManyToOne(() => BrandProfile, (brandProfile) => brandProfile.campaign, {
@@ -68,7 +70,8 @@ export class Campaign implements ICampaign {
 
   @ManyToOne(
     () => EmployeeProfile,
-    (employeeProfile) => employeeProfile.campaignManager
+    (employeeProfile) => employeeProfile.campaignManager,
+    { nullable: false }
   )
   manager: EmployeeProfile
 
@@ -85,6 +88,18 @@ export class Campaign implements ICampaign {
     { cascade: true }
   )
   participants: ICampaignParticipants[]
+
+  @OneToMany(() => SaleInvoice, (saleInvoice) => saleInvoice.campaign, {
+    cascade: true,
+  })
+  saleInvoices: ISaleInvoice[]
+
+  @OneToMany(
+    () => PurchaseInvoice,
+    (purchaseInvoice) => purchaseInvoice.campaign,
+    { cascade: true }
+  )
+  purchaseInvoices: IPurchaseInvoice[]
 
   @Column({ type: 'float', nullable: true })
   cpv: number | null
@@ -127,7 +142,11 @@ export class CampaignParticipants implements ICampaignParticipants {
   )
   agencyProfile: IAgencyProfile | null
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.participants)
+  @ManyToOne(() => Campaign, (campaign) => campaign.participants, {
+    onDelete: 'CASCADE',
+    eager: true,
+    nullable: false,
+  })
   campaign: ICampaign
 
   @Column({ type: 'float', nullable: true })
@@ -202,7 +221,8 @@ export class CampaignDeliverables implements ICampaignDeliverables {
 
   @ManyToOne(
     () => CampaignParticipants,
-    (participant) => participant.deliverables
+    (participant) => participant.deliverables,
+    { nullable: false, onDelete: 'CASCADE', eager: true }
   )
   campaignParticipant: ICampaignParticipants
 

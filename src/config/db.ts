@@ -19,6 +19,8 @@ import {
   Campaign,
   CampaignParticipants,
 } from '../v1/modules/campaign/models'
+import { Payroll, PayrollHistory } from '../v1/modules/payroll/models'
+import { SaleInvoice, PurchaseInvoice } from '../v1/modules/invoice/models'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -45,6 +47,10 @@ export const AppDataSource = new DataSource({
     Campaign,
     CampaignParticipants,
     CampaignDeliverables,
+    Payroll,
+    PayrollHistory,
+    SaleInvoice,
+    PurchaseInvoice,
   ],
   ssl: { rejectUnauthorized: false },
 })

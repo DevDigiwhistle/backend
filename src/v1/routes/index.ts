@@ -11,9 +11,11 @@ import employeeRouter from './employee.routes'
 import agencyRouter from './agency.routes'
 import userRouter from './user.routes'
 import remarksRouter from './remarks.routes'
-import campaignRouter from './camapign.routes'
+import campaignRouter from './campaign.routes'
 import campaignParticipantRouter from './campaign-participants.routes'
 import campaignDeliverableRouter from './campaign-deliverables.routes'
+import invoiceRouter from './invoice.routes'
+import payrollRouter from './payroll.routes'
 
 const apiRouter = Router()
 
@@ -31,5 +33,7 @@ apiRouter.use('/remarks', remarksRouter)
 apiRouter.use('/campaign/participants', campaignParticipantRouter)
 apiRouter.use('/campaign/deliverables', campaignDeliverableRouter)
 apiRouter.use('/campaign', campaignRouter)
+apiRouter.use('/invoice', invoiceRouter)
+apiRouter.use('/payroll', payrollRouter)
 
 export default apiRouter

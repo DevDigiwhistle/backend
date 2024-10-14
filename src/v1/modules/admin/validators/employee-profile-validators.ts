@@ -20,6 +20,12 @@ const updateEmployeeProfileSchema = {
     mobileNo: { type: 'string', nullable: false },
     profilePic: { type: 'string', nullable: true },
     designation: { type: 'string', nullable: false },
+    aadharNo: { type: 'string', nullable: true },
+    panNo: { type: 'string', nullable: true },
+    bankName: { type: 'string', nullable: true },
+    bankAccountNumber: { type: 'string', nullable: true },
+    bankIfscCode: { type: 'string', nullable: true },
+    bankAccountHolderName: { type: 'string', nullable: true },
   },
 
   additionalProperties: false,

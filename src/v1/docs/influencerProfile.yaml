@@ -253,6 +253,30 @@ components:
             - Agency
         exclusive:
           type: boolean
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
         user:
           $ref: '#/components/schemas/User'
 
@@ -282,3 +306,27 @@ components:
             - Agency
         exclusive:
           type: boolean
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string

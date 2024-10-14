@@ -79,6 +79,12 @@ campaignRouter.put(
 )
 
 campaignRouter.get(
+  '/search',
+  verifyToken,
+  campaignController.searchCampaign.bind(campaignController)
+)
+
+campaignRouter.get(
   '/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

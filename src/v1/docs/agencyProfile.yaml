@@ -169,6 +169,30 @@ components:
           type: string
         profilePic:
           type: string
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
 
     AgencyProfileInput:
       type: object
@@ -200,4 +224,28 @@ components:
         mobileNo:
           type: string
         websiteURL:
+          type: string
+        aadharNo:
+          type: string
+        panNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        bankName:
+          type: string
+        bankAccountNumber:
+          type: string
+        bankIfscCode:
+          type: string
+        bankAccountHolderName:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
           type: string

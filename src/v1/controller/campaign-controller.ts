@@ -492,6 +492,27 @@ class CampaignController extends BaseController<
       return errorHandler(e, res, req)
     }
   }
+
+  async searchCampaign(req: Request, res: Response): Promise<Response> {
+    try {
+      const { code } = req.query
+
+      if (typeof code === 'string') {
+        const campaign = await this.service.findOne({ code: code }, ['brand'])
+
+        if (campaign === null)
+          throw new HttpException(404, 'Campaign Not Found')
+
+        const data = CampaignDTO.transformationForCampaignSearchByCode(campaign)
+
+        return responseHandler(200, res, 'Fetched Successfully', data, req)
+      }
+
+      return responseHandler(200, res, 'Fetched Successfully', {}, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
 }
 
 export { CampaignController }

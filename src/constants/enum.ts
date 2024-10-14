@@ -66,3 +66,25 @@ export enum Platform {
   YOUTUBE = 'youtube',
   X = 'x',
 }
+
+export enum InvoiceStatus {
+  ALL_RECEIVED = 'All Received',
+  PENDING = 'Pending',
+}
+
+export enum EmploymentType {
+  FULL_TIME = 'Full Time',
+  INTERNSHIP = 'Internship',
+  NONE = 'None',
+}
+
+export enum PaymentStatus {
+  ALL_PAID = 'All Paid',
+  PENDING = 'Pending',
+}
+
+export enum PaymentTerms {
+  DAYS_0 = '0 Days',
+  DAYS_30 = '30 Days',
+  DAYS_60 = '60 Days',
+}

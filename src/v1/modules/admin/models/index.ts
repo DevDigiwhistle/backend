@@ -15,6 +15,8 @@ import { User } from '../../user/models'
 import { IEmployeeProfile } from '../../admin/interface'
 import { Campaign } from '../../campaign/models'
 import { ICampaign } from '../../campaign/interface'
+import { Payroll, PayrollHistory } from '../../payroll/models'
+import { IPayroll, IPayrollHistory } from '../../payroll/interface'
 
 @Entity()
 export class AdminProfile implements IAdminProfile {
@@ -74,11 +76,41 @@ export class EmployeeProfile implements IEmployeeProfile {
   @JoinColumn({ name: 'userId' })
   user: IUser
 
+  @Column({ type: 'varchar', default: null, nullable: true })
+  aadharNo: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  panNo: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  bankName: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  bankAccountNumber: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  bankIfscCode: string
+
+  @Column({ type: 'varchar', default: null, nullable: true })
+  bankAccountHolderName: string
+
   @OneToMany(() => Campaign, (campaign) => campaign.manager)
   campaignManager: ICampaign[]
 
   @OneToMany(() => Campaign, (campaign) => campaign.incentiveWinner)
   campaignIncentives: ICampaign[]
+
+  @OneToOne(() => Payroll, (payroll) => payroll.employeeProfile, {
+    cascade: true,
+  })
+  payroll: IPayroll
+
+  @OneToMany(
+    () => PayrollHistory,
+    (payrollHistory) => payrollHistory.employeeProfile,
+    { cascade: true }
+  )
+  payrollHistory: IPayrollHistory[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

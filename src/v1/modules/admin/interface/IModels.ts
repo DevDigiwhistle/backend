@@ -20,6 +20,12 @@ export interface IEmployeeProfile extends ObjectLiteral {
   user: IUser
   profilePic: string
   designation: string
+  aadharNo: string
+  panNo: string
+  bankName: string
+  bankAccountNumber: string
+  bankIfscCode: string
+  bankAccountHolderName: string
   createdAt?: Date
   updatedAt?: Date
 }
