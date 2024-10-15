@@ -45,7 +45,7 @@ export class Payroll implements IPayroll {
   })
   employmentType: Enum.EmploymentType
 
-  @Column({ nullable: false, default: 0 })
+  @Column({ nullable: false, default: 2 })
   tds: number
 
   @Column({ nullable: false, default: 0 })

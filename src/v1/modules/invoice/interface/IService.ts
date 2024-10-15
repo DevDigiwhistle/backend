@@ -32,6 +32,5 @@ export interface IPurchaseInvoiceService
   ): Promise<PaginatedResponse<IPurchaseInvoice>>
 
   sharePurchaseInvoice(data: ShareInvoiceRequest): Promise<void>
-  downloadPurchaseInvoice(id: string): Promise<string>
   downloadPurchaseInvoiceReport(startDate: Date, endDate: Date): Promise<string>
 }

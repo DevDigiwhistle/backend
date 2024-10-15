@@ -44,6 +44,30 @@ export class BrandProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: true, default: null })
   profilePic: string | null
 
+  @Column({ type: 'varchar', nullable: true, default: null })
+  msmeNo: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  gstNo: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  panNo: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  aadharNo: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  address: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  state: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  pincode: string
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  city: string
+
   @OneToMany(() => Campaign, (campaign) => campaign.brand)
   campaign: ICampaign[]
 
@@ -91,7 +115,8 @@ export class AgencyProfile implements IBrandProfile {
 
   @OneToMany(
     () => PurchaseInvoice,
-    (purchaseInvoice) => purchaseInvoice.agencyProfile
+    (purchaseInvoice) => purchaseInvoice.agencyProfile,
+    { cascade: true }
   )
   purchaseInvoices: PurchaseInvoice[]
 

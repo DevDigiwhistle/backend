@@ -1,11 +1,14 @@
-import nodemailer from 'nodemailer'
+import nodemailer, { Transporter } from 'nodemailer'
 import { AppLogger } from '../../utils'
+import { MailOptions } from 'nodemailer/lib/json-transport'
+import { Attachment } from 'nodemailer/lib/mailer'
 
 interface IMailerService {
   sendMail(
     to: string | string[],
     subject: string,
-    message: string
+    message: string,
+    attachment?: Attachment[]
   ): Promise<void>
 }
 
@@ -21,14 +24,19 @@ class MailerService implements IMailerService {
 
   private constructor() {}
 
-  async sendMail(to: string, subject: string, message: string): Promise<void> {
+  async sendMail(
+    to: string,
+    subject: string,
+    message: string,
+    attachments?: Attachment[]
+  ): Promise<void> {
     try {
       const port: number = parseInt(process.env.MAIL_PORT as string) ?? 0
       const user: string = process.env.MAIL_USER ?? ''
       const pass: string = process.env.MAIL_PASS ?? ''
       const host: string = process.env.MAIL_HOST ?? ''
 
-      const transporter: any = nodemailer.createTransport({
+      const transporter: Transporter = nodemailer.createTransport({
         host,
         port,
         secure: false,
@@ -38,11 +46,12 @@ class MailerService implements IMailerService {
         },
       })
 
-      const mailOptions = {
+      const mailOptions: MailOptions = {
         from: `"digiwhistle" <${user}>`,
         to,
         subject,
         html: message,
+        attachments: attachments,
       }
 
       await transporter.sendMail(mailOptions)

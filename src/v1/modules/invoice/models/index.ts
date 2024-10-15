@@ -109,10 +109,10 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column({ nullable: false })
   tds!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: true, default: null })
   tdsPercentage!: number
 
-  @Column({ nullable: false, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar', default: null })
   tdsSection: string
 
   @Column({ nullable: false })
@@ -121,7 +121,7 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column({ nullable: false })
   amountToBeReceived!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: true, default: 0 })
   balanceAmount: number
 
   @Column({ type: 'enum', enum: Enum.PaymentTerms, nullable: false })
@@ -130,20 +130,20 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column('enum', { enum: Enum.InvoiceStatus })
   paymentStatus!: Enum.InvoiceStatus
 
-  @Column({ nullable: true, type: 'varchar' })
+  @Column({ nullable: true, type: 'varchar', default: null })
   file!: string | null
 
   @ManyToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.purchaseInvoices,
-    { nullable: true, eager: true }
+    { nullable: true, eager: true, onDelete: 'CASCADE' }
   )
   influencerProfile?: IInfluencerProfile | null
 
   @ManyToOne(
     () => AgencyProfile,
     (agencyProfile) => agencyProfile.purchaseInvoices,
-    { nullable: true, eager: true }
+    { nullable: true, eager: true, onDelete: 'CASCADE' }
   )
   agencyProfile?: IAgencyProfile | null
 

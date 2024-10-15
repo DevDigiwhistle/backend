@@ -1,6 +1,6 @@
 export type ShareInvoiceRequest = {
   invoiceId: string
-  email: string[]
+  emails: string[]
   subject: string
   message: string
 }

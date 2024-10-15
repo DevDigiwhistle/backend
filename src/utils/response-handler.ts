@@ -13,7 +13,7 @@ export const responseHandler = (
   const logger = AppLogger.getInstance()
 
   logger.info(
-    `Response to ${req.method}, ${req.url} is ${JSON.stringify({ data: data, message: message })}`
+    `Response to ${req.method}, ${req.originalUrl} is ${JSON.stringify({ data: data, message: message })}`
   )
 
   return res.status(statusCode).json({

@@ -73,6 +73,18 @@ paths:
             type: number
           required: true
         - in: query
+          name: startDate
+          schema:
+            type: string
+          required: true
+          description: start date of the report
+        - in: query
+          name: endDate
+          schema:
+            type: string
+          required: true
+          description: end date of the report
+        - in: query
           name: invoiceNo
           schema:
             type: string
@@ -287,60 +299,11 @@ paths:
                     type: string
                   message:
                     type: string
-                  url:
-                    type: string
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        404:
-          description: not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-        500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/messageModel'
-
-    get:
-      summary: Purchase Invoice Download
-      tags:
-        - PurchaseInvoice
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: query
-          name: id
-          schema:
-            type: string
-          required: true
-          description: id of the purchase invoice
-      responses:
-        200:
-          description: Downloaded
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  message:
-                    type: string
-                  url:
-                    type: string
+                  data:
+                    type: object
+                    properties:
+                      url:
+                        type: string
         400:
           description: Bad Request
           content:

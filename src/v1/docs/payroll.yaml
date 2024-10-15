@@ -66,10 +66,12 @@ paths:
           name: limit
           schema:
             type: number
+          required: true
         - in: query
           name: page
           schema:
             type: number
+          required: true
         - in: query
           name: searchQuery
           schema:
@@ -81,6 +83,18 @@ paths:
             enum:
               - Pending
               - All Paid
+          required: true
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date-time
+          required: true
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date-time
           required: true
       responses:
         '200':
@@ -374,10 +388,6 @@ components:
           type: number
           example: 12
           description: The salary month
-        tds:
-          type: number
-          example: 5%
-          description: The tax deducted at source
         incentive:
           type: number
           example: 0
@@ -427,10 +437,6 @@ components:
             - None
           example: Full Time
           description: The type of employment
-        salaryMonth:
-          type: number
-          example: 0
-          description: The salary month between (0-11)
         tds:
           type: number
           example: 5%

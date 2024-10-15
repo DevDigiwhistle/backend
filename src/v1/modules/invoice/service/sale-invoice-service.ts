@@ -83,10 +83,10 @@ export class SaleInvoiceService
 
   async shareSaleInvoice(data: ShareInvoiceRequest): Promise<void> {
     try {
-      const { invoiceId, email, subject, message } = data
+      const { invoiceId, emails, subject, message } = data
 
       this.mailerService
-        .sendMail(email, subject, message)
+        .sendMail(emails, subject, message)
         .then(() => {
           AppLogger.getInstance().info(
             `Invoice ${invoiceId} shared successfully`

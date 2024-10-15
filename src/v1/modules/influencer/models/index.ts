@@ -96,7 +96,9 @@ export class InfluencerProfile implements IInfluencerProfile {
   )
   campaignParticipant: ICampaignParticipants
 
-  @ManyToOne(() => PurchaseInvoice, (invoice) => invoice.influencerProfile)
+  @OneToMany(() => PurchaseInvoice, (invoice) => invoice.influencerProfile, {
+    cascade: true,
+  })
   purchaseInvoices: IPurchaseInvoice[]
 
   @Column({ type: 'varchar', default: null })

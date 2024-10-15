@@ -29,7 +29,10 @@ export class PayrollController extends BaseController<
   async addController(req: Request, res: Response): Promise<Response> {
     try {
       const data = req.body
-      const workingDays = monthsToDays[data.salaryMonth]
+
+      const salaryMonth =
+        new Date(5.5 * 60 * 60 * 1000 + new Date().getTime()).getMonth() + 1
+      const workingDays = monthsToDays[salaryMonth]
 
       const existingPayroll = await this.service.findOne({
         employeeProfile: {
@@ -40,7 +43,11 @@ export class PayrollController extends BaseController<
       if (existingPayroll !== null)
         throw new HttpException(400, 'Payroll for this employee already exists')
 
-      const _data = await this.service.add({ ...data, workingDays })
+      const _data = await this.service.add({
+        ...data,
+        workingDays,
+        salaryMonth,
+      })
 
       return responseHandler(201, res, 'Added Successfully', _data, req)
     } catch (e) {
@@ -52,8 +59,30 @@ export class PayrollController extends BaseController<
     try {
       const { searchQuery, type } = req.query
 
+      const { startDate, endDate } = req.body
+
+      if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
+      const lowerBound = new Date(startDate)
+      const upperBound = new Date(endDate)
+
+      if (
+        !(
+          lowerBound instanceof Date && lowerBound.toISOString() === startDate
+        ) ||
+        !(upperBound instanceof Date && upperBound.toISOString() === endDate)
+      ) {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
       if (type === 'Pending') {
-        const data = await this.service.getAllPayroll(searchQuery as string)
+        const data = await this.service.getAllPayroll(
+          searchQuery as string,
+          lowerBound,
+          upperBound
+        )
 
         const _data = data.map((value) => {
           return PayrollDTO.transformationForPendingPayrollData(value)
@@ -71,7 +100,9 @@ export class PayrollController extends BaseController<
         const data = await this.payrollHistoryService.getAllPayrollHistory(
           parseInt(page),
           parseInt(limit),
-          searchQuery as string
+          searchQuery as string,
+          lowerBound,
+          upperBound
         )
 
         const _data = data.data.map((value) => {

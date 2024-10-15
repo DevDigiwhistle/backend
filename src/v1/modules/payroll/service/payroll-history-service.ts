@@ -1,4 +1,4 @@
-import { FindOptionsOrder, FindOptionsWhere, ILike } from 'typeorm'
+import { Between, FindOptionsOrder, FindOptionsWhere, ILike } from 'typeorm'
 import { BaseService, HttpException } from '../../../../utils'
 import {
   IPayroll,
@@ -30,24 +30,32 @@ export class PayrollHistoryService
   async getAllPayrollHistory(
     page: number,
     limit: number,
-    searchQuery: string
+    searchQuery: string,
+    lowerBound: Date,
+    upperBound: Date
   ): Promise<PaginatedResponse<IPayrollHistory>> {
     try {
       let query: FindOptionsWhere<IPayrollHistory>[] = []
+      let Query: FindOptionsWhere<IPayrollHistory> = {
+        createdAt: Between(lowerBound, upperBound),
+      }
 
       if (typeof searchQuery === 'string') {
         query = [
           {
+            ...Query,
             employeeProfile: {
               firstName: ILike(`%${searchQuery}%`),
             },
           },
           {
+            ...Query,
             employeeProfile: {
               lastName: ILike(`%${searchQuery}%`),
             },
           },
           {
+            ...Query,
             employeeProfile: {
               user: {
                 email: ILike(`%${searchQuery}%`),
@@ -55,6 +63,10 @@ export class PayrollHistoryService
             },
           },
         ]
+      }
+
+      if (query.length === 0) {
+        query.push(Query)
       }
 
       const order: FindOptionsOrder<IPayrollHistory> = {

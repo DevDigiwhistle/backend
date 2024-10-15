@@ -1,4 +1,4 @@
-import { Between, FindOptionsWhere, ILike } from 'typeorm'
+import { Between, DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
 import {
   AppLogger,
   BaseService,
@@ -15,6 +15,12 @@ import { ShareInvoiceRequest } from '../types'
 import { IMailerService } from '../../../utils'
 import { generateCSV } from '../utils'
 import fs from 'fs'
+import {
+  ICampaignParticipants,
+  ICampaignParticipantsService,
+} from '../../campaign/interface'
+import { Enum } from '../../../../constants'
+import { Attachment } from 'nodemailer/lib/mailer'
 
 export class PurchaseInvoiceService
   extends BaseService<IPurchaseInvoice, IPurchaseInvoiceCRUD>
@@ -22,15 +28,18 @@ export class PurchaseInvoiceService
 {
   private static instance: IPurchaseInvoiceService | null = null
   private readonly mailerService: IMailerService
+  private readonly campaignParticipantService: ICampaignParticipantsService
 
   static getInstance = (
     purchaseInvoiceCRUD: IPurchaseInvoiceCRUD,
-    mailerService: IMailerService
+    mailerService: IMailerService,
+    campaignParticipantService: ICampaignParticipantsService
   ) => {
     if (PurchaseInvoiceService.instance === null) {
       PurchaseInvoiceService.instance = new PurchaseInvoiceService(
         purchaseInvoiceCRUD,
-        mailerService
+        mailerService,
+        campaignParticipantService
       )
     }
     return PurchaseInvoiceService.instance
@@ -38,10 +47,105 @@ export class PurchaseInvoiceService
 
   private constructor(
     purchaseInvoiceCRUD: IPurchaseInvoiceCRUD,
-    mailerService: IMailerService
+    mailerService: IMailerService,
+    campaignParticipantService: ICampaignParticipantsService
   ) {
     super(purchaseInvoiceCRUD)
     this.mailerService = mailerService
+    this.campaignParticipantService = campaignParticipantService
+  }
+
+  async add(data: DeepPartial<IPurchaseInvoice>): Promise<IPurchaseInvoice> {
+    try {
+      let Query: FindOptionsWhere<IPurchaseInvoice> = {
+        campaign: {
+          id: data.campaign as unknown as string,
+        },
+      }
+
+      if (data.influencerProfile !== null) {
+        Query = {
+          ...Query,
+          influencerProfile: {
+            id: data.influencerProfile as unknown as string,
+          },
+        }
+      } else if (data.agencyProfile !== null) {
+        Query = {
+          ...Query,
+          agencyProfile: {
+            id: data.agencyProfile as unknown as string,
+          },
+        }
+      }
+
+      const exitingInvoice = await this.crudBase.findOne(Query)
+
+      if (exitingInvoice !== null)
+        throw new HttpException(400, 'Invoice Already Exists')
+
+      let query: FindOptionsWhere<ICampaignParticipants> = {
+        campaign: {
+          id: data.campaign as unknown as string,
+        },
+      }
+
+      if (data.influencerProfile !== null) {
+        query = {
+          ...query,
+          influencerProfile: {
+            id: data.influencerProfile as unknown as string,
+          },
+        }
+      } else if (data.agencyProfile !== null) {
+        query = {
+          ...query,
+          agencyProfile: {
+            id: data.agencyProfile as unknown as string,
+          },
+        }
+      }
+
+      const participant = await this.campaignParticipantService.findOne(query, [
+        'deliverables',
+      ])
+
+      if (participant === null)
+        throw new HttpException(
+          400,
+          'Not Part of this campaign, cannot process the invoice'
+        )
+
+      participant.deliverables.map((deliverable) => {
+        if (deliverable.status === Enum.CampaignDeliverableStatus.NOT_LIVE) {
+          throw new HttpException(
+            400,
+            'All Deliverables are not live so cannot process invoice request'
+          )
+        }
+      })
+
+      const resp = await this.crudBase.add(data)
+
+      await this.campaignParticipantService
+        .update(
+          { id: participant.id },
+          {
+            invoice: resp.invoiceNo,
+            invoiceStatus: Enum.CampaignInvoiceStatus.GENERATED,
+          }
+        )
+        .catch(async (e) => {
+          await this.crudBase.delete({ id: resp.id }).catch((e) => {
+            AppLogger.getInstance().error(e)
+          })
+          throw new HttpException(e?.errorCode, e?.message)
+        })
+
+      return resp
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   async getAllPurchaseInvoices(
@@ -98,10 +202,23 @@ export class PurchaseInvoiceService
 
   async sharePurchaseInvoice(data: ShareInvoiceRequest): Promise<void> {
     try {
-      const { invoiceId, email, subject, message } = data
+      const { invoiceId, emails, subject, message } = data
+
+      const invoice = await this.crudBase.findOne({ id: invoiceId })
+
+      if (invoice === null) throw new HttpException(400, 'Invoice Not Found')
+
+      const attachment: Attachment[] = []
+
+      if (invoice.file !== null) {
+        attachment.push({
+          filename: `${invoice.invoiceNo}.pdf`,
+          path: invoice.file,
+        })
+      }
 
       this.mailerService
-        .sendMail(email, subject, message)
+        .sendMail(emails, subject, message, attachment)
         .then(() => {
           AppLogger.getInstance().info(
             `Invoice ${invoiceId} shared successfully`
@@ -112,14 +229,6 @@ export class PurchaseInvoiceService
             `Error in sharing invoice ${invoiceId}: ${e}`
           )
         })
-    } catch (e) {
-      throw new HttpException(e?.errorCode, e?.message)
-    }
-  }
-
-  async downloadPurchaseInvoice(id: string): Promise<string> {
-    try {
-      return ''
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -199,8 +308,10 @@ export class PurchaseInvoiceService
 
       const url = await uploadFileToFirebase(
         filePath,
-        `reports/purchase_invoice_${new Date().toISOString()}.csv`
+        `reports/purchase_invoice.csv`
       )
+
+      fs.unlinkSync(filePath)
 
       return url
     } catch (e) {
