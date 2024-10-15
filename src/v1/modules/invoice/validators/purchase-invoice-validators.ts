@@ -59,6 +59,8 @@ export const updatePurchaseInvoiceSchema = {
     sgst: { type: 'number', nullable: false },
     totalAmount: { type: 'number', nullable: false },
     tds: { type: 'number', nullable: false },
+    tdsPercentage: { type: 'number', nullable: false },
+    tdsSection: { type: 'string', nullable: false },
     finalAmount: { type: 'number', nullable: false },
     amountToBeReceived: { type: 'number', nullable: false },
     paymentTerms: {

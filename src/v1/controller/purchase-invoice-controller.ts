@@ -159,6 +159,7 @@ export class PurchaseInvoiceController extends BaseController<
 
   async shareInvoiceController(req: Request, res: Response): Promise<Response> {
     try {
+      await this.service.sharePurchaseInvoice(req.body)
       return responseHandler(200, res, 'Shared Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)
@@ -192,29 +193,6 @@ export class PurchaseInvoiceController extends BaseController<
         lowerBound,
         upperBound
       )
-
-      return responseHandler(
-        200,
-        res,
-        'Downloaded Successfully',
-        { url: url },
-        req
-      )
-    } catch (e) {
-      return errorHandler(e, res, req)
-    }
-  }
-
-  async downloadPurchaseInvoiceController(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    try {
-      const { id } = req.query
-
-      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
-
-      const url = await this.service.downloadPurchaseInvoice(id)
 
       return responseHandler(
         200,

@@ -13,8 +13,6 @@ export const addPayrollSchema = {
       enum: Object.values(Enum.EmploymentType),
       nullable: false,
     },
-    salaryMonth: { type: 'number', nullable: false },
-    tds: { type: 'number', nullable: false },
   },
   required: [
     'employeeProfile',
@@ -23,8 +21,6 @@ export const addPayrollSchema = {
     'others',
     'ctc',
     'employmentType',
-    'salaryMonth',
-    'tds',
   ],
   additionalProperties: false,
 }

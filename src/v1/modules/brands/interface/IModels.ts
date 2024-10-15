@@ -10,6 +10,14 @@ export interface IBrandProfile extends ObjectLiteral {
   user: IUser
   mobileNo: string
   profilePicURL?: string
+  aadharNo: string
+  gstNo: string
+  panNo: string
+  msmeNo: string
+  address: string
+  city: string
+  state: string
+  pincode: string
   createdAt?: Date
   updatedAt?: Date
 }

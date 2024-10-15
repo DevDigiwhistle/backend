@@ -153,20 +153,6 @@ invoiceRouter.post(
   )
 )
 
-invoiceRouter.get(
-  '/purchase/download',
-  verifyToken,
-  authorizeUser([
-    Enum.ROLES.ADMIN,
-    Enum.ROLES.EMPLOYEE,
-    Enum.ROLES.INFLUENCER,
-    Enum.ROLES.AGENCY,
-  ]),
-  purchaseInvoiceController.downloadPurchaseInvoiceController.bind(
-    purchaseInvoiceController
-  )
-)
-
 invoiceRouter.post(
   '/purchase/download',
   verifyToken,

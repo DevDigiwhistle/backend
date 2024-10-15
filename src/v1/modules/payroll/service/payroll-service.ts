@@ -27,8 +27,14 @@ export class PayrollService
     super(payrollCRUD)
   }
 
-  async getAllPayroll(searchQuery: string): Promise<IPayroll[]> {
+  async getAllPayroll(
+    searchQuery: string,
+    lowerBound: Date,
+    upperBound: Date
+  ): Promise<IPayroll[]> {
     try {
+      //
+
       let query: FindOptionsWhere<IPayroll>[] = []
 
       if (typeof searchQuery === 'string') {

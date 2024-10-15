@@ -168,6 +168,22 @@ components:
           type: string
         profilePic:
           type: string
+        panNo:
+          type: string
+        aadharNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
+        address:
+          type: string
 
     BrandProfileInput:
       type: object
@@ -199,4 +215,20 @@ components:
         mobileNo:
           type: string
         websiteURL:
+          type: string
+        panNo:
+          type: string
+        aadharNo:
+          type: string
+        gstNo:
+          type: string
+        msmeNo:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        pincode:
+          type: string
+        address:
           type: string

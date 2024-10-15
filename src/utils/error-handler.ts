@@ -11,7 +11,7 @@ export const errorHandler = (
 ): Response => {
   const logger = AppLogger.getInstance()
   logger.error(
-    `Error: ${e} in  url: ${req.url} method: ${req.method} body: ${req.body}\n`
+    `Error: ${e} in  url: ${req.originalUrl} method: ${req.method} body: ${req.body}\n`
   )
 
   if (e instanceof HttpException) {
