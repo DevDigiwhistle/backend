@@ -7,7 +7,13 @@ import {
   IPayrollHistoryService,
   IPayrollService,
 } from '../interface'
-import { DeepPartial, FindOptionsOrder, FindOptionsWhere, ILike } from 'typeorm'
+import {
+  Between,
+  DeepPartial,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  ILike,
+} from 'typeorm'
 import { Enum, monthIndexToName, monthsToDays } from '../../../../constants'
 
 export class PayrollService
@@ -33,23 +39,27 @@ export class PayrollService
     upperBound: Date
   ): Promise<IPayroll[]> {
     try {
-      //
-
+      let Query: FindOptionsWhere<IPayroll> = {
+        payrollDate: Between(lowerBound, upperBound),
+      }
       let query: FindOptionsWhere<IPayroll>[] = []
 
       if (typeof searchQuery === 'string') {
         query = [
           {
+            ...Query,
             employeeProfile: {
               firstName: ILike(`%${searchQuery}%`),
             },
           },
           {
+            ...Query,
             employeeProfile: {
               lastName: ILike(`%${searchQuery}%`),
             },
           },
           {
+            ...Query,
             employeeProfile: {
               user: {
                 email: ILike(`%${searchQuery}%`),
@@ -65,6 +75,7 @@ export class PayrollService
             email: 'ASC',
           },
         },
+        payrollDate: 'ASC',
       }
 
       const data = await this.crudBase.findAll(
@@ -91,13 +102,20 @@ export class PayrollService
       // razorpay payout api call
 
       const newSalaryMonth = (payroll.salaryMonth + 1) % 12
+      const nextPayrollDate = new Date()
+      nextPayrollDate.setDate(1)
+      nextPayrollDate.setMonth(newSalaryMonth)
+      nextPayrollDate.setHours(0, 0, 0, 0)
+      if (newSalaryMonth === 0)
+        nextPayrollDate.setFullYear(nextPayrollDate.getFullYear() + 1)
 
-      const updatedPayroll = await this.crudBase.update(
+      await this.crudBase.update(
         { id: id },
         {
           salaryMonth: newSalaryMonth,
           workingDays: monthsToDays[newSalaryMonth],
           incentive: 0,
+          payrollDate: nextPayrollDate,
         }
       )
 
@@ -119,6 +137,7 @@ export class PayrollService
         grossPay: payroll.ctc,
         finalPay: payroll.ctc * (1 - payroll.tds / 100) + payroll.incentive,
         status: Enum.PaymentStatus.PENDING,
+        employment: Enum.EmploymentType.FULL_TIME,
         paymentDate: new Date(),
       }
     } catch (e) {

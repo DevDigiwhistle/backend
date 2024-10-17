@@ -16,6 +16,11 @@ paths:
           schema:
             type: string
           description: The name of the employee
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: The email of the employee
       responses:
         '200':
           description: Employee profile fetched successfully

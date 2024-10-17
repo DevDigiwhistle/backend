@@ -13,6 +13,7 @@ export interface IPayroll {
   tds: number
   incentive: number // set 0 back after the payroll done
   workingDays: number // set back to default when payroll done
+  payrollDate: Date
   createdAt?: Date
   updatedAt?: Date
 }
