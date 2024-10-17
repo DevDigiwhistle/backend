@@ -27,3 +27,12 @@
 #### Payroll Management
 - Created a payroll system for employees, including TDS and GST reporting.
 - Ensured compliance with taxation regulations.
+
+## Docs Link:
+https://erp.digiwhistle.com/v1/docs/
+
+## Live Link:
+https://landing-page-frontend-sigma.vercel.app/
+
+
+
