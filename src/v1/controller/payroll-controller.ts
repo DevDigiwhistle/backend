@@ -59,7 +59,7 @@ export class PayrollController extends BaseController<
     try {
       const { searchQuery, type } = req.query
 
-      const { startDate, endDate } = req.body
+      const { startDate, endDate } = req.query
 
       if (typeof startDate !== 'string' || typeof endDate !== 'string') {
         throw new HttpException(400, 'Invalid Date')
