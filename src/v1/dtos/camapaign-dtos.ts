@@ -267,9 +267,13 @@ export class CampaignDTO {
     influencerProfileId: string
   ) {
     const influencerDetails = data.participants.filter((data) => {
-      data.influencerProfile !== null &&
+      return (
+        data.influencerProfile !== null &&
         data.influencerProfile.id === influencerProfileId
+      )
     })
+
+    console.log(data.participants, influencerProfileId)
 
     return {
       campaignId: data.id,

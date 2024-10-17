@@ -57,6 +57,9 @@ export class Payroll implements IPayroll {
   @Column({ nullable: false, default: 0 })
   workingDays: number
 
+  @Column({ nullable: false, default: new Date(), type: 'date' })
+  payrollDate: Date
+
   @CreateDateColumn()
   createdAt: Date
 
