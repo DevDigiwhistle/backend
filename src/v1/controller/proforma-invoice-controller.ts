@@ -1,27 +1,22 @@
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { responseHandler } from '../../utils/response-handler'
-import { SaleInvoiceDTO } from '../dtos/sale-invoice-dtos'
-import { IExtendedRequest } from '../interface'
 import {
-  ISaleInvoice,
-  ISaleInvoiceCRUD,
-  ISaleInvoiceService,
+  IProformaInvoice,
+  IProformaInvoiceCRUD,
+  IProformaInvoiceService,
 } from '../modules/invoice/interface'
 import { Request, Response } from 'express'
 
-export class SaleInvoiceController extends BaseController<
-  ISaleInvoice,
-  ISaleInvoiceCRUD,
-  ISaleInvoiceService
+export class ProformaInvoiceController extends BaseController<
+  IProformaInvoice,
+  IProformaInvoiceCRUD,
+  IProformaInvoiceService
 > {
-  constructor(saleInvoiceService: ISaleInvoiceService) {
-    super(saleInvoiceService)
+  constructor(proformaInvoiceService: IProformaInvoiceService) {
+    super(proformaInvoiceService)
   }
 
-  async getAllController(
-    req: IExtendedRequest,
-    res: Response
-  ): Promise<Response> {
+  async getAllController(req: Request, res: Response): Promise<Response> {
     try {
       const { page, limit } = req.query
       if (typeof page !== 'string' || typeof limit !== 'string')
@@ -46,7 +41,7 @@ export class SaleInvoiceController extends BaseController<
         throw new HttpException(400, 'Invalid Date')
       }
 
-      const data = await this.service.getAllSaleInvoices(
+      const data = await this.service.getAllProformaInvoices(
         parseInt(page),
         parseInt(limit),
         lowerBound,
@@ -54,9 +49,7 @@ export class SaleInvoiceController extends BaseController<
         invoiceNo as string
       )
 
-      const _data = data.data.map((value) => {
-        return SaleInvoiceDTO.transformationForSaleInvoice(value)
-      })
+      const _data = data.data
 
       return responseHandler(
         200,
@@ -77,14 +70,14 @@ export class SaleInvoiceController extends BaseController<
 
   async shareInvoiceController(req: Request, res: Response): Promise<Response> {
     try {
-      await this.service.shareSaleInvoice(req.body)
+      await this.service.shareProformaInvoice(req.body)
       return responseHandler(200, res, 'Shared Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)
     }
   }
 
-  async downloadSaleInvoiceController(
+  async downloadProformaInvoiceController(
     req: Request,
     res: Response
   ): Promise<Response> {
@@ -93,47 +86,7 @@ export class SaleInvoiceController extends BaseController<
 
       if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
 
-      const url = await this.service.downloadSaleInvoice(id)
-
-      return responseHandler(
-        200,
-        res,
-        'Downloaded Successfully',
-        { url: url },
-        req
-      )
-    } catch (e) {
-      return errorHandler(e, res, req)
-    }
-  }
-
-  async downloadSaleInvoiceReportController(
-    req: Request,
-    res: Response
-  ): Promise<Response> {
-    try {
-      const { startDate, endDate } = req.body
-
-      if (typeof startDate !== 'string' || typeof endDate !== 'string') {
-        throw new HttpException(400, 'Invalid Date')
-      }
-
-      const lowerBound = new Date(startDate)
-      const upperBound = new Date(endDate)
-
-      if (
-        !(
-          lowerBound instanceof Date && lowerBound.toISOString() === startDate
-        ) ||
-        !(upperBound instanceof Date && upperBound.toISOString() === endDate)
-      ) {
-        throw new HttpException(400, 'Invalid Date')
-      }
-
-      const url = await this.service.downloadSaleInvoiceReport(
-        lowerBound,
-        upperBound
-      )
+      const url = await this.service.downloadProformaInvoice(id)
 
       return responseHandler(
         200,

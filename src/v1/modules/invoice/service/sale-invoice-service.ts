@@ -69,6 +69,8 @@ export class SaleInvoiceService
           'campaign.participants',
           'campaign.participants.deliverables',
           'campaign.brand',
+          'campaign.participants.influencerProfile',
+          'campaign.participants.agencyProfile',
         ],
         {
           invoiceDate: 'DESC',
@@ -168,7 +170,7 @@ export class SaleInvoiceService
 
       const url = await uploadFileToFirebase(
         filePath,
-        `reports/sale_invoice_${new Date().toISOString()}.csv`
+        `reports/sale_invoice.csv`
       )
 
       return url

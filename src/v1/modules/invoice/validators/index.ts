@@ -8,7 +8,17 @@ import {
   updatePurchaseInvoiceSchema,
 } from './purchase-invoice-validators'
 
+import {
+  addProformaInvoiceSchema,
+  updateProformaInvoiceSchema,
+} from './proforma-invoice-validator'
+
 import { shareInvoiceSchema } from './invoice-validators'
+
+import {
+  addCreditNoteSchema,
+  updateCreditNoteSchema,
+} from './credit-note-validator'
 
 export {
   addSaleInvoiceSchema,
@@ -16,4 +26,8 @@ export {
   addPurchaseInvoiceSchema,
   updatePurchaseInvoiceSchema,
   shareInvoiceSchema,
+  addProformaInvoiceSchema,
+  updateProformaInvoiceSchema,
+  addCreditNoteSchema,
+  updateCreditNoteSchema,
 }

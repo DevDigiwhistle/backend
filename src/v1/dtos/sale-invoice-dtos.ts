@@ -49,10 +49,20 @@ export class SaleInvoiceDTO {
   }
   static transformationForSaleInvoice(saleInvoice: ISaleInvoice) {
     const participants = saleInvoice.campaign.participants
+    const _deliverables: Array<{
+      name: string
+      deliverables: Array<{
+        id: string
+        name: string
+        desc: string | null
+        platform: Enum.Platform
+        status: Enum.CampaignDeliverableStatus
+      }>
+    }> = []
 
-    const _deliverables = participants.map((participant) => {
+    participants.forEach((participant) => {
       if (participant.influencerProfile !== null) {
-        return {
+        _deliverables.push({
           name:
             participant.influencerProfile.firstName +
             (participant.influencerProfile.lastName !== null
@@ -67,9 +77,10 @@ export class SaleInvoiceDTO {
               status: deliverable.status,
             }
           }),
-        }
+        })
       } else {
-        return this.groupDeliverablesByInfluencerName(participant)
+        const value = this.groupDeliverablesByInfluencerName(participant)
+        _deliverables.push(...value)
       }
     })
 
@@ -88,9 +99,7 @@ export class SaleInvoiceDTO {
       code: saleInvoice.campaign.code,
       name: saleInvoice.campaign.name,
       campaignDuration:
-        saleInvoice.campaign.startDate.toDateString() +
-        ' - ' +
-        saleInvoice.campaign.endDate.toString(),
+        saleInvoice.campaign.startDate + ' - ' + saleInvoice.campaign.endDate,
       sgst: saleInvoice.sgst,
       cgst: saleInvoice.cgst,
       igst: saleInvoice.igst,

@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -14,6 +15,7 @@ import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { AgencyProfile } from '../../brands/models'
 import { IAgencyProfile } from '../../brands/interface'
+import { ICreditNote, IProformaInvoice } from '../interface/IModels'
 
 @Entity()
 export class SaleInvoice implements ISaleInvoice {
@@ -36,28 +38,28 @@ export class SaleInvoice implements ISaleInvoice {
   @Column({ nullable: false, type: 'date' })
   invoiceDate!: Date
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   amount!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   sgst!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   cgst!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   igst!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   total!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   tds!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   received!: number
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'decimal' })
   balanceAmount!: number
 
   @Column({ nullable: false, type: 'varchar' })
@@ -65,6 +67,11 @@ export class SaleInvoice implements ISaleInvoice {
 
   @Column('enum', { enum: Enum.InvoiceStatus })
   paymentStatus!: Enum.InvoiceStatus
+
+  @OneToMany(() => CreditNote, (creditNote) => creditNote.invoice, {
+    cascade: true,
+  })
+  creditNotes!: ICreditNote[]
 
   @CreateDateColumn()
   createdAt: Date
@@ -86,46 +93,46 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   campaign!: ICampaign
 
   @Column({ nullable: false })
-  invoiceNo!: string
+  invoiceNo: string
 
   @Column({ nullable: false })
-  pan!: string
+  pan: string
 
-  @Column({ nullable: false })
-  amount!: number
+  @Column({ nullable: false, type: 'decimal' })
+  amount: number
 
-  @Column({ nullable: false })
-  igst!: number
+  @Column({ nullable: false, type: 'decimal' })
+  igst: number
 
-  @Column({ nullable: false })
-  cgst!: number
+  @Column({ nullable: false, type: 'decimal' })
+  cgst: number
 
-  @Column({ nullable: false })
-  sgst!: number
+  @Column({ nullable: false, type: 'decimal' })
+  sgst: number
 
-  @Column({ nullable: false })
-  totalAmount!: number
+  @Column({ nullable: false, type: 'decimal' })
+  totalAmount: number
 
-  @Column({ nullable: false })
-  tds!: number
+  @Column({ nullable: false, type: 'decimal' })
+  tds: number
 
-  @Column({ nullable: true, default: null })
-  tdsPercentage!: number
+  @Column({ nullable: true, type: 'decimal', default: null })
+  tdsPercentage: number
 
   @Column({ nullable: true, type: 'varchar', default: null })
   tdsSection: string
 
-  @Column({ nullable: false })
-  finalAmount!: number
+  @Column({ nullable: false, type: 'decimal' })
+  finalAmount: number
 
-  @Column({ nullable: false })
-  amountToBeReceived!: number
+  @Column({ nullable: false, type: 'decimal' })
+  amountToBeReceived: number
 
-  @Column({ nullable: true, default: 0 })
+  @Column({ nullable: false, type: 'decimal' })
   balanceAmount: number
 
   @Column({ type: 'enum', enum: Enum.PaymentTerms, nullable: false })
-  paymentTerms!: Enum.PaymentTerms
+  paymentTerms: Enum.PaymentTerms
 
   @Column('enum', { enum: Enum.InvoiceStatus })
   paymentStatus!: Enum.InvoiceStatus
@@ -149,6 +156,122 @@ export class PurchaseInvoice implements IPurchaseInvoice {
 
   @Column({ nullable: false, type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   invoiceDate!: Date
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+}
+
+@Entity()
+export class ProformaInvoice implements IProformaInvoice {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string
+
+  @ManyToOne(() => Campaign, (campaign) => campaign.proformaInvoices, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  campaign!: ICampaign
+
+  @Column({ nullable: false, type: 'varchar' })
+  gstTin!: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  invoiceNo!: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  billNo!: string
+
+  @Column({ nullable: false, type: 'date' })
+  billDate!: Date
+
+  @Column({ nullable: false, type: 'decimal' })
+  amount!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  sgst!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  cgst!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  igst!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  total!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  tds!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  received!: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  balanceAmount!: number
+
+  @Column({ nullable: false, type: 'varchar' })
+  month!: string
+
+  @Column({ nullable: false, type: 'date' })
+  invoiceDate: Date
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+}
+
+@Entity()
+export class CreditNote implements ICreditNote {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @ManyToOne(() => SaleInvoice, (invoice) => invoice.creditNotes, {
+    eager: true,
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  invoice: ISaleInvoice
+
+  @Column({ nullable: false, type: 'varchar' })
+  gstTin: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  creditNoteNo: string
+
+  @Column({ nullable: false, type: 'date' })
+  creditNoteDate: Date
+
+  @Column({ nullable: false, type: 'decimal' })
+  amount: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  sgst: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  cgst: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  igst: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  total: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  tds: number
+
+  @Column({ nullable: false, type: 'decimal' })
+  advance: number
+
+  @Column({ nullable: true, type: 'varchar', default: null })
+  remarks: string
+
+  @Column({ nullable: false, type: 'varchar' })
+  month: string
 
   @CreateDateColumn()
   createdAt: Date
