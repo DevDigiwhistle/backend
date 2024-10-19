@@ -116,6 +116,58 @@ paths:
                 $ref: '#/components/schemas/messageModel'
 
   /v1/invoice/proforma/{id}:
+    get:
+      summary: Get a Proforma Invoice
+      tags:
+        - ProformaInvoice
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the Proforma Invoice
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ProformaInvoice'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
     patch:
       summary: Update a Proforma Invoice
       tags:

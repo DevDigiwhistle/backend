@@ -45,6 +45,14 @@ payrollRouter.get(
   payrollController.getAllController.bind(payrollController)
 )
 
+payrollRouter.get(
+  '/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  payrollController.getByIdController.bind(payrollController)
+)
+
 payrollRouter.delete(
   '/:id',
   verifyToken,

@@ -72,6 +72,14 @@ invoiceRouter.post(
   saleInvoiceController.addController.bind(saleInvoiceController)
 )
 
+invoiceRouter.get(
+  '/sale/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  saleInvoiceController.getByIdController.bind(saleInvoiceController)
+)
+
 invoiceRouter.delete(
   '/sale/:id',
   verifyToken,
@@ -137,6 +145,18 @@ invoiceRouter.post(
   ]),
   addPurchaseInvoiceValidator.validateInput.bind(addPurchaseInvoiceValidator),
   purchaseInvoiceController.addController.bind(purchaseInvoiceController)
+)
+
+invoiceRouter.get(
+  '/purchase/:id',
+  verifyToken,
+  authorizeUser([
+    Enum.ROLES.ADMIN,
+    Enum.ROLES.EMPLOYEE,
+    Enum.ROLES.INFLUENCER,
+    Enum.ROLES.AGENCY,
+  ]),
+  purchaseInvoiceController.getByIdController.bind(purchaseInvoiceController)
 )
 
 invoiceRouter.delete(
@@ -211,6 +231,14 @@ invoiceRouter.post(
   proformaInvoiceController.addController.bind(proformaInvoiceController)
 )
 
+invoiceRouter.get(
+  '/proforma/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  proformaInvoiceController.getByIdController.bind(proformaInvoiceController)
+)
+
 invoiceRouter.patch(
   '/proforma/:id',
   verifyToken,
@@ -266,6 +294,14 @@ invoiceRouter.post(
   authorizeAccounts,
   addCreditNoteValidator.validateInput.bind(addCreditNoteValidator),
   creditNoteController.addController.bind(creditNoteController)
+)
+
+invoiceRouter.get(
+  '/creditnote/:id',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  creditNoteController.getByIdController.bind(creditNoteController)
 )
 
 invoiceRouter.patch(
