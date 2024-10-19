@@ -59,6 +59,7 @@ campaignRouter.get(
     Enum.ROLES.EMPLOYEE,
     Enum.ROLES.BRAND,
     Enum.ROLES.AGENCY,
+    Enum.ROLES.INFLUENCER,
   ]),
   campaignController.getAllStatsController.bind(campaignController)
 )
