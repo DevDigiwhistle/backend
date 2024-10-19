@@ -17,8 +17,16 @@ import {
   ICampaignParticipants,
 } from '../interface'
 import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
-import { PurchaseInvoice, SaleInvoice } from '../../invoice/models'
-import { IPurchaseInvoice, ISaleInvoice } from '../../invoice/interface'
+import {
+  ProformaInvoice,
+  PurchaseInvoice,
+  SaleInvoice,
+} from '../../invoice/models'
+import {
+  IProformaInvoice,
+  IPurchaseInvoice,
+  ISaleInvoice,
+} from '../../invoice/interface'
 
 @Entity()
 export class Campaign implements ICampaign {
@@ -100,6 +108,13 @@ export class Campaign implements ICampaign {
     { cascade: true }
   )
   purchaseInvoices: IPurchaseInvoice[]
+
+  @OneToMany(
+    () => ProformaInvoice,
+    (purchaseInvoice) => purchaseInvoice.campaign,
+    { cascade: true }
+  )
+  proformaInvoices: IProformaInvoice[]
 
   @Column({ type: 'float', nullable: true })
   cpv: number | null

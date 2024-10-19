@@ -1,8 +1,18 @@
 import { IBaseService } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { ShareInvoiceRequest } from '../types'
-import { IPurchaseInvoiceCRUD, ISaleInvoiceCRUD } from './ICRUD'
-import { IPurchaseInvoice, ISaleInvoice } from './IModels'
+import {
+  ICreditNoteCRUD,
+  IProformaInvoiceCRUD,
+  IPurchaseInvoiceCRUD,
+  ISaleInvoiceCRUD,
+} from './ICRUD'
+import {
+  ICreditNote,
+  IProformaInvoice,
+  IPurchaseInvoice,
+  ISaleInvoice,
+} from './IModels'
 
 export interface ISaleInvoiceService
   extends IBaseService<ISaleInvoice, ISaleInvoiceCRUD> {
@@ -33,4 +43,23 @@ export interface IPurchaseInvoiceService
 
   sharePurchaseInvoice(data: ShareInvoiceRequest): Promise<void>
   downloadPurchaseInvoiceReport(startDate: Date, endDate: Date): Promise<string>
+}
+
+export interface IProformaInvoiceService
+  extends IBaseService<IProformaInvoice, IProformaInvoiceCRUD> {
+  downloadProformaInvoice(id: string): Promise<string>
+  getAllProformaInvoices(
+    page: number,
+    limit: number,
+    startDate: Date,
+    endDate: Date,
+    invoiceNo: string
+  ): Promise<PaginatedResponse<IProformaInvoice>>
+
+  shareProformaInvoice(data: ShareInvoiceRequest): Promise<void>
+}
+
+export interface ICreditNoteService
+  extends IBaseService<ICreditNote, ICreditNoteCRUD> {
+  downloadCreditNote(invoiceId: string): Promise<string>
 }

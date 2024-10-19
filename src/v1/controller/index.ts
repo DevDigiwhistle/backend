@@ -9,6 +9,10 @@ import { BrandProfileController } from './brand-profile-controller'
 import { AdminController } from './admin-controller'
 import { RemarksController } from './remarks-controller'
 import { InfluencerController } from './influencer-controller'
+import { SaleInvoiceController } from './sale-invoice-controller'
+import { PurchaseInvoiceController } from './purchase-invoice-controller'
+import { CreditNoteController } from './credit-note-controller'
+import { ProformaInvoiceController } from './proforma-invoice-controller'
 
 export {
   ContactUsController,
@@ -22,4 +26,8 @@ export {
   BrandProfileController,
   RemarksController,
   InfluencerController,
+  SaleInvoiceController,
+  PurchaseInvoiceController,
+  CreditNoteController,
+  ProformaInvoiceController,
 }

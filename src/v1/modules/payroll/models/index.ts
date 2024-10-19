@@ -106,6 +106,9 @@ export class PayrollHistory implements IPayrollHistory {
   @Column({ nullable: false, default: 0 })
   finalPay: number
 
+  @Column({ nullable: false, default: 0 })
+  tds: number
+
   @Column({
     type: 'enum',
     enum: Enum.PaymentStatus,
@@ -118,7 +121,7 @@ export class PayrollHistory implements IPayrollHistory {
   paymentDate: Date
 
   @Column({ nullable: false, type: 'enum', enum: Enum.EmploymentType })
-  employment: Enum.EmploymentType
+  employmentType: Enum.EmploymentType
 
   @CreateDateColumn()
   createdAt: Date

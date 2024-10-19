@@ -1,8 +1,23 @@
 import { MailerService } from '../../utils'
 import { campaignParticipantsService } from '../campaign'
-import { PurchaseInvoiceCRUD, SaleInvoiceCRUD } from './crud'
-import { PurchaseInvoice, SaleInvoice } from './models'
-import { PurchaseInvoiceService, SaleInvoiceService } from './service'
+import {
+  CreditNoteCRUD,
+  ProformaInvoiceCRUD,
+  PurchaseInvoiceCRUD,
+  SaleInvoiceCRUD,
+} from './crud'
+import {
+  CreditNote,
+  ProformaInvoice,
+  PurchaseInvoice,
+  SaleInvoice,
+} from './models'
+import {
+  CreditNoteService,
+  ProformaInvoiceService,
+  PurchaseInvoiceService,
+  SaleInvoiceService,
+} from './service'
 
 const purchaseInvoiceService = PurchaseInvoiceService.getInstance(
   PurchaseInvoiceCRUD.getInstance(PurchaseInvoice),
@@ -15,4 +30,18 @@ const saleInvoiceService = SaleInvoiceService.getInstance(
   MailerService.getInstance()
 )
 
-export { purchaseInvoiceService, saleInvoiceService }
+const proformaInvoiceService = ProformaInvoiceService.getInstance(
+  ProformaInvoiceCRUD.getInstance(ProformaInvoice),
+  MailerService.getInstance()
+)
+
+const creditNoteService = CreditNoteService.getInstance(
+  CreditNoteCRUD.getInstance(CreditNote)
+)
+
+export {
+  purchaseInvoiceService,
+  saleInvoiceService,
+  proformaInvoiceService,
+  creditNoteService,
+}

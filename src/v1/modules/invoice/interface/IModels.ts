@@ -48,3 +48,43 @@ export interface IPurchaseInvoice {
   createdAt?: Date
   updatedAt?: Date
 }
+
+export interface IProformaInvoice {
+  id: string
+  campaign: ICampaign
+  gstTin: string
+  billNo: string
+  billDate: Date
+  invoiceNo: string
+  invoiceDate: Date
+  amount: number
+  sgst: number
+  cgst: number
+  igst: number
+  total: number
+  tds: number
+  received: number
+  balanceAmount: number
+  month: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface ICreditNote {
+  id: string
+  invoice: ISaleInvoice
+  gstTin: string
+  creditNoteNo: string
+  creditNoteDate: Date
+  amount: number
+  sgst: number
+  cgst: number
+  igst: number
+  total: number
+  tds: number
+  advance: number
+  remarks: string
+  month: string
+  createdAt?: Date
+  updatedAt?: Date
+}
