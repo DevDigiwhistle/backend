@@ -137,8 +137,9 @@ export class PayrollService
         grossPay: payroll.ctc,
         finalPay: payroll.ctc * (1 - payroll.tds / 100) + payroll.incentive,
         status: Enum.PaymentStatus.PENDING,
-        employment: Enum.EmploymentType.FULL_TIME,
+        employmentType: Enum.EmploymentType.FULL_TIME,
         paymentDate: new Date(),
+        tds: (payroll.tds / 100) * payroll.ctc,
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

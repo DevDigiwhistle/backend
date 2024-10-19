@@ -32,6 +32,10 @@ export class PayrollDTO {
         employeeProfile?.firstName +
         (employeeProfile?.lastName ? ' ' + employeeProfile?.lastName : ''),
       email: employeeProfile?.user?.email,
+      bankName: employeeProfile?.bankName,
+      bankAccountNumber: employeeProfile?.bankAccountNumber,
+      bankIfscCode: employeeProfile?.bankIfscCode,
+      panNo: employeeProfile?.panNo,
       ...payrollHistory,
     }
   }

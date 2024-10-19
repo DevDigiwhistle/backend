@@ -21,7 +21,7 @@ export interface IPayroll {
 export interface IPayrollHistory {
   id: string
   employeeProfile: IEmployeeProfile
-  employment: Enum.EmploymentType
+  employmentType: Enum.EmploymentType
   ctc: number
   basic: number
   hra: number
@@ -30,6 +30,7 @@ export interface IPayrollHistory {
   salaryMonth: string
   incentive: number
   grossPay: number
+  tds: number
   finalPay: number
   status: Enum.PaymentStatus
   paymentDate: Date

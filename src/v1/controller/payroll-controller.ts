@@ -88,7 +88,15 @@ export class PayrollController extends BaseController<
           return PayrollDTO.transformationForPendingPayrollData(value)
         })
 
-        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          {
+            data: _data,
+          },
+          req
+        )
       }
 
       if (type === 'All Paid') {

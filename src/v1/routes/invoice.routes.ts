@@ -274,7 +274,7 @@ invoiceRouter.patch(
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   authorizeAccounts,
   updateCreditNoteValidator.validateInput.bind(updateCreditNoteValidator),
-  creditNoteController.addController.bind(creditNoteController)
+  creditNoteController.updateController.bind(creditNoteController)
 )
 
 invoiceRouter.delete(

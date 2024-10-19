@@ -17,14 +17,11 @@ class CreditNoteService extends BaseService<ICreditNote, ICreditNoteCRUD> {
 
   async downloadCreditNote(invoiceId: string): Promise<string> {
     try {
-      const creditNote = await this.crudBase.findAll({
+      const creditNote = await this.crudBase.findOne({
         invoice: {
           id: invoiceId,
         },
       })
-
-      if (creditNote.length === 0)
-        throw new HttpException(400, 'Credit Note Not Found')
 
       return ''
     } catch (e) {
