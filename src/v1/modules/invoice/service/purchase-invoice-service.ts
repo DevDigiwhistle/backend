@@ -302,13 +302,13 @@ export class PurchaseInvoiceService
       ]
 
       const csv = generateCSV(_data, fields)
-      const filePath = './reports/purchase_invoice.csv'
+      const filePath = `./reports/purchase_invoice_${new Date()}.csv`
 
       fs.writeFileSync(filePath, csv)
 
       const url = await uploadFileToFirebase(
         filePath,
-        `reports/purchase_invoice.csv`
+        `reports/purchase_invoice_${new Date()}.csv`
       )
 
       fs.unlinkSync(filePath)

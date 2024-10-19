@@ -1,5 +1,6 @@
 import { BaseController, errorHandler, HttpException } from '../../utils'
 import { responseHandler } from '../../utils/response-handler'
+import { ProformaInvoiceDTO } from '../dtos/proforma-invoice-dtos'
 import {
   IProformaInvoice,
   IProformaInvoiceCRUD,
@@ -49,7 +50,9 @@ export class ProformaInvoiceController extends BaseController<
         invoiceNo as string
       )
 
-      const _data = data.data
+      const _data = data.data.map((value) => {
+        return ProformaInvoiceDTO.transformationForProformaInvoice(value)
+      })
 
       return responseHandler(
         200,

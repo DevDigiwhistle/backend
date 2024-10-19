@@ -97,6 +97,8 @@ class ProformaInvoiceService
           'campaign.participants',
           'campaign.participants.deliverables',
           'campaign.brand',
+          'campaign.participants.influencerProfile',
+          'campaign.participants.agencyProfile',
         ],
         {
           invoiceDate: 'DESC',
