@@ -22,6 +22,10 @@ export class PurchaseInvoiceDTO {
       balanceAmount: data.balanceAmount,
       PaymentStatus: data.paymentStatus,
       paymentTerms: data.paymentTerms,
+      panNo:
+        data.influencerProfile === null
+          ? data.agencyProfile?.pan
+          : data.influencerProfile?.pan,
       file: data.file,
     }
   }
@@ -34,7 +38,7 @@ export class PurchaseInvoiceDTO {
       campaignDuration: data.campaign.startDate + ' - ' + data.campaign.endDate,
       campaignName: data.campaign.name,
       brand: data.campaign.brand?.name,
-      invoiceDate: data.invoiceDate,
+      invoiceDate: new Date(data.invoiceDate).toDateString(),
       finalAmount: data.amount,
       totalAmount: data.amount,
       igst: data.igst,

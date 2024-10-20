@@ -87,7 +87,7 @@ export class SaleInvoiceDTO {
     return {
       id: saleInvoice.id,
       invoiceNumber: saleInvoice.invoiceNo,
-      issueDate: saleInvoice.invoiceDate,
+      issueDate: new Date(saleInvoice.invoiceDate).toDateString(),
       amount: saleInvoice.total,
       taxableAmount: saleInvoice.amount,
       status: saleInvoice.paymentStatus,

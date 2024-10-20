@@ -89,6 +89,7 @@ jobs:
             echo "FB_STORAGE_BUCKET=$FB_STORAGE_BUCKET" >> backend/.env
             pm2 stop digiwhistle-api
             cd backend
+            mkdir reports
             git pull origin main
             yarn install
             yarn tsc
