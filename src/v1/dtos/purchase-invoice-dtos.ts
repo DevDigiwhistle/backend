@@ -22,6 +22,7 @@ export class PurchaseInvoiceDTO {
       balanceAmount: data.balanceAmount,
       PaymentStatus: data.paymentStatus,
       paymentTerms: data.paymentTerms,
+      file: data.file,
     }
   }
 
@@ -50,12 +51,17 @@ export class PurchaseInvoiceDTO {
       paymentTerms: data.paymentTerms,
       category:
         data.influencerProfile === null ? 'Agency Fee' : 'Influencer Fee',
-      vendorName: data.influencerProfile
+      participantName: data.influencerProfile
         ? data.influencerProfile.firstName +
           (data.influencerProfile.lastName === null
             ? ''
             : ' ' + data.influencerProfile.lastName)
         : data.agencyProfile?.name,
+      panNo:
+        data.influencerProfile === null
+          ? data.agencyProfile?.pan
+          : data.influencerProfile?.pan,
+      file: data.file,
     }
   }
 }
