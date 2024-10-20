@@ -24,8 +24,8 @@ export class PurchaseInvoiceDTO {
       paymentTerms: data.paymentTerms,
       panNo:
         data.influencerProfile === null
-          ? data.agencyProfile?.pan
-          : data.influencerProfile?.pan,
+          ? data.agencyProfile?.panNo
+          : data.influencerProfile?.panNo,
       file: data.file,
     }
   }
@@ -63,8 +63,8 @@ export class PurchaseInvoiceDTO {
         : data.agencyProfile?.name,
       panNo:
         data.influencerProfile === null
-          ? data.agencyProfile?.pan
-          : data.influencerProfile?.pan,
+          ? data.agencyProfile?.panNo
+          : data.influencerProfile?.panNo,
       file: data.file,
     }
   }
