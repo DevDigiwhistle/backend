@@ -1,6 +1,6 @@
 import Router from 'express'
 import { PayrollController } from '../controller/payroll-controller'
-import { payrollHistoryService, payrollService } from '../modules/payroll'
+import { payrollService } from '../modules/payroll'
 import { BaseValidator } from '../../utils'
 import {
   addPayrollSchema,
@@ -9,11 +9,12 @@ import {
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
 import { authorizeAccounts } from '../middleware/authorizeAccounts'
+import { employeeProfileService } from '../modules/admin'
 
 const payrollRouter = Router()
 const payrollController = new PayrollController(
   payrollService,
-  payrollHistoryService
+  employeeProfileService
 )
 
 const addPayrollValidator = new BaseValidator(addPayrollSchema)
@@ -40,9 +41,23 @@ payrollRouter.patch(
 payrollRouter.get(
   '/',
   verifyToken,
-  authorizeAccounts,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
   payrollController.getAllController.bind(payrollController)
+)
+
+payrollRouter.get(
+  '/employee',
+  verifyToken,
+  authorizeUser([Enum.ROLES.EMPLOYEE]),
+  payrollController.getAllPayrollByEmployee.bind(payrollController)
+)
+
+payrollRouter.get(
+  '/download',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  payrollController.generatePaySlip.bind(payrollController)
 )
 
 payrollRouter.get(

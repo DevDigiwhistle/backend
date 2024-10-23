@@ -39,4 +39,21 @@ export class PayrollDTO {
       ...payrollHistory,
     }
   }
+
+  static transformationForEmployeePayroll(data: IPayrollHistory) {
+    return {
+      salaryMonth: data.salaryMonth,
+      workingDays: data.workingDays,
+      basic: data.basic,
+      hra: data.hra,
+      others: data.others,
+      ctc: data.ctc,
+      tds: data.tds,
+      incentive: data.incentive,
+      grossPay: data.grossPay,
+      finalPay: data.finalPay,
+      status: data.status,
+      paymentDate: data.paymentDate,
+    }
+  }
 }

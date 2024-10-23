@@ -10,18 +10,22 @@ import { responseHandler } from '../../utils/response-handler'
 import { monthsToDays } from '../../constants'
 import { PayrollDTO } from '../dtos/payroll-dtos'
 import { v4 as uuidv4 } from 'uuid'
+import { IEmployeeProfileService } from '../modules/admin/interface'
+import { IExtendedRequest } from '../interface'
 export class PayrollController extends BaseController<
   IPayroll,
   IPayrollCRUD,
   IPayrollService
 > {
   private readonly payrollService: IPayrollService
+  private readonly employeeProfileService: IEmployeeProfileService
 
   constructor(
     payrollService: IPayrollService,
-    payrollHistoryService: IPayrollHistoryService
+    employeeProfileService: IEmployeeProfileService
   ) {
     super(payrollService)
+    this.employeeProfileService = employeeProfileService
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -106,9 +110,9 @@ export class PayrollController extends BaseController<
         const data = await this.payrollService.getAllPayrollHistory(
           parseInt(page),
           parseInt(limit),
-          searchQuery as string,
           lowerBound,
-          upperBound
+          upperBound,
+          searchQuery as string
         )
 
         const _data = data.data.map((value) => {
@@ -135,6 +139,74 @@ export class PayrollController extends BaseController<
     }
   }
 
+  async getAllPayrollByEmployee(
+    req: IExtendedRequest,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { startDate, endDate } = req.query
+
+      if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
+      const lowerBound = new Date(startDate)
+      const upperBound = new Date(endDate)
+
+      if (
+        !(
+          lowerBound instanceof Date && lowerBound.toISOString() === startDate
+        ) ||
+        !(upperBound instanceof Date && upperBound.toISOString() === endDate)
+      ) {
+        throw new HttpException(400, 'Invalid Date')
+      }
+
+      const { page, limit } = req.query
+
+      if (typeof page !== 'string' || typeof limit !== 'string')
+        throw new HttpException(400, 'Invalid Page Details')
+
+      const employee = await this.employeeProfileService.findOne({
+        user: {
+          id: req.user.id,
+        },
+      })
+
+      if (employee === null) {
+        throw new HttpException(404, 'Employee Not Found')
+      }
+
+      const data = await this.service.getAllPayrollHistory(
+        parseInt(page),
+        parseInt(limit),
+        lowerBound,
+        upperBound,
+        undefined,
+        employee.id
+      )
+
+      const _data = data.data.map((value) => {
+        return PayrollDTO.transformationForEmployeePayroll(value)
+      })
+
+      return responseHandler(
+        200,
+        res,
+        'Fetched Successfully',
+        {
+          data: _data,
+          currentPage: data.currentPage,
+          totalPages: data.totalPages,
+          totalCount: data.totalCount,
+        },
+        req
+      )
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
   async releaseSalaryController(
     req: Request,
     res: Response
@@ -147,6 +219,23 @@ export class PayrollController extends BaseController<
       await this.service.releaseSalary(id, uuidv4())
 
       return responseHandler(200, res, 'Payment Done Successfully', {}, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async generatePaySlip(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.query
+      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
+      const data = await this.service.generatePaySlip(id)
+      return responseHandler(
+        200,
+        res,
+        'Generated Successfully',
+        { url: data },
+        req
+      )
     } catch (e) {
       return errorHandler(e, res, req)
     }

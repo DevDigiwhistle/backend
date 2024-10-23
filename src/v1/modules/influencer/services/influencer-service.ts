@@ -5,7 +5,6 @@ import {
   ILike,
   IsNull,
   LessThanOrEqual,
-  MoreThan,
   MoreThanOrEqual,
   Not,
 } from 'typeorm'

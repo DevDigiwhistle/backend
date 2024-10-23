@@ -16,9 +16,10 @@ export interface IPayrollService extends IBaseService<IPayroll, IPayrollCRUD> {
   getAllPayrollHistory(
     page: number,
     limit: number,
-    searchQuery: string,
     lowerBound: Date,
-    upperBound: Date
+    upperBound: Date,
+    searchQuery?: string,
+    employeeId?: string
   ): Promise<PaginatedResponse<IPayrollHistory>>
   handleWebhook(
     payload: PayrollWebhookPayload,

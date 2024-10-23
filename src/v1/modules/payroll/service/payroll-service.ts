@@ -61,14 +61,24 @@ export class PayrollService
   async getAllPayrollHistory(
     page: number,
     limit: number,
-    searchQuery: string,
     lowerBound: Date,
-    upperBound: Date
+    upperBound: Date,
+    searchQuery?: string,
+    employeeId?: string
   ): Promise<PaginatedResponse<IPayrollHistory>> {
     try {
       let query: FindOptionsWhere<IPayrollHistory>[] = []
       let Query: FindOptionsWhere<IPayrollHistory> = {
         createdAt: Between(lowerBound, upperBound),
+      }
+
+      if (typeof employeeId === 'string') {
+        Query = {
+          ...Query,
+          employeeProfile: {
+            id: employeeId,
+          },
+        }
       }
 
       if (typeof searchQuery === 'string') {
@@ -327,13 +337,13 @@ export class PayrollService
 
       if (payroll === null) throw new HttpException(404, 'Payroll Not Found')
 
-      const filePath = `./reports/PaySlip_${payroll.employeeProfile.name}_${payroll.salaryMonth}.pdf`
+      const filePath = `./reports/PaySlip_${new Date()}.pdf`
 
-      generatePaySlipPdf(payroll, filePath)
+      await generatePaySlipPdf(payroll, filePath)
 
       const publicUrl = await uploadFileToFirebase(
         filePath,
-        `reports/PaySlip_${payroll.employeeProfile.name}_${payroll.salaryMonth}.pdf`
+        `reports/PaySlip_${new Date()}.pdf`
       )
 
       fs.unlinkSync(filePath)
