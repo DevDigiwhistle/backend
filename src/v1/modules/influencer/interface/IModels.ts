@@ -34,6 +34,7 @@ export interface IInfluencerProfile extends ObjectLiteral {
   city: string
   state: string
   pincode: string
+  fundAccountId: string | null
   createdAt?: Date
   updatedAt?: Date
 }

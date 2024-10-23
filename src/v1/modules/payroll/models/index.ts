@@ -37,6 +37,9 @@ export class Payroll implements IPayroll {
   @Column({ nullable: false, default: 0 })
   ctc: number
 
+  @Column({ nullable: true, type: 'varchar', default: null })
+  fundAccountId: string | null
+
   @Column({
     type: 'enum',
     enum: Enum.EmploymentType,

@@ -137,6 +137,9 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', default: null })
   pincode: string
 
+  @Column({ type: 'varchar', default: null, nullable: true })
+  fundAccountId: string | null
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 

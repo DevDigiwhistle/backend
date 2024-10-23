@@ -11,7 +11,7 @@ import {
   IPurchaseInvoiceCRUD,
   IPurchaseInvoiceService,
 } from '../interface'
-import { ShareInvoiceRequest } from '../types'
+import { PurchaseInvoiceWebhookPayload, ShareInvoiceRequest } from '../types'
 import { IMailerService } from '../../../utils'
 import { generateCSV } from '../utils'
 import fs from 'fs'
@@ -21,6 +21,7 @@ import {
 } from '../../campaign/interface'
 import { Enum } from '../../../../constants'
 import { Attachment } from 'nodemailer/lib/mailer'
+import { IRazorpayService } from '../../../utils/razorpay-service'
 
 export class PurchaseInvoiceService
   extends BaseService<IPurchaseInvoice, IPurchaseInvoiceCRUD>
@@ -29,17 +30,20 @@ export class PurchaseInvoiceService
   private static instance: IPurchaseInvoiceService | null = null
   private readonly mailerService: IMailerService
   private readonly campaignParticipantService: ICampaignParticipantsService
+  private readonly razorpayService: IRazorpayService
 
   static getInstance = (
     purchaseInvoiceCRUD: IPurchaseInvoiceCRUD,
     mailerService: IMailerService,
-    campaignParticipantService: ICampaignParticipantsService
+    campaignParticipantService: ICampaignParticipantsService,
+    razorpayService: IRazorpayService
   ) => {
     if (PurchaseInvoiceService.instance === null) {
       PurchaseInvoiceService.instance = new PurchaseInvoiceService(
         purchaseInvoiceCRUD,
         mailerService,
-        campaignParticipantService
+        campaignParticipantService,
+        razorpayService
       )
     }
     return PurchaseInvoiceService.instance
@@ -48,11 +52,13 @@ export class PurchaseInvoiceService
   private constructor(
     purchaseInvoiceCRUD: IPurchaseInvoiceCRUD,
     mailerService: IMailerService,
-    campaignParticipantService: ICampaignParticipantsService
+    campaignParticipantService: ICampaignParticipantsService,
+    razorpayService: IRazorpayService
   ) {
     super(purchaseInvoiceCRUD)
     this.mailerService = mailerService
     this.campaignParticipantService = campaignParticipantService
+    this.razorpayService = razorpayService
   }
 
   async add(data: DeepPartial<IPurchaseInvoice>): Promise<IPurchaseInvoice> {
@@ -314,6 +320,108 @@ export class PurchaseInvoiceService
       fs.unlinkSync(filePath)
 
       return url
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async releasePayment(
+    invoiceId: string,
+    idempotencyKey: string
+  ): Promise<void> {
+    try {
+      const invoice = await this.crudBase.findOne({ id: invoiceId }, [
+        'influencerProfile',
+        'agencyProfile',
+      ])
+
+      if (invoice === null) throw new HttpException(404, 'Invoice Not Found')
+
+      if (invoice.influencerProfile !== null) {
+        if (
+          invoice.influencerProfile?.bankAccountHolderName === null ||
+          invoice.influencerProfile?.bankAccountNumber === null ||
+          invoice.influencerProfile?.bankIfscCode === null
+        ) {
+          throw new HttpException(400, 'Bank details not provided by vendor')
+        }
+      }
+
+      if (invoice.agencyProfile !== null) {
+        if (
+          invoice.agencyProfile?.bankAccountHolderName === null ||
+          invoice.agencyProfile?.bankAccountNumber === null ||
+          invoice.agencyProfile?.bankIfscCode === null
+        ) {
+          throw new HttpException(400, 'Bank details not provided by vendor')
+        }
+      }
+
+      let fund_account_id: string = ''
+
+      if (invoice.influencerProfile !== null) {
+        if (invoice.influencerProfile?.fundAccountId === null) {
+          fund_account_id = await this.razorpayService.createFundAccount({
+            contact_id: invoice.influencerProfile.id,
+            account_type: 'bank_account',
+            bank_account: {
+              name: invoice.influencerProfile.bankAccountHolderName,
+              ifsc: invoice.influencerProfile.bankIfscCode,
+              account_number: invoice.influencerProfile.bankAccountNumber,
+            },
+          })
+        }
+      }
+
+      if (invoice.agencyProfile !== null) {
+        if (invoice.agencyProfile?.fundAccountId === null) {
+          fund_account_id = await this.razorpayService.createFundAccount({
+            contact_id: invoice.agencyProfile.id,
+            account_type: 'bank_account',
+            bank_account: {
+              name: invoice.agencyProfile.bankAccountHolderName,
+              ifsc: invoice.agencyProfile.bankIfscCode,
+              account_number: invoice.agencyProfile.bankAccountNumber,
+            },
+          })
+        }
+      }
+
+      await this.razorpayService.processPayout(
+        {
+          account_number: process.env.RAZORPAY_ACCOUNT_NUMBER ?? '',
+          mode: 'NEFT',
+          currency: 'INR',
+          amount: invoice.finalAmount,
+          fund_account_id: fund_account_id,
+          purpose: 'payout',
+          notes: {
+            type: 'purchase_invoice',
+            invoiceId: invoiceId,
+          },
+        },
+        idempotencyKey
+      )
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async handleWebhook(
+    payload: PurchaseInvoiceWebhookPayload,
+    event: Enum.WEBHOOK_EVENTS
+  ): Promise<void> {
+    try {
+      if (event === Enum.WEBHOOK_EVENTS.PROCESSED) {
+        await this.crudBase.update(
+          {
+            id: payload.invoiceId,
+          },
+          {
+            paymentStatus: Enum.InvoiceStatus.ALL_RECEIVED,
+          }
+        )
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

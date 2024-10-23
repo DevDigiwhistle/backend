@@ -7,6 +7,7 @@ import { type IBaseService, BaseService } from './base-service'
 import AppLogger from './app-logger'
 import { logsScheduler } from './log-scheduler'
 import { uploadFileToFirebase } from './upload-file'
+import { uploadPdfToFirebase } from './upload-pdf'
 
 export {
   BaseController,
@@ -21,4 +22,5 @@ export {
   AppLogger,
   logsScheduler,
   uploadFileToFirebase,
+  uploadPdfToFirebase,
 }

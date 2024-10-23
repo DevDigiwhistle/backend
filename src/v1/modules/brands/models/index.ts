@@ -68,6 +68,9 @@ export class BrandProfile implements IBrandProfile {
   @Column({ type: 'varchar', nullable: true, default: null })
   city: string
 
+  @Column({ type: 'varchar', default: null, nullable: true })
+  fundAccountId: string | null
+
   @OneToMany(() => Campaign, (campaign) => campaign.brand)
   campaign: ICampaign[]
 

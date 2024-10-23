@@ -14,6 +14,7 @@ export interface IPayroll {
   incentive: number // set 0 back after the payroll done
   workingDays: number // set back to default when payroll done
   payrollDate: Date
+  fundAccountId: string | null
   createdAt?: Date
   updatedAt?: Date
 }
@@ -34,6 +35,6 @@ export interface IPayrollHistory {
   finalPay: number
   status: Enum.PaymentStatus
   paymentDate: Date
-  createdAt?: Date
-  updatedAt?: Date
+  createdAt: Date
+  updatedAt: Date
 }

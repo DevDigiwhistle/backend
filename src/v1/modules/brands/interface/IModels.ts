@@ -43,6 +43,7 @@ export interface IAgencyProfile extends ObjectLiteral {
   city: string
   state: string
   pincode: string
+  fundAccountId: string
   createdAt?: Date
   updatedAt?: Date
 }

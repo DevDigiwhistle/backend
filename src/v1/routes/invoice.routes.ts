@@ -73,6 +73,16 @@ invoiceRouter.post(
 )
 
 invoiceRouter.get(
+  '/sale/download',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  saleInvoiceController.downloadSaleInvoiceController.bind(
+    saleInvoiceController
+  )
+)
+
+invoiceRouter.get(
   '/sale/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
@@ -112,16 +122,6 @@ invoiceRouter.post(
   authorizeAccounts,
   shareInvoiceValidator.validateInput.bind(shareInvoiceValidator),
   saleInvoiceController.shareInvoiceController.bind(saleInvoiceController)
-)
-
-invoiceRouter.get(
-  '/sale/download',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  authorizeAccounts,
-  saleInvoiceController.downloadSaleInvoiceController.bind(
-    saleInvoiceController
-  )
 )
 
 invoiceRouter.post(
@@ -232,6 +232,24 @@ invoiceRouter.post(
 )
 
 invoiceRouter.get(
+  '/proforma',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  proformaInvoiceController.getAllController.bind(proformaInvoiceController)
+)
+
+invoiceRouter.get(
+  '/proforma/download',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  proformaInvoiceController.downloadProformaInvoiceController.bind(
+    proformaInvoiceController
+  )
+)
+
+invoiceRouter.get(
   '/proforma/:id',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
@@ -258,14 +276,6 @@ invoiceRouter.delete(
   proformaInvoiceController.deleteController.bind(proformaInvoiceController)
 )
 
-invoiceRouter.get(
-  '/proforma',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  authorizeAccounts,
-  proformaInvoiceController.getAllController.bind(proformaInvoiceController)
-)
-
 invoiceRouter.post(
   '/proforma/share',
   verifyToken,
@@ -277,16 +287,6 @@ invoiceRouter.post(
   )
 )
 
-invoiceRouter.get(
-  '/proforma/download',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  authorizeAccounts,
-  proformaInvoiceController.downloadProformaInvoiceController.bind(
-    proformaInvoiceController
-  )
-)
-
 invoiceRouter.post(
   '/creditnote',
   verifyToken,
@@ -294,6 +294,14 @@ invoiceRouter.post(
   authorizeAccounts,
   addCreditNoteValidator.validateInput.bind(addCreditNoteValidator),
   creditNoteController.addController.bind(creditNoteController)
+)
+
+invoiceRouter.get(
+  '/creditnote/download',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  creditNoteController.downloadCreditNoteController.bind(creditNoteController)
 )
 
 invoiceRouter.get(
@@ -319,14 +327,6 @@ invoiceRouter.delete(
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   authorizeAccounts,
   creditNoteController.deleteController.bind(creditNoteController)
-)
-
-invoiceRouter.get(
-  '/creditnote/download',
-  verifyToken,
-  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  authorizeAccounts,
-  creditNoteController.downloadCreditNoteController.bind(creditNoteController)
 )
 
 export default invoiceRouter

@@ -9,21 +9,19 @@ import {
 import { responseHandler } from '../../utils/response-handler'
 import { monthsToDays } from '../../constants'
 import { PayrollDTO } from '../dtos/payroll-dtos'
-
+import { v4 as uuidv4 } from 'uuid'
 export class PayrollController extends BaseController<
   IPayroll,
   IPayrollCRUD,
   IPayrollService
 > {
   private readonly payrollService: IPayrollService
-  private readonly payrollHistoryService: IPayrollHistoryService
 
   constructor(
     payrollService: IPayrollService,
     payrollHistoryService: IPayrollHistoryService
   ) {
     super(payrollService)
-    this.payrollHistoryService = payrollHistoryService
   }
 
   async addController(req: Request, res: Response): Promise<Response> {
@@ -105,7 +103,7 @@ export class PayrollController extends BaseController<
         if (typeof page !== 'string' || typeof limit !== 'string')
           throw new HttpException(400, 'Invalid Page Details')
 
-        const data = await this.payrollHistoryService.getAllPayrollHistory(
+        const data = await this.payrollService.getAllPayrollHistory(
           parseInt(page),
           parseInt(limit),
           searchQuery as string,
@@ -146,9 +144,7 @@ export class PayrollController extends BaseController<
 
       if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
 
-      const payrollHistoryData = await this.service.releaseSalary(id)
-
-      await this.payrollHistoryService.add(payrollHistoryData)
+      await this.service.releaseSalary(id, uuidv4())
 
       return responseHandler(200, res, 'Payment Done Successfully', {}, req)
     } catch (e) {

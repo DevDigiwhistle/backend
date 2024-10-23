@@ -4,6 +4,7 @@ import {
   BaseService,
   HttpException,
   uploadFileToFirebase,
+  uploadPdfToFirebase,
 } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import {
@@ -15,7 +16,8 @@ import { ShareInvoiceRequest } from '../types'
 import { IMailerService } from '../../../utils'
 import { generateCSV } from '../utils'
 import fs from 'fs'
-
+import { generateSaleInvoicePdf } from '../../../pdf/sale-invoice-pdf'
+import numWords from 'num-words'
 export class SaleInvoiceService
   extends BaseService<ISaleInvoice, ISaleInvoiceCRUD>
   implements ISaleInvoiceService
@@ -42,6 +44,79 @@ export class SaleInvoiceService
   ) {
     super(saleInvoiceCRUD)
     this.mailerService = mailerService
+  }
+
+  private async generateInvoicePdf(invoiceId: string): Promise<{
+    invoiceNo: string
+    filePath: string
+  }> {
+    try {
+      const invoice = await this.crudBase.findOne({ id: invoiceId }, [
+        'campaign',
+        'campaign.brand',
+        'campaign.participants',
+        'campaign.participants.deliverables',
+      ])
+
+      const details: string[][] = []
+
+      if (invoice === null) throw new HttpException(404, 'Invoice Not Found')
+
+      let counter = 0
+
+      invoice.campaign.participants.forEach((participant) => {
+        participant.deliverables.forEach((deliverable) => {
+          if (counter === 0) {
+            details.push([
+              (counter + 1).toString(),
+              deliverable.desc === null ? 'IG Reel' : deliverable.desc,
+              '998361',
+              invoice.amount.toString(),
+            ])
+          } else {
+            details.push([
+              (counter + 1).toString(),
+              deliverable.desc === null ? 'IG Reel' : deliverable.desc,
+              '',
+              '',
+            ])
+          }
+          counter++
+        })
+      })
+
+      const filePath = `./reports/${invoiceId}.pdf`
+
+      await generateSaleInvoicePdf(
+        {
+          clientDetails: {
+            name: invoice.campaign.brand?.name as string,
+            panNo: invoice.campaign.brand?.panNo as string,
+            gstNo: invoice.campaign.brand?.gstNo as string,
+            address: invoice.campaign.brand?.address as string,
+          },
+          invoiceDetails: {
+            invoiceNo: invoice.invoiceNo,
+            invoiceDate: new Date(invoice.invoiceDate).toDateString(),
+            total: invoice.amount.toString(),
+            sgst: invoice.sgst.toString(),
+            cgst: invoice.cgst.toString(),
+            igst: invoice.igst.toString(),
+            amount: invoice.total.toString(),
+            amountInWords: numWords(invoice.total),
+            data: details,
+          },
+        },
+        filePath
+      )
+
+      return {
+        invoiceNo: invoice.invoiceNo,
+        filePath,
+      }
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   async getAllSaleInvoices(
@@ -87,14 +162,23 @@ export class SaleInvoiceService
     try {
       const { invoiceId, emails, subject, message } = data
 
+      const { invoiceNo, filePath } = await this.generateInvoicePdf(invoiceId)
+
       this.mailerService
-        .sendMail(emails, subject, message)
+        .sendMail(emails, subject, message, [
+          {
+            filename: `${invoiceNo}.pdf`,
+            path: filePath,
+          },
+        ])
         .then(() => {
+          fs.unlinkSync(filePath)
           AppLogger.getInstance().info(
             `Invoice ${invoiceId} shared successfully`
           )
         })
         .catch((e) => {
+          fs.unlinkSync(filePath)
           AppLogger.getInstance().error(
             `Error in sharing invoice ${invoiceId}: ${e}`
           )
@@ -106,7 +190,16 @@ export class SaleInvoiceService
 
   async downloadSaleInvoice(id: string): Promise<string> {
     try {
-      return ''
+      const { invoiceNo, filePath } = await this.generateInvoicePdf(id)
+
+      const publicUrl = await uploadPdfToFirebase(
+        filePath,
+        `reports/${invoiceNo}_${new Date()}.pdf`
+      )
+
+      fs.unlinkSync(filePath)
+
+      return publicUrl
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

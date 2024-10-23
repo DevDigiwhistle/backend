@@ -1,4 +1,4 @@
-import { MailerService } from '../../utils'
+import { AxiosService, MailerService, RazorpayService } from '../../utils'
 import { campaignParticipantsService } from '../campaign'
 import {
   CreditNoteCRUD,
@@ -22,7 +22,8 @@ import {
 const purchaseInvoiceService = PurchaseInvoiceService.getInstance(
   PurchaseInvoiceCRUD.getInstance(PurchaseInvoice),
   MailerService.getInstance(),
-  campaignParticipantsService
+  campaignParticipantsService,
+  RazorpayService.getInstance(AxiosService.getInstance())
 )
 
 const saleInvoiceService = SaleInvoiceService.getInstance(

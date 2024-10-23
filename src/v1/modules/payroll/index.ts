@@ -1,10 +1,16 @@
+import { AxiosService } from '../../utils'
+import { RazorpayService } from '../../utils/razorpay-service'
 import { PayrollCRUD, PayrollHistoryCRUD } from './crud'
 import { Payroll, PayrollHistory } from './models'
 import { PayrollService } from './service'
 import { PayrollHistoryService } from './service'
 
 const payrollService = PayrollService.getInstance(
-  PayrollCRUD.getInstance(Payroll)
+  PayrollCRUD.getInstance(Payroll),
+  RazorpayService.getInstance(AxiosService.getInstance()),
+  PayrollHistoryService.getInstance(
+    PayrollHistoryCRUD.getInstance(PayrollHistory)
+  )
 )
 
 const payrollHistoryService = PayrollHistoryService.getInstance(

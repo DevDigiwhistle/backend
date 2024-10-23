@@ -4,3 +4,8 @@ export type ShareInvoiceRequest = {
   subject: string
   message: string
 }
+
+export type PurchaseInvoiceWebhookPayload = {
+  invoiceId: string
+  type: string
+}

@@ -88,3 +88,10 @@ export enum PaymentTerms {
   DAYS_30 = '30 Days',
   DAYS_60 = '60 Days',
 }
+
+export enum WEBHOOK_EVENTS {
+  REJECTED = 'payout.rejected',
+  PROCESSED = 'payout.processed',
+  REVERSED = 'payout.reversed',
+  FAILED = 'payout.failed',
+}
