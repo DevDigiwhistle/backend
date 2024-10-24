@@ -362,7 +362,14 @@ export class PurchaseInvoiceService
       if (invoice.influencerProfile !== null) {
         if (invoice.influencerProfile?.fundAccountId === null) {
           fund_account_id = await this.razorpayService.createFundAccount({
-            contact_id: invoice.influencerProfile.id,
+            type: 'vendor',
+            name:
+              invoice.influencerProfile.firstName +
+              (invoice.influencerProfile.lastName === null
+                ? ''
+                : ' ' + invoice.influencerProfile.lastName),
+            contact: invoice.influencerProfile.mobileNo,
+            email: invoice.influencerProfile.user.email,
             account_type: 'bank_account',
             bank_account: {
               name: invoice.influencerProfile.bankAccountHolderName,
@@ -376,7 +383,10 @@ export class PurchaseInvoiceService
       if (invoice.agencyProfile !== null) {
         if (invoice.agencyProfile?.fundAccountId === null) {
           fund_account_id = await this.razorpayService.createFundAccount({
-            contact_id: invoice.agencyProfile.id,
+            type: 'vendor',
+            name: invoice.agencyProfile.name,
+            contact: invoice.agencyProfile.mobileNo,
+            email: invoice.agencyProfile.user.email,
             account_type: 'bank_account',
             bank_account: {
               name: invoice.agencyProfile.bankAccountHolderName,

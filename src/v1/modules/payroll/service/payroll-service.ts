@@ -207,13 +207,26 @@ export class PayrollService
       if (payroll.fundAccountId === null) {
         fund_account_id = await this.razorpayService.createFundAccount({
           account_type: 'bank_account',
-          contact_id: payroll.id,
+          name:
+            payroll.employeeProfile.firstName +
+            ' ' +
+            (payroll.employeeProfile.lastName === null
+              ? ''
+              : payroll.employeeProfile.lastName),
+          type: 'employee',
+          contact: payroll.employeeProfile.mobileNo,
+          email: payroll.employeeProfile.user.email,
           bank_account: {
             account_number: payroll.employeeProfile.bankAccountNumber,
             ifsc: payroll.employeeProfile.bankIfscCode,
             name: payroll.employeeProfile.bankAccountHolderName,
           },
         })
+
+        await this.crudBase.update(
+          { id: id },
+          { fundAccountId: fund_account_id }
+        )
       }
 
       if (fund_account_id === '')
@@ -225,7 +238,8 @@ export class PayrollService
         {
           account_number: process.env.RAZORPAY_ACCOUNT_NUMBER ?? '',
           fund_account_id: fund_account_id,
-          amount: payroll.ctc * (1 - payroll.tds / 100) + payroll.incentive,
+          amount:
+            (payroll.ctc * (1 - payroll.tds / 100) + payroll.incentive) * 100,
           currency: 'INR',
           mode: 'NEFT',
           purpose: 'salary',
@@ -269,10 +283,10 @@ export class PayrollService
         hra: payroll.hra,
         others: payroll.others,
         salaryMonth:
-          monthIndexToName[newSalaryMonth] +
+          monthIndexToName[payroll.salaryMonth] +
           ' ' +
           new Date().getFullYear().toString().slice(-2) +
-          `(${monthsToDays[newSalaryMonth]} days)`,
+          `(${monthsToDays[payroll.salaryMonth]} days)`,
         workingDays: payroll.workingDays.toString(),
         incentive: payroll.incentive,
         grossPay: payroll.ctc,

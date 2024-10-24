@@ -22,7 +22,10 @@ export interface IRazorpayPayoutRequest {
 }
 
 export interface IFundAccountRequest {
-  contact_id: string
+  type: string
+  name: string
+  email: string
+  contact: string
   account_type: string
   bank_account: {
     name: string
@@ -31,8 +34,15 @@ export interface IFundAccountRequest {
   }
 }
 
-export class RazorpayService {
-  static instance: IRazorpayService | null = null
+export interface IContactRequest {
+  name: string
+  email: string
+  contact: string
+  type: string
+}
+
+export class RazorpayService implements IRazorpayService {
+  private static instance: IRazorpayService | null = null
   private readonly axiosService: IAxiosService
   private readonly RAZORPAY_KEY_ID
   private readonly RAZORPAY_KEY_SECRET
@@ -69,6 +79,7 @@ export class RazorpayService {
         }
       )
     } catch (e) {
+      console.log('error in payout', e)
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
@@ -78,7 +89,7 @@ export class RazorpayService {
     webhook_signature: string
   ): Promise<boolean> {
     try {
-      const key = this.RAZORPAY_KEY_SECRET
+      const key = process.env.RAZORPAY_WEBHOOK_SECRET ?? ''
       const message = JSON.stringify(webhook_body)
 
       const expectedSignature = crypto
@@ -97,14 +108,14 @@ export class RazorpayService {
     }
   }
 
-  async createFundAccount(data: IFundAccountRequest): Promise<string> {
+  async createContact(data: IContactRequest): Promise<string> {
     try {
       const auth = Buffer.from(
         `${this.RAZORPAY_KEY_ID}:${this.RAZORPAY_KEY_SECRET}`
       ).toString('base64')
 
       const response = await this.axiosService.post(
-        'https://api.razorpay.com/v1/fund_accounts',
+        'https://api.razorpay.com/v1/contacts',
         data,
         {
           'Content-Type': 'application/json',
@@ -114,6 +125,39 @@ export class RazorpayService {
 
       return response.id
     } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async createFundAccount(data: IFundAccountRequest): Promise<string> {
+    try {
+      const auth = Buffer.from(
+        `${this.RAZORPAY_KEY_ID}:${this.RAZORPAY_KEY_SECRET}`
+      ).toString('base64')
+
+      const contact_id = await this.createContact({
+        name: data.name,
+        email: data.email,
+        contact: data.contact,
+        type: data.type,
+      })
+
+      const response = await this.axiosService.post(
+        'https://api.razorpay.com/v1/fund_accounts',
+        {
+          contact_id: contact_id,
+          account_type: data.account_type,
+          bank_account: data.bank_account,
+        },
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${auth}`,
+        }
+      )
+
+      return response.id
+    } catch (e) {
+      console.log('error in fund account', e)
       throw new HttpException(e?.errorCode, e?.message)
     }
   }

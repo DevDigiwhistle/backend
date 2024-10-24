@@ -1,6 +1,7 @@
+import { Enum } from '../../../../constants'
 import { IBaseService } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { ShareInvoiceRequest } from '../types'
+import { PurchaseInvoiceWebhookPayload, ShareInvoiceRequest } from '../types'
 import {
   ICreditNoteCRUD,
   IProformaInvoiceCRUD,
@@ -43,6 +44,10 @@ export interface IPurchaseInvoiceService
 
   sharePurchaseInvoice(data: ShareInvoiceRequest): Promise<void>
   downloadPurchaseInvoiceReport(startDate: Date, endDate: Date): Promise<string>
+  handleWebhook(
+    payload: PurchaseInvoiceWebhookPayload,
+    event: Enum.WEBHOOK_EVENTS
+  ): Promise<void>
 }
 
 export interface IProformaInvoiceService
