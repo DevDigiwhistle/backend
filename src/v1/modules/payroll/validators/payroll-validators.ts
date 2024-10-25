@@ -43,3 +43,21 @@ export const updatePayrollSchema = {
   },
   additionalProperties: false,
 }
+
+export const sharePaySlipSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', format: 'uuid', nullable: false },
+    emails: {
+      type: 'array',
+      items: {
+        type: 'string',
+        format: 'email',
+      },
+    },
+    subject: { type: 'string', nullable: false },
+    message: { type: 'string', nullable: false },
+  },
+  required: ['id', 'emails', 'subject', 'message'],
+  additionalProperties: false,
+}

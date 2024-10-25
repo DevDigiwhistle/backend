@@ -3,7 +3,7 @@ import { IBaseService } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { IPayrollCRUD, IPayrollHistoryCRUD } from './ICRUD'
 import { IPayroll, IPayrollHistory } from './IModel'
-import { PayrollWebhookPayload } from '../types'
+import { PayrollWebhookPayload, SharePaySlipRequest } from '../types'
 import { Enum } from '../../../../constants'
 
 export interface IPayrollService extends IBaseService<IPayroll, IPayrollCRUD> {
@@ -26,6 +26,7 @@ export interface IPayrollService extends IBaseService<IPayroll, IPayrollCRUD> {
     event: Enum.WEBHOOK_EVENTS
   ): Promise<void>
   generatePaySlip(id: string): Promise<string>
+  sharePaySlip(data: SharePaySlipRequest): Promise<void>
 }
 
 export interface IPayrollHistoryService

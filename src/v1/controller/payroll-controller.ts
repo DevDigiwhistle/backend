@@ -32,8 +32,9 @@ export class PayrollController extends BaseController<
     try {
       const data = req.body
 
-      const salaryMonth =
-        new Date(5.5 * 60 * 60 * 1000 + new Date().getTime()).getMonth() + 1
+      const salaryMonth = new Date(
+        5.5 * 60 * 60 * 1000 + new Date().getTime()
+      ).getMonth()
       const workingDays = monthsToDays[salaryMonth]
 
       const existingPayroll = await this.service.findOne({
@@ -224,7 +225,10 @@ export class PayrollController extends BaseController<
     }
   }
 
-  async generatePaySlip(req: Request, res: Response): Promise<Response> {
+  async generatePaySlipController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
     try {
       const { id } = req.query
       if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
@@ -236,6 +240,15 @@ export class PayrollController extends BaseController<
         { url: data },
         req
       )
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async sharePaySlipController(req: Request, res: Response): Promise<Response> {
+    try {
+      await this.service.sharePaySlip(req.body)
+      return responseHandler(200, res, 'Shared Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)
     }

@@ -481,6 +481,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/messageModel'
 
+  /v1/payroll/share:
+    post:
+      summary: share payroll
+      tags:
+        - Payroll
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Payroll data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollShare'
+      responses:
+        '200':
+          description: Payroll created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
     PayrollDetails:
@@ -723,3 +769,25 @@ components:
           format: date-time
           example: '2022-09-01T00:00:00.000Z'
           description: The date of payment
+
+    PayrollShare:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: The id of the payroll
+        emails:
+          type: array
+          items:
+            type: string
+            example: 123e4567-e89b-12d3-a456-426614174000
+            description: The id of the employee
+        subject:
+          type: string
+          example: Subject
+          description: The subject of the email
+        message:
+          type: string
+          example: Message
+          description: The message of the email

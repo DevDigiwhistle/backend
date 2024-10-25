@@ -21,9 +21,10 @@ import { Enum, monthIndexToName, monthsToDays } from '../../../../constants'
 import { v4 as uuidv4 } from 'uuid'
 import { IRazorpayService } from '../../../utils/razorpay-service'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { PayrollWebhookPayload } from '../types'
+import { PayrollWebhookPayload, SharePaySlipRequest } from '../types'
 import { generatePaySlipPdf } from '../../../pdf/payslip-pdf'
 import fs from 'fs'
+import { IMailerService } from '../../../utils'
 
 export class PayrollService
   extends BaseService<IPayroll, IPayrollCRUD>
@@ -32,17 +33,20 @@ export class PayrollService
   private static instance: IPayrollService | null = null
   private readonly razorpayService: IRazorpayService
   private readonly payrollHistoryService: IPayrollHistoryService
+  private readonly mailerService: IMailerService
 
   static getInstance = (
     payrollCRUD: IPayrollCRUD,
     razorpayService: IRazorpayService,
-    payrollHistoryService: IPayrollHistoryService
+    payrollHistoryService: IPayrollHistoryService,
+    mailerService: IMailerService
   ) => {
     if (PayrollService.instance === null) {
       PayrollService.instance = new PayrollService(
         payrollCRUD,
         razorpayService,
-        payrollHistoryService
+        payrollHistoryService,
+        mailerService
       )
     }
     return PayrollService.instance
@@ -51,11 +55,13 @@ export class PayrollService
   private constructor(
     payrollCRUD: IPayrollCRUD,
     razorpayService: IRazorpayService,
-    payrollHistoryService: IPayrollHistoryService
+    payrollHistoryService: IPayrollHistoryService,
+    mailerService: IMailerService
   ) {
     super(payrollCRUD)
     this.razorpayService = razorpayService
     this.payrollHistoryService = payrollHistoryService
+    this.mailerService = mailerService
   }
 
   async getAllPayrollHistory(
@@ -363,6 +369,32 @@ export class PayrollService
       fs.unlinkSync(filePath)
 
       return publicUrl
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async sharePaySlip(data: SharePaySlipRequest): Promise<void> {
+    try {
+      const { id, emails, subject, message } = data
+
+      const payroll = await this.payrollHistoryService.findOne({ id: id }, [
+        'employeeProfile',
+      ])
+
+      if (payroll === null) throw new HttpException(404, 'Payroll Not Found')
+
+      const filePath = `./reports/PaySlip_${new Date()}.pdf`
+
+      await generatePaySlipPdf(payroll, filePath)
+
+      this.mailerService.sendMail(emails, subject, message, [
+        {
+          filename: `PaySlip_${payroll.employeeProfile.firstName}.pdf`,
+          path: filePath,
+          contentType: 'application/pdf',
+        },
+      ])
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

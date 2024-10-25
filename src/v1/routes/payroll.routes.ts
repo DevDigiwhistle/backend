@@ -5,6 +5,7 @@ import { BaseValidator } from '../../utils'
 import {
   addPayrollSchema,
   updatePayrollSchema,
+  sharePaySlipSchema,
 } from '../modules/payroll/validators'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
@@ -19,6 +20,7 @@ const payrollController = new PayrollController(
 
 const addPayrollValidator = new BaseValidator(addPayrollSchema)
 const updatePayrollValidator = new BaseValidator(updatePayrollSchema)
+const sharePaySlipValidator = new BaseValidator(sharePaySlipSchema)
 
 payrollRouter.post(
   '/',
@@ -27,6 +29,15 @@ payrollRouter.post(
   authorizeAccounts,
   addPayrollValidator.validateInput.bind(addPayrollValidator),
   payrollController.addController.bind(payrollController)
+)
+
+payrollRouter.post(
+  '/share',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  sharePaySlipValidator.validateInput.bind(sharePaySlipValidator),
+  payrollController.sharePaySlipController.bind(payrollController)
 )
 
 payrollRouter.patch(
@@ -57,7 +68,7 @@ payrollRouter.get(
   '/download',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
-  payrollController.generatePaySlip.bind(payrollController)
+  payrollController.generatePaySlipController.bind(payrollController)
 )
 
 payrollRouter.get(

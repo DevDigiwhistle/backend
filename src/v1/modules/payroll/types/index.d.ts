@@ -6,3 +6,10 @@ export type PayrollWebhookPayload = {
   payrollDate: Date
   incentive: number
 }
+
+export type SharePaySlipRequest = {
+  emails: string[]
+  subject: string
+  message: string
+  id: string
+}

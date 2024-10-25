@@ -1,3 +1,7 @@
-import { addPayrollSchema, updatePayrollSchema } from './payroll-validators'
+import {
+  addPayrollSchema,
+  updatePayrollSchema,
+  sharePaySlipSchema,
+} from './payroll-validators'
 
-export { addPayrollSchema, updatePayrollSchema }
+export { addPayrollSchema, updatePayrollSchema, sharePaySlipSchema }
