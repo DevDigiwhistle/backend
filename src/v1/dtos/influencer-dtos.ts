@@ -9,6 +9,19 @@ import {
 } from '../modules/influencer/types'
 
 export class InfluencerDTO {
+  static transformationForInfluencerList(data: IInfluencerProfile) {
+    return {
+      name:
+        data.firstName + ' ' + (data.lastName !== null ? data.lastName : ''),
+      youtubeUrl: data.youtubeURL,
+      instagramUrl: data.instagramURL,
+      twitterUrl: data.twitterURL,
+      profilePic: data.profilePic,
+      linkedInUrl: data.linkedInURL,
+      niche: data.niche,
+    }
+  }
+
   static transformationForInfluencerResponse(
     data: IInfluencerProfile,
     platform: Enum.Platform

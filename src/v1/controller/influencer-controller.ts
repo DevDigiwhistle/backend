@@ -250,6 +250,22 @@ class InfluencerController {
       return errorHandler(e, res, req)
     }
   }
+
+  async getInfluencersListController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const data = await this.influencerService.getInfluencersList()
+      const _data = data.map((value) => {
+        return InfluencerDTO.transformationForInfluencerList(value)
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
 }
 
 export { InfluencerController }

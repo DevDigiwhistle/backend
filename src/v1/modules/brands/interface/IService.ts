@@ -13,6 +13,7 @@ export interface IBrandProfileService
     name?: string
   ): Promise<PaginatedResponse<IBrandProfile>>
   findBrandsByName(name: string): Promise<IBrandProfile[]>
+  getBrandsList(): Promise<IBrandProfile[]>
 }
 
 export interface IAgencyProfileService

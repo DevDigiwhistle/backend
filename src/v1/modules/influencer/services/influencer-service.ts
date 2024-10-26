@@ -467,5 +467,25 @@ class InfluencerService implements IInfluencerService {
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async getInfluencersList(): Promise<IInfluencerProfile[]> {
+    try {
+      const data = await this.influencerProfileService.findAllPaginated(
+        1,
+        30,
+        {
+          user: {
+            isApproved: true,
+          },
+        },
+        undefined,
+        { createdAt: 'DESC' }
+      )
+
+      return data.data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 export { InfluencerService }

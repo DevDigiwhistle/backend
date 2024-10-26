@@ -64,6 +64,11 @@ influencerRouter.get(
 )
 
 influencerRouter.get(
+  '/list',
+  influencerController.getInfluencersListController.bind(influencerController)
+)
+
+influencerRouter.get(
   '/explore',
   verifyToken,
   influencerController.exploreInfluencerController.bind(influencerController)

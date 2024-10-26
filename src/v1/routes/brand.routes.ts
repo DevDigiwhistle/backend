@@ -39,6 +39,11 @@ brandRouter.get(
 )
 
 brandRouter.get(
+  '/list',
+  brandProfileController.getBrandsListController.bind(brandProfileController)
+)
+
+brandRouter.get(
   '/search',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

@@ -217,7 +217,13 @@ export class PayrollController extends BaseController<
 
       if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
 
-      await this.service.releaseSalary(id, uuidv4())
+      const idempotencyKey = req.headers['x-idempotency-key'] as string
+
+      if (!idempotencyKey) {
+        throw new HttpException(400, 'Invalid Idempotency Key')
+      }
+
+      await this.service.releaseSalary(id, idempotencyKey)
 
       return responseHandler(200, res, 'Payment Done Successfully', {}, req)
     } catch (e) {

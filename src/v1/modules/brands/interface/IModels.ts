@@ -9,7 +9,7 @@ export interface IBrandProfile extends ObjectLiteral {
   websiteURL: string
   user: IUser
   mobileNo: string
-  profilePicURL?: string
+  profilePic: string | null
   aadharNo: string
   gstNo: string
   panNo: string
@@ -28,7 +28,7 @@ export interface IAgencyProfile extends ObjectLiteral {
   pocLastName: string
   name: string
   websiteURL: string
-  profilePicURL?: string
+  profilePic: string | null
   user: IUser
   mobileNo: string
   aadharNo: string

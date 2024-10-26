@@ -10,6 +10,7 @@ import { IExtendedRequest } from '../interface'
 import { Enum } from '../../constants'
 import { PurchaseInvoiceDTO } from '../dtos/purchase-invoice-dtos'
 import { IUserService } from '../modules/user/interface'
+import { v4 as uuidv4 } from 'uuid'
 export class PurchaseInvoiceController extends BaseController<
   IPurchaseInvoice,
   IPurchaseInvoiceCRUD,
@@ -201,6 +202,29 @@ export class PurchaseInvoiceController extends BaseController<
         { url: url },
         req
       )
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async releaseSalaryController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const { id } = req.query
+
+      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
+
+      const idempotencyKey = req.headers['x-idempotency-key'] as string
+
+      if (!idempotencyKey) {
+        throw new HttpException(400, 'Invalid Idempotency Key')
+      }
+
+      await this.service.releasePayment(id, idempotencyKey)
+
+      return responseHandler(200, res, 'Payment Done Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)
     }

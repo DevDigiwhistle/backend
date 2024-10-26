@@ -46,7 +46,7 @@ class EmployeeService implements IEmployeeService {
     const { uid } = await this.googleAuthService
       .createUser(data.email)
       .catch((err) => {
-        throw new HttpException(500, 'Internal Server Error')
+        throw new HttpException(500, err?.message ?? 'Internal Server Error')
       })
 
     try {

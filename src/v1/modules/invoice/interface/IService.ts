@@ -48,6 +48,7 @@ export interface IPurchaseInvoiceService
     payload: PurchaseInvoiceWebhookPayload,
     event: Enum.WEBHOOK_EVENTS
   ): Promise<void>
+  releasePayment(invoiceId: string, idempotencyKey: string): Promise<void>
 }
 
 export interface IProformaInvoiceService

@@ -223,6 +223,16 @@ invoiceRouter.post(
 )
 
 invoiceRouter.post(
+  '/purchase/release',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  authorizeAccounts,
+  purchaseInvoiceController.releaseSalaryController.bind(
+    purchaseInvoiceController
+  )
+)
+
+invoiceRouter.post(
   '/proforma',
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),

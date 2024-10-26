@@ -73,6 +73,7 @@ export interface IInfluencerService {
     limit: number,
     platform: string
   ): Promise<PaginatedResponse<IInfluencerProfile>>
+  getInfluencersList(): Promise<IInfluencerProfile[]>
 }
 
 export interface IInstagramService {

@@ -85,6 +85,26 @@ class BrandProfileService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async getBrandsList(): Promise<IBrandProfile[]> {
+    try {
+      const data = await this.crudBase.findAllPaginated(
+        1,
+        30,
+        {
+          user: {
+            isApproved: true,
+          },
+        },
+        [],
+        { createdAt: 'DESC' }
+      )
+
+      return data.data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 
 export { BrandProfileService }

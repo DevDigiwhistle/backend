@@ -10,6 +10,7 @@ import {
   IBrandProfileService,
 } from '../modules/brands/interface'
 import { Request, Response } from 'express'
+import { profile } from 'winston'
 
 export class BrandProfileController extends BaseController<
   IBrandProfile,
@@ -104,6 +105,26 @@ export class BrandProfileController extends BaseController<
         return {
           name: value.name,
           id: value.id,
+        }
+      })
+
+      return responseHandler(200, res, 'Fetched Successfully', _data, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
+
+  async getBrandsListController(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const data = await this.service.getBrandsList()
+      const _data = data.map((value) => {
+        return {
+          name: value.name,
+          id: value.id,
+          profilePic: value.profilePic,
         }
       })
 

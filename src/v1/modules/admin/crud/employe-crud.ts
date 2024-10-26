@@ -50,7 +50,7 @@ class EmployeeCRUD implements IEmployeeCRUD {
       await queryRunner.commitTransaction()
     } catch (e) {
       await queryRunner.rollbackTransaction()
-      throw new HttpException(500, e)
+      throw new HttpException(e?.errorCode, e?.message)
     } finally {
       await queryRunner.release()
     }
