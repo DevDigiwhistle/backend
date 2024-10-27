@@ -41,7 +41,7 @@ export interface ICampaignService
     influencerProfileId?: string
   ): Promise<CampaignStats>
   releaseIncentive(id: string): Promise<void>
-  generateBrandReport(brandId: string): Promise<any>
+  generateBrandReport(brandId?: string, id?: string): Promise<any>
 }
 
 export interface ICampaignDeliverablesService

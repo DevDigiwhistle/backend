@@ -400,10 +400,16 @@ paths:
       parameters:
         - in: query
           name: id
-          required: true
+
           schema:
             type: string
           description: brand Id
+        - in: query
+          name: campaignId
+
+          schema:
+            type: string
+          description: campaign Id
       responses:
         '200':
           description: fetched successfully

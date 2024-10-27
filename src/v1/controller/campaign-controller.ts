@@ -529,11 +529,12 @@ class CampaignController extends BaseController<
 
   async generateBrandReport(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.query
+      const { id, campaignId } = req.query
 
-      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
-
-      const data = await this.service.generateBrandReport(id)
+      const data = await this.service.generateBrandReport(
+        id as string,
+        campaignId as string
+      )
       return responseHandler(200, res, 'Generated Successfully', data, req)
     } catch (e) {
       return errorHandler(e, res, req)

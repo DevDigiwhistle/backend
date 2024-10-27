@@ -471,23 +471,34 @@ class CampaignService
     }
   }
 
-  async generateBrandReport(brandId: string): Promise<any> {
+  async generateBrandReport(brandId?: string, id?: string): Promise<any> {
     try {
-      const campaignList = await this.findAll(
-        { brand: { id: brandId } },
-        [
+      let campaign: ICampaign | null = null
+
+      if (typeof brandId === 'string') {
+        const campaignList = await this.findAll(
+          { brand: { id: brandId } },
+          [
+            'brand',
+            'participants',
+            'participants.influencerProfile',
+            'participants.deliverables',
+          ],
+          { createdAt: 'DESC' }
+        )
+
+        if (campaignList.length === 0)
+          throw new HttpException(404, 'No Campaign Found')
+
+        campaign = campaignList[0]
+      } else if (typeof id === 'string') {
+        campaign = await this.findOne({ id: id }, [
           'brand',
           'participants',
           'participants.influencerProfile',
           'participants.deliverables',
-        ],
-        { createdAt: 'DESC' }
-      )
-
-      if (campaignList.length === 0)
-        throw new HttpException(404, 'No Campaign Found')
-
-      const campaign = campaignList[0]
+        ])
+      }
 
       if (campaign === null) throw new HttpException(404, 'No Campaign Found')
 
@@ -590,6 +601,7 @@ class CampaignService
         influencers,
         averageCpv: netCpv / totalCount,
         campaignName: campaign.name,
+        brandLogo: campaign.brand?.profilePic,
         table,
       }
     } catch (e) {
