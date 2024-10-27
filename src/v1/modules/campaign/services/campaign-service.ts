@@ -441,6 +441,20 @@ class CampaignService
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
+
+  async generateBrandReport(brandId: string) {
+    try {
+      const campaign = await this.findOne({ brand: { id: brandId } }, [
+        'brand',
+        'participants',
+        'participants.influencerProfile',
+      ])
+
+      if (campaign === null) throw new HttpException(404, 'No Campaign Found')
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
 }
 
 export { CampaignService }
