@@ -59,7 +59,7 @@ export class SaleInvoice implements ISaleInvoice {
   @Column({ nullable: false, type: 'decimal' })
   received!: number
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: false, type: 'decimal', default: 0 })
   balanceAmount!: number
 
   @Column({ nullable: false, type: 'varchar' })
