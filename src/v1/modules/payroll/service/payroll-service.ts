@@ -25,6 +25,8 @@ import { PayrollWebhookPayload, SharePaySlipRequest } from '../types'
 import { generatePaySlipPdf } from '../../../pdf/payslip-pdf'
 import fs from 'fs'
 import { IMailerService } from '../../../utils'
+import { AppDataSource } from '../../../../config'
+import { Payroll, PayrollHistory } from '../models'
 
 export class PayrollService
   extends BaseService<IPayroll, IPayrollCRUD>
@@ -313,8 +315,6 @@ export class PayrollService
   ): Promise<void> {
     try {
       if (event === Enum.WEBHOOK_EVENTS.PROCESSED) {
-        // mail payslip to the employee work
-
         await this.payrollHistoryService.update(
           {
             id: payload.payrollHistoryId,
@@ -332,17 +332,20 @@ export class PayrollService
           incentive,
         } = payload
 
-        await this.crudBase.update(
-          { id: payrollId },
-          {
-            incentive: incentive,
-            salaryMonth: presentSalaryMonth,
-            workingDays: monthsToDays[presentSalaryMonth],
-            payrollDate: payrollDate,
-          }
-        )
+        AppDataSource.manager.transaction(async (manager) => {
+          await manager.update(
+            Payroll,
+            { id: payrollId },
+            {
+              incentive: incentive,
+              salaryMonth: presentSalaryMonth,
+              workingDays: monthsToDays[presentSalaryMonth],
+              payrollDate: payrollDate,
+            }
+          )
 
-        await this.payrollHistoryService.delete({ id: payrollHistoryId })
+          await manager.delete(PayrollHistory, { id: payrollHistoryId })
+        })
       }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
@@ -395,6 +398,16 @@ export class PayrollService
           contentType: 'application/pdf',
         },
       ])
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+  async incrementIncentive(
+    employeeId: string,
+    incentive: number
+  ): Promise<void> {
+    try {
+      await this.crudBase.incrementIncentive(employeeId, incentive)
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

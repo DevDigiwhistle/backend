@@ -22,6 +22,7 @@ export interface ICampaign {
   participants: ICampaignParticipants[]
   saleInvoices?: ISaleInvoice[]
   purchaseInvoices?: IPurchaseInvoice[]
+  incentiveReleased: boolean
   cpv: number | null
   createdAt: Date
   updatedAt: Date

@@ -1,5 +1,5 @@
 import { EntityTarget } from 'typeorm'
-import { CRUDBase } from '../../../../utils'
+import { CRUDBase, HttpException } from '../../../../utils'
 import { IPayroll, IPayrollCRUD } from '../interface'
 
 export class PayrollCRUD extends CRUDBase<IPayroll> implements IPayrollCRUD {
@@ -13,5 +13,24 @@ export class PayrollCRUD extends CRUDBase<IPayroll> implements IPayrollCRUD {
   }
   private constructor(payroll: EntityTarget<IPayroll>) {
     super(payroll)
+  }
+
+  async incrementIncentive(
+    employeeId: string,
+    incentive: number
+  ): Promise<void> {
+    try {
+      await this.repository.increment(
+        {
+          employeeProfile: {
+            id: employeeId,
+          },
+        },
+        'incentive',
+        incentive
+      )
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 }

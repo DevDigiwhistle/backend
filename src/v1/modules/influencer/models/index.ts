@@ -152,14 +152,20 @@ export class YoutubeProfileStats implements IYoutubeProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   views: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   videos: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   subscribers: number
+
+  @Column({ type: 'varchar', default: null })
+  profilePic: string | null
+
+  @Column({ type: 'varchar', default: null })
+  handleName: string | null
 
   @OneToOne(
     () => InfluencerProfile,
@@ -180,13 +186,13 @@ export class InstagramProfileStats implements IInstagramProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   likes: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   comments: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   followers: number
 
   @Column({ type: 'decimal', default: 0 })
@@ -195,8 +201,14 @@ export class InstagramProfileStats implements IInstagramProfileStats {
   @Column({ type: 'decimal', default: 0 })
   percentageFakeFollowers: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   views: number
+
+  @Column({ type: 'varchar', default: null })
+  profilePic: string | null
+
+  @Column({ type: 'varchar', default: null })
+  handleName: string | null
 
   @OneToOne(
     () => InfluencerProfile,
@@ -217,20 +229,26 @@ export class TwitterProfileStats implements ITwitterProfileStats {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   followers: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   tweets: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   views: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   replyCount: number
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'bigint', default: 0 })
   retweets: number
+
+  @Column({ type: 'varchar', default: null })
+  profilePic: string | null
+
+  @Column({ type: 'varchar', default: null })
+  handleName: string | null
 
   @OneToOne(
     () => InfluencerProfile,

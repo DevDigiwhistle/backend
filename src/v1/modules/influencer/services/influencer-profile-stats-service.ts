@@ -70,6 +70,8 @@ class InfluencerStatsService implements IInfluencerStatsService {
         engagementRate,
         percentageFakeFollowers,
         views,
+        name,
+        image,
       } = instagramProfileStats
 
       await this.instagramProfileStatsService.addOrUpdate({
@@ -79,6 +81,8 @@ class InfluencerStatsService implements IInfluencerStatsService {
         engagementRate: engagementRate,
         percentageFakeFollowers: percentageFakeFollowers,
         views: views,
+        handleName: name,
+        profilePic: image,
         influencerProfile: {
           id: profileId,
         },
@@ -101,12 +105,14 @@ class InfluencerStatsService implements IInfluencerStatsService {
       const youtubeProfileStats =
         await this.youtubeService.getYoutubeProfileStats(youtubeURL)
 
-      const { views, subscribers, videos } = youtubeProfileStats
+      const { views, subscribers, videos, title, image } = youtubeProfileStats
 
       await this.youtubeProfileStatsService.addOrUpdate({
         videos: videos,
         views: views,
         subscribers: subscribers,
+        handleName: title,
+        profilePic: image,
         influencerProfile: {
           id: profileId,
         },
@@ -129,7 +135,7 @@ class InfluencerStatsService implements IInfluencerStatsService {
       const twitterProfileStats =
         await this.twitterService.getTwitterProfileStats(twitterURL)
 
-      const { followers, tweets, views, replyCount, retweets } =
+      const { followers, tweets, views, replyCount, retweets, name, image } =
         twitterProfileStats
 
       await this.twitterProfileStatsService.addOrUpdate({
@@ -138,6 +144,8 @@ class InfluencerStatsService implements IInfluencerStatsService {
         views: views,
         replyCount: replyCount,
         retweets: retweets,
+        handleName: name,
+        profilePic: image,
         influencerProfile: {
           id: profileId,
         },

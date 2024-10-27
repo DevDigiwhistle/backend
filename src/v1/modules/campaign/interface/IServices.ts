@@ -40,6 +40,7 @@ export interface ICampaignService
     agencyProfileId?: string,
     influencerProfileId?: string
   ): Promise<CampaignStats>
+  releaseIncentive(id: string): Promise<void>
 }
 
 export interface ICampaignDeliverablesService

@@ -47,6 +47,8 @@ export interface IInstagramProfileStats extends ObjectLiteral {
   engagementRate: number
   percentageFakeFollowers: number
   views: number
+  profilePic: string | null
+  handleName: string | null
   influencerProfile: IInfluencerProfile
   createdAt?: Date
   updatedAt?: Date
@@ -57,6 +59,8 @@ export interface IYoutubeProfileStats extends ObjectLiteral {
   views: number
   videos: number
   subscribers: number
+  profilePic: string | null
+  handleName: string | null
   influencerProfile: IInfluencerProfile
   createdAt?: Date
   updatedAt?: Date
@@ -69,6 +73,8 @@ export interface ITwitterProfileStats extends ObjectLiteral {
   views: number
   replyCount: number
   retweets: number
+  profilePic: string | null
+  handleName: string | null
   influencerProfile: IInfluencerProfile
   createdAt?: Date
   updatedAt?: Date

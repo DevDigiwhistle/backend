@@ -27,6 +27,7 @@ export interface IPayrollService extends IBaseService<IPayroll, IPayrollCRUD> {
   ): Promise<void>
   generatePaySlip(id: string): Promise<string>
   sharePaySlip(data: SharePaySlipRequest): Promise<void>
+  incrementIncentive(employeeId: string, incentive: number): Promise<void>
 }
 
 export interface IPayrollHistoryService

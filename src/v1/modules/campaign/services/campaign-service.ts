@@ -11,6 +11,10 @@ import {
   InfluencerFilters,
 } from '../types'
 import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
+import { IPayrollService } from '../../payroll/interface'
+import { AppDataSource } from '../../../../config'
+import { Campaign } from '../models'
+import { Payroll } from '../../payroll/models'
 
 class CampaignService
   extends BaseService<ICampaign, ICampaignCRUD>
@@ -398,6 +402,41 @@ class CampaignService
         agencyProfileId,
         influencerProfileId
       )
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async releaseIncentive(id: string): Promise<void> {
+    try {
+      const campaign = await this.findOne({ id: id }, ['incentiveWinner'])
+
+      if (campaign === null) throw new HttpException(404, 'Campaign not found')
+
+      if (campaign.incentiveReleased === true)
+        throw new HttpException(400, 'Incentive already released')
+
+      if (campaign.incentiveWinner === null)
+        throw new HttpException(400, 'Incentive Winner not found')
+
+      await AppDataSource.manager.transaction(async (manager) => {
+        await manager.update(
+          Campaign,
+          { id: campaign.id },
+          { incentiveReleased: true }
+        )
+
+        await manager.increment(
+          Payroll,
+          {
+            employeeProfile: {
+              id: campaign.incentiveWinner?.id,
+            },
+          },
+          'incentive',
+          0.05 * campaign.commercial
+        )
+      })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

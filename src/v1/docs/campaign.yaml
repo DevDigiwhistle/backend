@@ -346,6 +346,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/messageModel'
+
+  /v1/campaign/release/incentive:
+    post:
+      summary: Release a campaign incentive
+      tags:
+        - Campaign
+      security:
+        - bearerAuth: []
+      description: This endpoint will release the incentive for a campaign
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Campaign ID
+      responses:
+        '200':
+          description: fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messageModel'
+
 components:
   schemas:
     AddCampaignSchema:

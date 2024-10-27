@@ -37,6 +37,13 @@ campaignRouter.post(
   campaignController.addController.bind(campaignController)
 )
 
+campaignRouter.post(
+  '/release/incentive',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  campaignController.releaseIncentive.bind(campaignController)
+)
+
 campaignRouter.get(
   '/',
   verifyToken,

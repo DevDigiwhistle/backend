@@ -119,6 +119,9 @@ export class Campaign implements ICampaign {
   @Column({ type: 'float', nullable: true })
   cpv: number | null
 
+  @Column({ type: 'boolean', default: false })
+  incentiveReleased: boolean
+
   @CreateDateColumn()
   createdAt: Date
 

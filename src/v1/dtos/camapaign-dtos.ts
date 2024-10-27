@@ -175,6 +175,7 @@ export class CampaignDTO {
         data.manager?.firstName +
         (data.manager?.lastName === null ? '' : ' ' + data.manager?.lastName) +
         ' 5% (incentive)',
+      incentiveReleased: data.incentiveReleased,
       status: data.status,
       paymentStatus: data.paymentStatus,
       participants: data.participants.map((participant) => {
@@ -195,31 +196,18 @@ export class CampaignDTO {
             margin: participant.margin,
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
-            deliverables:
-              participant.deliverables.length > 0
-                ? participant.deliverables.map((deliverable) => {
-                    return {
-                      id: deliverable.id,
-                      title: deliverable.title,
-                      platform: deliverable.platform,
-                      status: deliverable.status,
-                      deliverableLink: deliverable.link,
-                      er: deliverable.engagementRate,
-                      cpv: deliverable.cpv,
-                      desc: deliverable.desc,
-                    }
-                  })
-                : [
-                    {
-                      id: null,
-                      title: null,
-                      platform: Enum.Platform.INSTAGRAM,
-                      status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                      deliverableLink: null,
-                      er: null,
-                      cpv: null,
-                    },
-                  ],
+            deliverables: participant.deliverables.map((deliverable) => {
+              return {
+                id: deliverable.id,
+                title: deliverable.title,
+                platform: deliverable.platform,
+                status: deliverable.status,
+                deliverableLink: deliverable.link,
+                er: deliverable.engagementRate,
+                cpv: deliverable.cpv,
+                desc: deliverable.desc,
+              }
+            }),
           }
         } else {
           const influencerGroupedData = this.groupDeliverableByInfluencerName(
@@ -236,26 +224,7 @@ export class CampaignDTO {
             margin: participant.margin,
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
-            influencer:
-              influencerGroupedData.length > 0
-                ? influencerGroupedData
-                : [
-                    {
-                      id: null,
-                      name: null,
-                      deliverables: [
-                        {
-                          id: null,
-                          title: null,
-                          platform: Enum.Platform.INSTAGRAM,
-                          status: Enum.CampaignDeliverableStatus.NOT_LIVE,
-                          deliverableLink: null,
-                          er: null,
-                          cpv: null,
-                        },
-                      ],
-                    },
-                  ],
+            influencer: influencerGroupedData,
           }
         }
       }),
