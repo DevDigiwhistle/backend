@@ -15,20 +15,49 @@ import { IPayrollService } from '../../payroll/interface'
 import { AppDataSource } from '../../../../config'
 import { Campaign } from '../models'
 import { Payroll } from '../../payroll/models'
+import {
+  IInstagramProfileStatsService,
+  IInstagramService,
+  ITwitterProfileStatsService,
+  ITwitterService,
+  IYoutubeProfileStatsService,
+  IYoutubeService,
+} from '../../influencer/interface'
 
 class CampaignService
   extends BaseService<ICampaign, ICampaignCRUD>
   implements ICampaignService
 {
   private static instance: ICampaignService | null = null
+  private readonly instagramService: IInstagramService
+  private readonly youtubeService: IYoutubeService
+  private readonly twitterService: ITwitterService
 
-  private constructor(campaignCRUD: ICampaignCRUD) {
+  private constructor(
+    campaignCRUD: ICampaignCRUD,
+    instagramService: IInstagramService,
+    youtubeService: IYoutubeService,
+    twitterService: ITwitterService
+  ) {
     super(campaignCRUD)
+    this.instagramService = instagramService
+    this.youtubeService = youtubeService
+    this.twitterService = twitterService
   }
 
-  static getInstance = (campaignCRUD: ICampaignCRUD) => {
+  static getInstance = (
+    campaignCRUD: ICampaignCRUD,
+    instagramService: IInstagramService,
+    youtubeService: IYoutubeService,
+    twitterService: ITwitterService
+  ) => {
     if (CampaignService.instance === null)
-      CampaignService.instance = new CampaignService(campaignCRUD)
+      CampaignService.instance = new CampaignService(
+        campaignCRUD,
+        instagramService,
+        youtubeService,
+        twitterService
+      )
     return CampaignService.instance
   }
 
@@ -442,15 +471,127 @@ class CampaignService
     }
   }
 
-  async generateBrandReport(brandId: string) {
+  async generateBrandReport(brandId: string): Promise<any> {
     try {
-      const campaign = await this.findOne({ brand: { id: brandId } }, [
-        'brand',
-        'participants',
-        'participants.influencerProfile',
-      ])
+      const campaignList = await this.findAll(
+        { brand: { id: brandId } },
+        [
+          'brand',
+          'participants',
+          'participants.influencerProfile',
+          'participants.deliverables',
+        ],
+        { createdAt: 'DESC' }
+      )
+
+      if (campaignList.length === 0)
+        throw new HttpException(404, 'No Campaign Found')
+
+      const campaign = campaignList[0]
 
       if (campaign === null) throw new HttpException(404, 'No Campaign Found')
+
+      const influencers: Array<{ name: string; profilePic: string | null }> = []
+
+      const table: {
+        headers: string[]
+        rows: Array<{
+          name: string
+          views: number
+          likes: number
+          comments: number
+        }>
+      } = {
+        headers: ['Name', 'Views', 'Likes', 'Comments'],
+        rows: [],
+      }
+
+      let netCpv = 0,
+        totalCount = 0
+
+      campaign.participants.map((participant) => {
+        participant.deliverables.map((deliverable) => {
+          netCpv += deliverable.cpv === null ? 0 : deliverable.cpv
+          totalCount += deliverable.cpv === null ? 0 : 1
+        })
+      })
+
+      campaign.participants.forEach((participant) => {
+        if (participant.influencerProfile !== null) {
+          const name =
+            participant.influencerProfile.firstName +
+            ' ' +
+            participant.influencerProfile.lastName
+
+          let views = 0,
+            likes = 0,
+            comments = 0
+          participant.deliverables.forEach((deliverable) => {
+            views += 1
+            likes += 1
+            comments += 1
+          })
+
+          table.rows.push({
+            name,
+            views,
+            likes,
+            comments,
+          })
+        } else {
+          const mp = new Map<
+            string,
+            { views: number; likes: number; comments: number }
+          >()
+          participant.deliverables.forEach((deliverable) => {
+            if (mp.has(deliverable.name)) {
+              const data = mp.get(deliverable.name)!
+              data.views += 1
+              data.likes += 1
+              data.comments += 1
+              mp.set(deliverable.name, data)
+            } else {
+              mp.set(deliverable.name, { views: 1, likes: 1, comments: 1 })
+            }
+          })
+
+          for (const [key, value] of mp) {
+            table.rows.push({
+              name: key,
+              views: value.views,
+              likes: value.likes,
+              comments: value.comments,
+            })
+          }
+        }
+      })
+
+      campaign.participants.forEach((participant) => {
+        if (participant.influencerProfile !== null) {
+          const name =
+            participant.influencerProfile.firstName +
+            ' ' +
+            participant.influencerProfile.lastName
+          const profilePic = participant.influencerProfile.profilePic
+          influencers.push({ name, profilePic })
+        } else {
+          const nameSet = new Set<string>()
+          participant.deliverables.forEach((deliverable) => {
+            nameSet.add(deliverable.name)
+          })
+
+          for (const name of nameSet) {
+            influencers.push({ name, profilePic: null })
+          }
+        }
+      })
+
+      return {
+        influencers,
+        averageCpv: netCpv / totalCount,
+        campaignName: campaign.name,
+        table,
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

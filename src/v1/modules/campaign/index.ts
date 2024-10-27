@@ -1,3 +1,4 @@
+import { instagramService, twitterService, youtubeService } from '../influencer'
 import {
   CampaignCRUD,
   CampaignDeliverablesCRUD,
@@ -9,7 +10,10 @@ import { CampaignParticipantsService } from './services/campaign-participants-se
 import { CampaignService } from './services/campaign-service'
 
 const campaignService = CampaignService.getInstance(
-  CampaignCRUD.getInstance(Campaign)
+  CampaignCRUD.getInstance(Campaign),
+  instagramService,
+  youtubeService,
+  twitterService
 )
 
 const campaignDeliverablesService = CampaignDeliverablesService.getInstance(

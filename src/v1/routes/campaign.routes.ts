@@ -45,6 +45,11 @@ campaignRouter.post(
 )
 
 campaignRouter.get(
+  '/report',
+  campaignController.generateBrandReport.bind(campaignController)
+)
+
+campaignRouter.get(
   '/',
   verifyToken,
   campaignController.getAllController.bind(campaignController)
