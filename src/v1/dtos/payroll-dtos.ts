@@ -54,6 +54,7 @@ export class PayrollDTO {
       finalPay: data.finalPay,
       status: data.status,
       paymentDate: data.paymentDate,
+      id: data.id,
     }
   }
 }
