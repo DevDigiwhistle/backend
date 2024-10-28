@@ -39,9 +39,9 @@ export const updateProformaInvoiceSchema = {
   properties: {
     gstTin: { type: 'string', nullable: false },
     billNo: { type: 'string', nullable: false },
-    billDate: { type: 'string', format: 'date', nullable: false },
+    billDate: { type: 'string', format: 'date-time', nullable: false },
     invoiceNo: { type: 'string', nullable: false },
-    invoiceDate: { type: 'string', format: 'date', nullable: false },
+    invoiceDate: { type: 'string', format: 'date-time', nullable: false },
     amount: { type: 'number', nullable: false },
     sgst: { type: 'number', nullable: false },
     cgst: { type: 'number', nullable: false },

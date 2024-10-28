@@ -4,7 +4,7 @@ export const addCreditNoteSchema = {
     invoice: { type: 'string', nullable: false, format: 'uuid' },
     gstTin: { type: 'string', nullable: false },
     creditNoteNo: { type: 'string', nullable: false },
-    creditNoteDate: { type: 'string', format: 'date', nullable: false },
+    creditNoteDate: { type: 'string', format: 'date-time', nullable: false },
     amount: { type: 'number', nullable: false },
     sgst: { type: 'number', nullable: false },
     cgst: { type: 'number', nullable: false },
@@ -36,7 +36,7 @@ export const updateCreditNoteSchema = {
   properties: {
     gstTin: { type: 'string', nullable: false },
     creditNoteNo: { type: 'string', nullable: false },
-    creditNoteDate: { type: 'string', format: 'date', nullable: false },
+    creditNoteDate: { type: 'string', format: 'date-time', nullable: false },
     amount: { type: 'number', nullable: false },
     sgst: { type: 'number', nullable: false },
     cgst: { type: 'number', nullable: false },

@@ -128,7 +128,7 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column({ nullable: false, type: 'decimal' })
   amountToBeReceived: number
 
-  @Column({ nullable: false, type: 'decimal' })
+  @Column({ nullable: false, type: 'decimal', default: 0 })
   balanceAmount: number
 
   @Column({ type: 'enum', enum: Enum.PaymentTerms, nullable: false })

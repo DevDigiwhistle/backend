@@ -108,7 +108,7 @@ export class PayrollController extends BaseController<
         if (typeof page !== 'string' || typeof limit !== 'string')
           throw new HttpException(400, 'Invalid Page Details')
 
-        const data = await this.payrollService.getAllPayrollHistory(
+        const data = await this.service.getAllPayrollHistory(
           parseInt(page),
           parseInt(limit),
           lowerBound,
