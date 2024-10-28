@@ -259,6 +259,7 @@ export class CampaignDTO {
       commercial: influencerDetails[0].commercialCreator,
       toBeGiven: influencerDetails[0].toBePaid,
       invoice: influencerDetails[0].invoice,
+      invoiceStatus: influencerDetails[0].invoiceStatus,
       deliverable: influencerDetails[0].deliverables,
       participantId: influencerDetails[0].id,
     }
@@ -279,11 +280,17 @@ export class CampaignDTO {
         ' DW (POC)',
       status: data.status,
       paymentStatus: data.paymentStatus,
+
       participants: this.groupDeliverablesByInfluencers(data.participants),
     }
   }
 
   static transformationForAgency(data: ICampaign, agencyProfileId: string) {
+    const agencyDetails = data.participants.filter((data) => {
+      return (
+        data.agencyProfile !== null && data.agencyProfile.id === agencyProfileId
+      )
+    })
     return {
       id: data.id,
       name: data.name,
@@ -298,13 +305,9 @@ export class CampaignDTO {
         ' DW (POC)',
       status: data.status,
       paymentStatus: data.paymentStatus,
+      invoiceStatus: agencyDetails[0].invoiceStatus,
       participants: this.groupDeliverableByInfluencerName(
-        data.participants.filter((data) => {
-          return (
-            data.agencyProfile !== null &&
-            data.agencyProfile.id === agencyProfileId
-          )
-        })[0].deliverables
+        agencyDetails[0].deliverables
       ),
     }
   }
