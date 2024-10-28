@@ -1,5 +1,10 @@
 import { BaseService, HttpException } from '../../../../utils'
-import { ICampaign, ICampaignCRUD, ICampaignService } from '../interface'
+import {
+  ICampaign,
+  ICampaignCRUD,
+  ICampaignDeliverables,
+  ICampaignService,
+} from '../interface'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { FindOptionsWhere, ILike, IsNull, Not } from 'typeorm'
 import { Enum } from '../../../../constants'
@@ -7,6 +12,7 @@ import {
   AdminFilters,
   AgencyFilters,
   BrandFilters,
+  BrandReport,
   CampaignStats,
   InfluencerFilters,
 } from '../types'
@@ -23,6 +29,7 @@ import {
   IYoutubeProfileStatsService,
   IYoutubeService,
 } from '../../influencer/interface'
+import { checkSocialMediaLink } from '../../../utils/post-pattern'
 
 class CampaignService
   extends BaseService<ICampaign, ICampaignCRUD>
@@ -471,7 +478,51 @@ class CampaignService
     }
   }
 
-  async generateBrandReport(brandId?: string, id?: string): Promise<any> {
+  private async computeDeliverableMetrics(deliverable: ICampaignDeliverables) {
+    let views = 0,
+      likes = 0,
+      comments = 0
+    if (
+      deliverable.link !== null &&
+      checkSocialMediaLink(deliverable.link) === deliverable.platform
+    ) {
+      if (deliverable.platform === Enum.Platform.INSTAGRAM) {
+        const postData = await this.instagramService.getInstagramPostStats(
+          deliverable.link
+        )
+        views += postData.views
+        likes += postData.likes
+        comments += postData.comments
+      }
+      if (deliverable.platform === Enum.Platform.YOUTUBE) {
+        const postData = await this.youtubeService.getYoutubePostStats(
+          deliverable.link
+        )
+        views += postData.views
+        likes += postData.likes
+        comments += postData.comments
+      }
+
+      if (deliverable.platform === Enum.Platform.X) {
+        const postData = await this.twitterService.getTwitterPostStats(
+          deliverable.link
+        )
+        views += postData.views
+        likes += postData.retweets
+        comments += postData.replyCount
+      }
+    }
+    return {
+      views,
+      likes,
+      comments,
+    }
+  }
+
+  async generateBrandReport(
+    brandId?: string,
+    id?: string
+  ): Promise<BrandReport> {
     try {
       let campaign: ICampaign | null = null
 
@@ -537,10 +588,11 @@ class CampaignService
           let views = 0,
             likes = 0,
             comments = 0
-          participant.deliverables.forEach((deliverable) => {
-            views += 1
-            likes += 1
-            comments += 1
+          participant.deliverables.forEach(async (deliverable) => {
+            const data = await this.computeDeliverableMetrics(deliverable)
+            views += data.views
+            likes += data.likes
+            comments += data.comments
           })
 
           table.rows.push({
@@ -554,15 +606,18 @@ class CampaignService
             string,
             { views: number; likes: number; comments: number }
           >()
-          participant.deliverables.forEach((deliverable) => {
+          participant.deliverables.forEach(async (deliverable) => {
             if (mp.has(deliverable.name)) {
+              const metrics = await this.computeDeliverableMetrics(deliverable)
+
               const data = mp.get(deliverable.name)!
-              data.views += 1
-              data.likes += 1
-              data.comments += 1
+              data.views += metrics.views
+              data.likes += metrics.likes
+              data.comments += metrics.comments
               mp.set(deliverable.name, data)
             } else {
-              mp.set(deliverable.name, { views: 1, likes: 1, comments: 1 })
+              const metrics = await this.computeDeliverableMetrics(deliverable)
+              mp.set(deliverable.name, metrics)
             }
           })
 

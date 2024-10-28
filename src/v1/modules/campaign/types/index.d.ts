@@ -99,3 +99,19 @@ export interface ICampaignCardsRequest {
   status: string
   participants: Array<ICampaignInfluencerData | ICampaignAgencyData>
 }
+
+export type BrandReport = {
+  influencers: Array<{ name: string; profilePic: string | null }>
+  averageCpv: number
+  campaignName: string
+  brandLogo: string | null | undefined
+  table: {
+    headers: string[]
+    rows: Array<{
+      name: string
+      views: number
+      likes: number
+      comments: number
+    }>
+  }
+}

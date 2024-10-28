@@ -162,7 +162,12 @@ invoiceRouter.get(
 invoiceRouter.delete(
   '/purchase/:id',
   verifyToken,
-  authorizeUser([Enum.ROLES.INFLUENCER, Enum.ROLES.AGENCY]),
+  authorizeUser([
+    Enum.ROLES.INFLUENCER,
+    Enum.ROLES.AGENCY,
+    Enum.ROLES.EMPLOYEE,
+    Enum.ROLES.ADMIN,
+  ]),
   purchaseInvoiceController.deleteController.bind(purchaseInvoiceController)
 )
 

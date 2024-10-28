@@ -1,4 +1,5 @@
 import {
+  AppLogger,
   BaseService,
   HttpException,
   uploadFileToFirebase,
@@ -391,13 +392,22 @@ export class PayrollService
 
       await generatePaySlipPdf(payroll, filePath)
 
-      this.mailerService.sendMail(emails, subject, message, [
-        {
-          filename: `PaySlip_${payroll.employeeProfile.firstName}.pdf`,
-          path: filePath,
-          contentType: 'application/pdf',
-        },
-      ])
+      this.mailerService
+        .sendMail(emails, subject, message, [
+          {
+            filename: `PaySlip_${payroll.employeeProfile.firstName}.pdf`,
+            path: filePath,
+            contentType: 'application/pdf',
+          },
+        ])
+        .then(() => {
+          fs.unlinkSync(filePath)
+          AppLogger.getInstance().info(`PaySlip ${id} shared successfully`)
+        })
+        .catch(() => {
+          fs.unlinkSync(filePath)
+          AppLogger.getInstance().error(`Error in sharing PaySlip ${id}`)
+        })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

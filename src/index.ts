@@ -55,15 +55,15 @@ app.listen(PORT, () => {
     })
 })
 
-cron.schedule('0 0 * * *', () => {
-  logsScheduler()
-    .then(() => {
-      console.log(`Done upload of logs at ${new Date()}`)
-    })
-    .catch((e) => {
-      console.log(e)
-    })
-})
+// cron.schedule('0 0 * * *', () => {
+//   logsScheduler()
+//     .then(() => {
+//       console.log(`Done upload of logs at ${new Date()}`)
+//     })
+//     .catch((e) => {
+//       console.log(e)
+//     })
+// })
 
 process.on('uncaughtException', (err: any) => {
   console.error(err)

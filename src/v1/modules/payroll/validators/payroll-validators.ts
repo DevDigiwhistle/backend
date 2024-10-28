@@ -39,6 +39,7 @@ export const updatePayrollSchema = {
     },
     tds: { type: 'number', nullable: false },
     workingDays: { type: 'number', nullable: false },
+    salaryMonth: { type: 'number', nullable: false },
     incentive: { type: 'number', nullable: false },
   },
   additionalProperties: false,
