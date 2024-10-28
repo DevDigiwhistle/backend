@@ -380,11 +380,12 @@ export class PayrollService
 
   async sharePaySlip(data: SharePaySlipRequest): Promise<void> {
     try {
-      const { id, emails, subject, message } = data
+      const { invoiceId, emails, subject, message } = data
 
-      const payroll = await this.payrollHistoryService.findOne({ id: id }, [
-        'employeeProfile',
-      ])
+      const payroll = await this.payrollHistoryService.findOne(
+        { id: invoiceId },
+        ['employeeProfile']
+      )
 
       if (payroll === null) throw new HttpException(404, 'Payroll Not Found')
 
@@ -402,11 +403,13 @@ export class PayrollService
         ])
         .then(() => {
           fs.unlinkSync(filePath)
-          AppLogger.getInstance().info(`PaySlip ${id} shared successfully`)
+          AppLogger.getInstance().info(
+            `PaySlip ${invoiceId} shared successfully`
+          )
         })
         .catch(() => {
           fs.unlinkSync(filePath)
-          AppLogger.getInstance().error(`Error in sharing PaySlip ${id}`)
+          AppLogger.getInstance().error(`Error in sharing PaySlip ${invoiceId}`)
         })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

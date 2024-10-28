@@ -11,5 +11,5 @@ export type SharePaySlipRequest = {
   emails: string[]
   subject: string
   message: string
-  id: string
+  invoiceId: string
 }
