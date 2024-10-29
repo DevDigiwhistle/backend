@@ -12,10 +12,10 @@ import helmet from 'helmet'
 import csrf from 'csurf'
 
 // Rate Limit
-// const apiLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100, // limit each IP to 100 requests per windowMs
-// })
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+})
 
 const app = express()
 app.use(
@@ -26,9 +26,9 @@ app.use(
   })
 )
 
-// app.use(apiLimiter)
-// app.use(helmet)
-// app.use(csrf({ cookie: true }))
+app.use(apiLimiter)
+app.use(helmet)
+app.use(csrf({ cookie: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -55,15 +55,15 @@ app.listen(PORT, () => {
     })
 })
 
-// cron.schedule('0 0 * * *', () => {
-//   logsScheduler()
-//     .then(() => {
-//       console.log(`Done upload of logs at ${new Date()}`)
-//     })
-//     .catch((e) => {
-//       console.log(e)
-//     })
-// })
+cron.schedule('0 0 * * *', () => {
+  logsScheduler()
+    .then(() => {
+      console.log(`Done upload of logs at ${new Date()}`)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+})
 
 process.on('uncaughtException', (err: any) => {
   console.error(err)
