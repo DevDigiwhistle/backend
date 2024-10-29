@@ -32,6 +32,8 @@ class EmployeeCRUD implements IEmployeeCRUD {
           id: 2,
         },
         isVerified: true,
+        isApproved: true,
+        isPaused: false,
       })
 
       const employeeProfileRepository =

@@ -31,6 +31,8 @@ class AdminCRUD implements IAdminCRUD {
           id: 1,
         },
         isVerified: true,
+        isApproved: true,
+        isPaused: false,
       })
 
       const adminProfileRepository =

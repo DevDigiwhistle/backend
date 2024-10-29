@@ -6,7 +6,7 @@ import {
   ICampaignService,
 } from '../interface'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { FindOptionsWhere, ILike, IsNull, Not } from 'typeorm'
+import { Between, FindOptionsWhere, ILike, IsNull, Not } from 'typeorm'
 import { Enum } from '../../../../constants'
 import {
   AdminFilters,
@@ -87,8 +87,7 @@ class CampaignService
         let agencyQuery: FindOptionsWhere<ICampaign> = {}
 
         agencyQuery = {
-          startDate: MoreThanOrEqual(lowerBound),
-          endDate: LessThanOrEqual(upperBound),
+          ...agencyQuery,
           participants: {
             agencyProfile: {
               id: agencyFilters?.id,
@@ -176,16 +175,20 @@ class CampaignService
           }
         }
 
-        query.push(agencyQuery)
+        query.push(
+          {
+            ...agencyQuery,
+            startDate: Between(lowerBound, upperBound),
+          },
+          {
+            ...agencyQuery,
+            endDate: Between(lowerBound, upperBound),
+          }
+        )
       }
 
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
-        let adminQuery: FindOptionsWhere<ICampaign>[] = [
-          {
-            startDate: MoreThanOrEqual(lowerBound),
-            endDate: LessThanOrEqual(upperBound),
-          },
-        ]
+        let adminQuery: FindOptionsWhere<ICampaign>[] = []
 
         if (typeof name === 'string') {
           adminQuery[0] = {
@@ -241,13 +244,33 @@ class CampaignService
           }
         }
 
-        query = adminQuery
+        if (adminQuery.length > 1) {
+          query = [
+            {
+              ...adminQuery,
+              startDate: Between(lowerBound, upperBound),
+            },
+            {
+              ...adminQuery,
+              endDate: Between(lowerBound, upperBound),
+            },
+          ]
+        } else {
+          query = [
+            {
+              ...adminQuery[0],
+              startDate: Between(lowerBound, upperBound),
+            },
+            {
+              ...adminQuery[0],
+              endDate: Between(lowerBound, upperBound),
+            },
+          ]
+        }
       }
 
       if (roleId === Enum.ROLES.BRAND) {
         let brandQuery: FindOptionsWhere<ICampaign> = {
-          startDate: MoreThanOrEqual(lowerBound),
-          endDate: LessThanOrEqual(upperBound),
           brand: {
             id: brandFilters?.brand,
           },
@@ -322,14 +345,20 @@ class CampaignService
           }
         }
 
-        query.push(brandQuery)
+        query.push(
+          {
+            ...brandQuery,
+            startDate: Between(lowerBound, upperBound),
+          },
+          {
+            ...query,
+            endDate: Between(lowerBound, upperBound),
+          }
+        )
       }
 
       if (roleId === Enum.ROLES.INFLUENCER) {
-        let influencerQuery: FindOptionsWhere<ICampaign> = {
-          startDate: MoreThanOrEqual(lowerBound),
-          endDate: LessThanOrEqual(upperBound),
-        }
+        let influencerQuery: FindOptionsWhere<ICampaign> = {}
 
         if (typeof name === 'string') {
           influencerQuery = {
@@ -398,7 +427,16 @@ class CampaignService
           }
         }
 
-        query.push(influencerQuery)
+        query.push(
+          {
+            startDate: Between(lowerBound, upperBound),
+            ...influencerQuery,
+          },
+          {
+            endDate: Between(lowerBound, upperBound),
+            ...influencerQuery,
+          }
+        )
       }
 
       const data = await this.findAllPaginated(

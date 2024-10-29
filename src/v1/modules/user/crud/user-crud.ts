@@ -26,6 +26,9 @@ export class UserCRUD extends CRUDBase<IUser> implements IUserCRUD {
           'SUM(CASE WHEN user.isApproved = true THEN 1 ELSE 0 END) AS Approved',
           'SUM(CASE WHEN user.isApproved = false THEN 1 ELSE 0 END) AS Rejected',
         ])
+        .where('"roleId"=:roleId', { roleId: 3 })
+        .orWhere('"roleId"=:roleId', { roleId: 4 })
+        .orWhere('"roleId"=:roleId', { roleId: 5 })
         .getRawOne()
 
       return result

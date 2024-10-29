@@ -26,19 +26,19 @@ export class AdminDTO {
     return [
       {
         label: 'Accepted Requests',
-        value: parseInt(data.approved),
+        value: typeof data.approved === 'string' ? parseInt(data.approved) : 0,
         subValue: '',
         iconName: 'FaceSmileIcon',
       },
       {
         label: 'Pending Requests',
-        value: parseInt(data.pending),
+        value: typeof data.pending === 'string' ? parseInt(data.pending) : 0,
         subValue: '',
         iconName: 'ExclamationCircleIcon',
       },
       {
         label: 'Declined Requests',
-        value: parseInt(data.rejected),
+        value: typeof data.rejected === 'string' ? parseInt(data.rejected) : 0,
         subValue: '',
         iconName: 'FaceFrownIcon',
       },
