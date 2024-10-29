@@ -122,14 +122,16 @@ export class PurchaseInvoiceService
           'Not Part of this campaign, cannot process the invoice'
         )
 
-      participant.deliverables.map((deliverable) => {
-        if (deliverable.status === Enum.CampaignDeliverableStatus.NOT_LIVE) {
-          throw new HttpException(
-            400,
-            'All Deliverables are not live so cannot process invoice request'
-          )
-        }
-      })
+      // keep it for future client may ask for it
+
+      // participant.deliverables.map((deliverable) => {
+      //   if (deliverable.status === Enum.CampaignDeliverableStatus.NOT_LIVE) {
+      //     throw new HttpException(
+      //       400,
+      //       'All Deliverables are not live so cannot process invoice request'
+      //     )
+      //   }
+      // })
 
       const resp = await this.crudBase.add(data)
 
