@@ -29,8 +29,14 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
         .createQueryBuilder('campaign')
         .select('SUM(campaign.commercial)', 'totalRevenue')
         .addSelect('COUNT(campaign.id)', 'totalCampaign')
-        .where('campaign."startDate">=:lowerBound', { lowerBound: lowerBound })
-        .andWhere('campaign."endDate"<=:upperBound', { upperBound: upperBound })
+        .where('campaign."startDate" BETWEEN :lowerBound AND :upperBound', {
+          lowerBound: lowerBound,
+          upperBound: upperBound,
+        })
+        .orWhere('campaign."endDate" BETWEEN :lowerBound AND :upperBound', {
+          lowerBound: lowerBound,
+          upperBound: upperBound,
+        })
 
       if (typeof brandProfileId === 'string') {
         query = query.andWhere('campaign."brandId"=:brandId', {

@@ -56,14 +56,14 @@ class CreditNoteService extends BaseService<ICreditNote, ICreditNoteCRUD> {
           if (counter === 0) {
             details.push([
               (counter + 1).toString(),
-              deliverable.desc === null ? 'IG Reel' : deliverable.desc,
+              deliverable.title === null ? 'IG Reel' : deliverable.title,
               '998361',
               creditNote.amount.toString(),
             ])
           } else {
             details.push([
               (counter + 1).toString(),
-              deliverable.desc === null ? 'IG Reel' : deliverable.desc,
+              deliverable.title === null ? 'IG Reel' : deliverable.title,
               '',
               '',
             ])

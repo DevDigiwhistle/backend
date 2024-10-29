@@ -37,7 +37,7 @@ export class ProformaInvoiceDTO {
           return {
             id: deliverable.id,
             name: deliverable.name,
-            desc: deliverable.desc,
+            desc: deliverable.title,
             platform: deliverable.platform,
             status: deliverable.status,
           }
@@ -72,7 +72,7 @@ export class ProformaInvoiceDTO {
             return {
               id: deliverable.id,
               name: deliverable.name,
-              desc: deliverable.desc,
+              desc: deliverable.title,
               platform: deliverable.platform,
               status: deliverable.status,
             }
