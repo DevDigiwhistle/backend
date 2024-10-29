@@ -27,7 +27,7 @@ app.use(
 )
 
 app.use(apiLimiter)
-app.use(helmet)
+app.use(helmet())
 app.use(csrf({ cookie: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
