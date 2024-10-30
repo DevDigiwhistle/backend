@@ -57,6 +57,7 @@
     "helmet": "^8.0.0",
     "json2csv": "^6.0.0-alpha.2",
     "millify": "^6.1.0",
+    "moment-timezone": "^0.5.46",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
     "num-words": "^1.2.3",

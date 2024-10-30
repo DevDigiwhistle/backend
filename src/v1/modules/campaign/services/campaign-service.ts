@@ -3,6 +3,7 @@ import {
   ICampaign,
   ICampaignCRUD,
   ICampaignDeliverables,
+  ICampaignParticipantsService,
   ICampaignService,
 } from '../interface'
 import { PaginatedResponse } from '../../../../utils/base-service'
@@ -39,31 +40,36 @@ class CampaignService
   private readonly instagramService: IInstagramService
   private readonly youtubeService: IYoutubeService
   private readonly twitterService: ITwitterService
+  private readonly campaignParticipantService: ICampaignParticipantsService
 
   private constructor(
     campaignCRUD: ICampaignCRUD,
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
-    twitterService: ITwitterService
+    twitterService: ITwitterService,
+    campaignParticipantService: ICampaignParticipantsService
   ) {
     super(campaignCRUD)
     this.instagramService = instagramService
     this.youtubeService = youtubeService
     this.twitterService = twitterService
+    this.campaignParticipantService = campaignParticipantService
   }
 
   static getInstance = (
     campaignCRUD: ICampaignCRUD,
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
-    twitterService: ITwitterService
+    twitterService: ITwitterService,
+    campaignParticipantService: ICampaignParticipantsService
   ) => {
     if (CampaignService.instance === null)
       CampaignService.instance = new CampaignService(
         campaignCRUD,
         instagramService,
         youtubeService,
-        twitterService
+        twitterService,
+        campaignParticipantService
       )
     return CampaignService.instance
   }
@@ -469,12 +475,27 @@ class CampaignService
     influencerProfileId?: string
   ): Promise<CampaignStats> {
     try {
+      if (typeof agencyProfileId === 'string') {
+        return await this.campaignParticipantService.getTotalCampaignsAndRevenue(
+          lowerBound,
+          upperBound,
+          undefined,
+          agencyProfileId
+        )
+      }
+
+      if (typeof influencerProfileId === 'string') {
+        return await this.campaignParticipantService.getTotalCampaignsAndRevenue(
+          lowerBound,
+          upperBound,
+          influencerProfileId
+        )
+      }
+
       return await this.crudBase.getTotalCampaignsAndRevenue(
         lowerBound,
         upperBound,
-        brandProfileId,
-        agencyProfileId,
-        influencerProfileId
+        brandProfileId
       )
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)

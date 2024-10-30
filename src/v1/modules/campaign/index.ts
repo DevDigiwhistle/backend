@@ -9,19 +9,20 @@ import { CampaignDeliverablesService } from './services/campaign-deliverable-ser
 import { CampaignParticipantsService } from './services/campaign-participants-service'
 import { CampaignService } from './services/campaign-service'
 
-const campaignService = CampaignService.getInstance(
-  CampaignCRUD.getInstance(Campaign),
-  instagramService,
-  youtubeService,
-  twitterService
-)
-
 const campaignDeliverablesService = CampaignDeliverablesService.getInstance(
   CampaignDeliverablesCRUD.getInstance(CampaignDeliverables)
 )
 
 const campaignParticipantsService = CampaignParticipantsService.getInstance(
   CampaignParticipantsCRUD.getInstance(CampaignParticipants)
+)
+
+const campaignService = CampaignService.getInstance(
+  CampaignCRUD.getInstance(Campaign),
+  instagramService,
+  youtubeService,
+  twitterService,
+  campaignParticipantsService
 )
 
 export {

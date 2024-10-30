@@ -1,6 +1,7 @@
-import { DeepPartial, EntityTarget } from 'typeorm'
+import { Between, DeepPartial, EntityTarget } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaignParticipants, ICampaignParticipantsCRUD } from '../interface'
+import { CampaignStats } from '../types'
 
 class CampaignParticipantsCRUD
   extends CRUDBase<ICampaignParticipants>
@@ -48,6 +49,63 @@ class CampaignParticipantsCRUD
       })
 
       await Promise.all(promises)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    influencerProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats> {
+    try {
+      if (typeof influencerProfileId === 'string') {
+        const data = await this.repository.find({
+          where: {
+            campaign: [
+              { startDate: Between(lowerBound, upperBound) },
+              { endDate: Between(lowerBound, upperBound) },
+            ],
+            influencerProfile: {
+              id: influencerProfileId,
+            },
+          },
+        })
+
+        let totalRevenue = 0
+        data.forEach((value) => {
+          totalRevenue += value.toBePaid === null ? 0 : value.toBePaid
+        })
+
+        return {
+          totalCampaign: data.length.toString(),
+          totalRevenue: totalRevenue,
+        }
+      } else {
+        const data = await this.repository.find({
+          where: {
+            campaign: [
+              { startDate: Between(lowerBound, upperBound) },
+              { endDate: Between(lowerBound, upperBound) },
+            ],
+            agencyProfile: {
+              id: agencyProfileId,
+            },
+          },
+        })
+
+        let totalRevenue = 0
+        data.forEach((value) => {
+          totalRevenue += value.toBePaid === null ? 0 : value.toBePaid
+        })
+
+        return {
+          totalCampaign: data.length.toString(),
+          totalRevenue: totalRevenue,
+        }
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

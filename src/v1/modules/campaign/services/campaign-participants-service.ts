@@ -5,6 +5,7 @@ import {
   ICampaignParticipantsCRUD,
   ICampaignParticipantsService,
 } from '../interface'
+import { CampaignStats } from '../types'
 
 class CampaignParticipantsService
   extends BaseService<ICampaignParticipants, ICampaignParticipantsCRUD>
@@ -32,6 +33,20 @@ class CampaignParticipantsService
 
   async updateMany(data: Partial<ICampaignParticipants>[]): Promise<void> {
     await this.crudBase.updateMany(data)
+  }
+
+  async getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    influencerProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats> {
+    return await this.crudBase.getTotalCampaignsAndRevenue(
+      lowerBound,
+      upperBound,
+      influencerProfileId,
+      agencyProfileId
+    )
   }
 }
 

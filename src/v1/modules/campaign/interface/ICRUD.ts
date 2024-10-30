@@ -11,9 +11,7 @@ export interface ICampaignCRUD extends ICRUDBase<ICampaign> {
   getTotalCampaignsAndRevenue(
     lowerBound: Date,
     upperBound: Date,
-    brandProfileId?: string,
-    agencyProfileId?: string,
-    influencerProfileId?: string
+    brandProfileId?: string
   ): Promise<CampaignStats>
 }
 
@@ -27,4 +25,10 @@ export interface ICampaignParticipantsCRUD
   extends ICRUDBase<ICampaignParticipants> {
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
   updateMany(data: Partial<ICampaignParticipants>[]): Promise<void>
+  getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    influencerProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats>
 }

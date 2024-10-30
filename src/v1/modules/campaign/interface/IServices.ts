@@ -54,6 +54,12 @@ export interface ICampaignParticipantsService
   extends IBaseService<ICampaignParticipants, ICampaignParticipantsCRUD> {
   insertMany(data: DeepPartial<ICampaignParticipants>[]): Promise<void>
   updateMany(data: Partial<ICampaignParticipants>[]): Promise<void>
+  getTotalCampaignsAndRevenue(
+    lowerBound: Date,
+    upperBound: Date,
+    influencerProfileId?: string,
+    agencyProfileId?: string
+  ): Promise<CampaignStats>
 }
 
 export interface ICampaignInsightsService {}

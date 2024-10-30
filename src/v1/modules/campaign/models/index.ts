@@ -168,7 +168,7 @@ export class CampaignParticipants implements ICampaignParticipants {
   campaign: ICampaign
 
   @Column({ type: 'float', nullable: true })
-  toBePaid: number | null
+  toBePaid: number
 
   @Column({ type: 'float', nullable: true })
   margin: number | null

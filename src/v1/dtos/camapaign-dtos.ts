@@ -242,8 +242,6 @@ export class CampaignDTO {
       )
     })
 
-    console.log(data.participants, influencerProfileId)
-
     return {
       campaignId: data.id,
       name: data.name,
@@ -298,7 +296,7 @@ export class CampaignDTO {
       brandName: data.brandName,
       startDate: data.startDate,
       endDate: data.endDate,
-      commercial: data.commercial,
+      commercial: agencyDetails[0].toBePaid,
       poc:
         data.manager.firstName +
         (data.manager.lastName === null ? '' : ' ' + data.manager.lastName) +

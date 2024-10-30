@@ -282,6 +282,9 @@ export class PayrollService
         }
       )
 
+      const today = new Date()
+      today.setUTCHours(0, 0, 0, 0)
+
       await this.payrollHistoryService.add({
         id: payrollHistoryId,
         employeeProfile: {
@@ -294,7 +297,7 @@ export class PayrollService
         salaryMonth:
           monthIndexToName[payroll.salaryMonth] +
           ' ' +
-          new Date().getFullYear().toString().slice(-2) +
+          today.getFullYear().toString().slice(-2) +
           `(${monthsToDays[payroll.salaryMonth]} days)`,
         workingDays: payroll.workingDays.toString(),
         incentive: payroll.incentive,
@@ -302,7 +305,7 @@ export class PayrollService
         finalPay: payroll.ctc * (1 - payroll.tds / 100) + payroll.incentive,
         status: Enum.PaymentStatus.PENDING,
         employmentType: Enum.EmploymentType.FULL_TIME,
-        paymentDate: new Date(),
+        paymentDate: today,
         tds: (payroll.tds / 100) * payroll.ctc,
       })
     } catch (e) {

@@ -87,10 +87,10 @@ jobs:
             echo "LINKEDIN_API_KEY=$LINKEDIN_API_KEY" >> backend/.env
             echo "TWITTER_API_KEY=$TWITTER_API_KEY" >> backend/.env
             echo "FB_STORAGE_BUCKET=$FB_STORAGE_BUCKET" >> backend/.env
-            echo "RAZORPAY_KEY_ID"=$RAZORPAY_KEY_ID >> backend/.env
-            echo "RAZORPAY_KEY_SECRET"=$RAZORPAY_KEY_SECRET >> backend/.env
-            echo "RAZORPAY_ACCOUNT_NUMBER"=$RAZORPAY_ACCOUNT_NUMBER >> backend/.env
-            echo "RAZORPAY_WEBHOOK_SECRET"=$RAZORPAY_WEBHOOK_SECRET >> backend/.env
+            echo "RAZORPAY_KEY_ID=$RAZORPAY_KEY_ID" >> backend/.env
+            echo "RAZORPAY_KEY_SECRET=$RAZORPAY_KEY_SECRET" >> backend/.env
+            echo "RAZORPAY_ACCOUNT_NUMBER=$RAZORPAY_ACCOUNT_NUMBER" >> backend/.env
+            echo "RAZORPAY_WEBHOOK_SECRET=$RAZORPAY_WEBHOOK_SECRET" >> backend/.env
             pm2 stop digiwhistle-api
             cd backend
             mkdir reports

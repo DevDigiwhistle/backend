@@ -9,9 +9,10 @@ import {
 import { responseHandler } from '../../utils/response-handler'
 import { monthsToDays } from '../../constants'
 import { PayrollDTO } from '../dtos/payroll-dtos'
-import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment-timezone'
 import { IEmployeeProfileService } from '../modules/admin/interface'
 import { IExtendedRequest } from '../interface'
+
 export class PayrollController extends BaseController<
   IPayroll,
   IPayrollCRUD,
@@ -69,7 +70,8 @@ export class PayrollController extends BaseController<
       }
 
       const lowerBound = new Date(startDate)
-      const upperBound = new Date(endDate)
+      let upperBound = new Date(endDate)
+      upperBound = moment(upperBound).add(1, 'days').toDate()
 
       if (
         !(
@@ -152,7 +154,8 @@ export class PayrollController extends BaseController<
       }
 
       const lowerBound = new Date(startDate)
-      const upperBound = new Date(endDate)
+      let upperBound = new Date(endDate)
+      upperBound = moment(upperBound).add(1, 'days').toDate()
 
       if (
         !(
