@@ -24,8 +24,8 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
     try {
       let query = this.repository
         .createQueryBuilder('campaign')
-        .select('COUNT(*) as totalCampaign')
-        .select('SUM(campaign."commercial") as totalRevenue')
+        .select('COUNT(*) as "totalCampaign"')
+        .addSelect('SUM(campaign."commercial") as "totalRevenue"')
         .where('campaign."startDate" BETWEEN :lowerBound AND :upperBound', {
           lowerBound: lowerBound,
           upperBound: upperBound,
@@ -42,6 +42,8 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
       }
 
       const result = await query.getRawOne()
+      console.log(result)
+
       return result
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
