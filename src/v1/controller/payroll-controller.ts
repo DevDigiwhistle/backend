@@ -71,7 +71,6 @@ export class PayrollController extends BaseController<
 
       const lowerBound = new Date(startDate)
       let upperBound = new Date(endDate)
-      upperBound = moment(upperBound).add(1, 'days').toDate()
 
       if (
         !(
@@ -81,6 +80,8 @@ export class PayrollController extends BaseController<
       ) {
         throw new HttpException(400, 'Invalid Date')
       }
+
+      upperBound = moment(upperBound).add(1, 'days').toDate()
 
       if (type === 'Pending') {
         const data = await this.service.getAllPayroll(

@@ -78,7 +78,7 @@ export class PayrollService
     try {
       let query: FindOptionsWhere<IPayrollHistory>[] = []
       let Query: FindOptionsWhere<IPayrollHistory> = {
-        createdAt: Between(lowerBound, upperBound),
+        paymentDate: Between(lowerBound, upperBound),
       }
 
       if (typeof employeeId === 'string') {
