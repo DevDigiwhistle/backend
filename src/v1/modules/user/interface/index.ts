@@ -1,6 +1,7 @@
 import { ObjectLiteral } from 'typeorm'
 import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
-import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { IBrandProfile } from '../../brands/interface'
+import { IAgencyProfile } from '../../agency/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { ICRUDBase } from '../../../../utils'
 import { userStats } from '../types'

@@ -224,7 +224,7 @@ class InfluencerController {
         if (agencyProfile === null || agencyProfile.agencyProfile === null)
           throw new HttpException(400, 'Agency Profile Not Found')
 
-        agencyId = agencyProfile.agencyProfile.id
+        agencyId = agencyProfile?.agencyProfile?.id
       }
 
       const data = await this.influencerService.exploreInfluencer(

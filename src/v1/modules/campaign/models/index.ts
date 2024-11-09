@@ -196,6 +196,12 @@ export class CampaignParticipants implements ICampaignParticipants {
   )
   deliverables: ICampaignDeliverables[]
 
+  @Column({ type: 'boolean', default: false })
+  confirmationSent: boolean
+
+  @Column({ type: 'enum', enum: Enum.PaymentTerms, default: null })
+  paymentTerms: Enum.PaymentTerms
+
   @CreateDateColumn()
   createdAt: Date
 

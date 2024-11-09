@@ -104,4 +104,11 @@ campaignRouter.get(
   campaignController.getByIdController.bind(campaignController)
 )
 
+campaignRouter.post(
+  '/sendEmail',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
+  campaignController.sendConfirmationEmail.bind(campaignController)
+)
+
 export default campaignRouter

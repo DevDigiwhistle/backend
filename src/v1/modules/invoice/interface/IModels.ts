@@ -1,5 +1,5 @@
 import { Enum } from '../../../../constants'
-import { IAgencyProfile } from '../../brands/interface'
+import { IAgencyProfile } from '../../agency/interface'
 import { ICampaign } from '../../campaign/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 

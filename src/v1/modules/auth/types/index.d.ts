@@ -1,6 +1,7 @@
 import { IAdminProfile, IEmployeeProfile } from '../../admin/interface'
-import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
+import { IAgencyProfile } from '../../agency/interface'
 
 export type authRequest = {
   idToken: string

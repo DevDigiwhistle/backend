@@ -26,8 +26,13 @@ export type InfluencerFilters = {
 }
 
 export type CampaignStats = {
+  totalCampaign: number
+  totalCommercialBrand: number
+  totalCommercialCreator: number
+  totalToBeGiven: number
+  totalMargin: number
+  totalIncentive: number
   totalRevenue: number
-  totalCampaign: string
 }
 
 export interface ICampaignInfluencerData {

@@ -196,6 +196,13 @@ class CampaignService
             ...adminQuery[0],
             name: ILike(`%${name}%`),
           }
+
+          adminQuery.push({
+            ...adminQuery[0],
+            manager: {
+              firstName: ILike(`%${name}%`),
+            },
+          })
         }
 
         if (typeof adminFilters?.paymentStatus === 'string') {
@@ -235,13 +242,6 @@ class CampaignService
                 },
               },
             }
-
-            adminQuery.push({
-              ...adminQuery[0],
-              participants: {
-                influencerProfile: IsNull(),
-              },
-            })
           }
         }
 

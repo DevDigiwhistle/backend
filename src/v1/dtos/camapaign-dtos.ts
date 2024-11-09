@@ -436,22 +436,46 @@ export class CampaignDTO {
       return [
         {
           label: 'Total Campaigns',
-          value: millify(parseInt(data.totalCampaign)),
+          value: millify(data.totalCampaign),
           subValue: '',
           iconName: 'UsersIcon',
         },
         {
           label: 'Total Comm.Brand',
-          value: millify(data.totalRevenue === null ? 0 : data.totalRevenue),
+          value: millify(data.totalCommercialBrand),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+        {
+          label: 'Total Comm.Creator',
+          value: millify(data.totalCommercialCreator),
+          subValue: '',
+          icon: 'CurrencyRupeeIcon',
+        },
+        {
+          label: 'Total To Be Paid',
+          value: millify(data.totalToBeGiven),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+        {
+          label: 'Total Margin',
+          value: millify(data.totalMargin),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+        {
+          label: 'Total Revenue',
+          value: millify(data.totalRevenue),
           subValue: '',
           iconName: 'CurrencyRupeeIcon',
         },
       ]
-    } else if (roleId === Enum.ROLES.BRAND || roleId === Enum.ROLES.AGENCY) {
+    } else if (roleId === Enum.ROLES.BRAND) {
       return [
         {
           label: 'Total Campaigns',
-          value: millify(parseInt(data.totalCampaign)),
+          value: millify(data.totalCampaign),
           subValue: '',
           iconName: 'UsersIcon',
         },
@@ -462,11 +486,14 @@ export class CampaignDTO {
           iconName: 'CurrencyRupeeIcon',
         },
       ]
-    } else if (roleId === Enum.ROLES.INFLUENCER) {
+    } else if (
+      roleId === Enum.ROLES.INFLUENCER ||
+      roleId === Enum.ROLES.AGENCY
+    ) {
       return [
         {
           label: 'Total Campaigns',
-          value: millify(parseInt(data.totalCampaign)),
+          value: millify(data.totalCampaign),
           subValue: '',
           iconName: 'UsersIcon',
         },

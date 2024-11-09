@@ -1,8 +1,9 @@
 import { Enum } from '../../../../constants'
 import { IEmployeeProfile } from '../../admin/interface'
-import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { IBrandProfile } from '../../brands/interface'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { IPurchaseInvoice, ISaleInvoice } from '../../invoice/interface'
+import { IAgencyProfile } from '../../agency/interface'
 
 export interface ICampaign {
   id: string
@@ -42,6 +43,8 @@ export interface ICampaignParticipants {
   toBePaid: number | null
   margin: number | null
   deliverables: ICampaignDeliverables[]
+  confirmationSent: boolean
+  paymentTerms: Enum.PaymentTerms
   createdAt: Date
   updatedAt: Date
 }

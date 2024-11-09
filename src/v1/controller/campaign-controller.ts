@@ -540,6 +540,16 @@ class CampaignController extends BaseController<
       return errorHandler(e, res, req)
     }
   }
+
+  async sendConfirmationEmail(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.query
+
+      return responseHandler(200, res, 'Sent Successfully', {}, req)
+    } catch (e) {
+      return errorHandler(e, res, req)
+    }
+  }
 }
 
 export { CampaignController }

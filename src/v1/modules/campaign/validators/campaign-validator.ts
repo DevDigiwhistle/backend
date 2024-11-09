@@ -33,6 +33,11 @@ const addCampaignSchema = {
         required: ['roleId', 'profileId', 'email', 'id'],
       },
     },
+    paymentTerms: {
+      type: 'string',
+      nullable: false,
+      enum: Object.values(Enum.PaymentTerms),
+    },
   },
   required: [
     'name',

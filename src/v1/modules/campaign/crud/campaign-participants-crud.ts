@@ -80,8 +80,13 @@ class CampaignParticipantsCRUD
         })
 
         return {
-          totalCampaign: data.length.toString(),
+          totalCampaign: data.length,
           totalRevenue: totalRevenue,
+          totalCommercialBrand: 0,
+          totalCommercialCreator: 0,
+          totalToBeGiven: 0,
+          totalMargin: 0,
+          totalIncentive: 0,
         }
       } else {
         const data = await this.repository.find({
@@ -102,8 +107,13 @@ class CampaignParticipantsCRUD
         })
 
         return {
-          totalCampaign: data.length.toString(),
+          totalCampaign: data.length,
           totalRevenue: totalRevenue,
+          totalCommercialBrand: 0,
+          totalCommercialCreator: 0,
+          totalToBeGiven: 0,
+          totalMargin: 0,
+          totalIncentive: 0,
         }
       }
     } catch (e) {
