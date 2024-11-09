@@ -18,4 +18,28 @@ const contactUsFormSchema = {
   additionalProperties: false,
 }
 
-export { contactUsFormSchema }
+const contactUsConfigSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      followersCount: { type: 'string', nullable: true },
+      employees: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            email: { type: 'string', nullable: false },
+            id: { type: 'string', nullable: false },
+          },
+          required: ['email', 'id'],
+          additionalProperties: false,
+        },
+      },
+    },
+    required: ['followersCount', 'employees'],
+    additionalProperties: false,
+  },
+}
+
+export { contactUsFormSchema, contactUsConfigSchema }

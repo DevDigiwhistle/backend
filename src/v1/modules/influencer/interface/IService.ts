@@ -25,6 +25,7 @@ import {
   ITwitterProfileStats,
   IYoutubeProfileStats,
 } from './IModels'
+import { Enum } from '../../../../constants'
 
 export interface IInfluencerProfileService
   extends IBaseService<IInfluencerProfile, IInfluencerProfileCRUD> {
@@ -74,6 +75,11 @@ export interface IInfluencerService {
     platform: string
   ): Promise<PaginatedResponse<IInfluencerProfile>>
   getInfluencersList(): Promise<IInfluencerProfile[]>
+  exploreInfluencer(
+    url: string,
+    role: Enum.ROLES,
+    agencyId?: string
+  ): Promise<InstagramProfileStats | TwitterProfileStats | YoutubeProfileStats>
 }
 
 export interface IInstagramService {

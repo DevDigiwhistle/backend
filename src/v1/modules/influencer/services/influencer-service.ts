@@ -15,16 +15,23 @@ import {
   IInfluencerService,
   IInfluencerCRUD,
   IInfluencerProfile,
-  IInfluencerProfileCRUD,
   IInfluencerProfileService,
   IInfluencerStatsService,
+  IInstagramService,
+  IYoutubeService,
+  ITwitterService,
 } from '../interface'
 import {
   IAddInfluencerInput,
   IInviteInfluencerInput,
   InfluencerStats,
+  InstagramProfileStats,
+  TwitterProfileStats,
+  YoutubeProfileStats,
 } from '../types'
 import { PaginatedResponse } from '../../../../utils/base-service'
+import { Enum } from '../../../../constants'
+import { ISearchCreditsService } from '../../agency/interface'
 
 class InfluencerService implements IInfluencerService {
   private readonly mailerService: IMailerService
@@ -32,6 +39,10 @@ class InfluencerService implements IInfluencerService {
   private readonly influencerCRUD: IInfluencerCRUD
   private readonly influencerProfileService: IInfluencerProfileService
   private readonly influencerStatsService: IInfluencerStatsService
+  private readonly instagramService: IInstagramService
+  private readonly youtubeService: IYoutubeService
+  private readonly twitterService: ITwitterService
+  private readonly searchCreditsService: ISearchCreditsService
   private static instance: IInfluencerService | null = null
 
   static getInstance = (
@@ -39,7 +50,11 @@ class InfluencerService implements IInfluencerService {
     googleAuthService: IGoogleAuthService,
     influencerCRUD: IInfluencerCRUD,
     influencerProfileService: IInfluencerProfileService,
-    influencerStatsService: IInfluencerStatsService
+    influencerStatsService: IInfluencerStatsService,
+    instagramService: IInstagramService,
+    youtubeService: IYoutubeService,
+    twitterService: ITwitterService,
+    searchCreditsService: ISearchCreditsService
   ) => {
     if (InfluencerService.instance === null) {
       InfluencerService.instance = new InfluencerService(
@@ -47,7 +62,11 @@ class InfluencerService implements IInfluencerService {
         googleAuthService,
         influencerCRUD,
         influencerProfileService,
-        influencerStatsService
+        influencerStatsService,
+        instagramService,
+        youtubeService,
+        twitterService,
+        searchCreditsService
       )
     }
     return InfluencerService.instance
@@ -58,13 +77,21 @@ class InfluencerService implements IInfluencerService {
     googleAuthService: IGoogleAuthService,
     influencerCRUD: IInfluencerCRUD,
     influencerProfileService: IInfluencerProfileService,
-    influencerStatsService: IInfluencerStatsService
+    influencerStatsService: IInfluencerStatsService,
+    instagramService: IInstagramService,
+    youtubeService: IYoutubeService,
+    twitterService: ITwitterService,
+    searchCreditsService: ISearchCreditsService
   ) {
     this.mailerService = mailerService
     this.googleAuthService = googleAuthService
     this.influencerCRUD = influencerCRUD
     this.influencerProfileService = influencerProfileService
     this.influencerStatsService = influencerStatsService
+    this.instagramService = instagramService
+    this.youtubeService = youtubeService
+    this.twitterService = twitterService
+    this.searchCreditsService = searchCreditsService
   }
 
   async addInfluencer(data: IAddInfluencerInput): Promise<IInfluencerProfile> {
@@ -483,6 +510,62 @@ class InfluencerService implements IInfluencerService {
       )
 
       return data.data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async exploreInfluencer(
+    url: string,
+    role: Enum.ROLES,
+    agencyId?: string
+  ): Promise<
+    InstagramProfileStats | TwitterProfileStats | YoutubeProfileStats
+  > {
+    try {
+      if (role === Enum.ROLES.AGENCY && agencyId !== undefined) {
+        const credits = await this.searchCreditsService.findOne({
+          agency: {
+            id: agencyId,
+          },
+        })
+
+        if (!credits) {
+          throw new HttpException(400, 'Insufficient credits')
+        }
+
+        if (credits.credits < 1) {
+          throw new HttpException(400, 'Insufficient credits')
+        }
+
+        await this.searchCreditsService.update(
+          {
+            agency: {
+              id: agencyId,
+            },
+          },
+          {
+            credits: credits.credits - 1,
+            lastUpdatedAt: new Date(),
+          }
+        )
+      }
+
+      if (url.includes('instagram')) {
+        const data = await this.instagramService.getInstagramProfileStats(url)
+
+        return data
+      } else if (url.includes('x.com')) {
+        const data = await this.twitterService.getTwitterProfileStats(url)
+
+        return data
+      } else if (url.includes('youtube')) {
+        const data = await this.youtubeService.getYoutubeProfileStats(url)
+
+        return data
+      } else {
+        throw new HttpException(400, 'Invalid URL')
+      }
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

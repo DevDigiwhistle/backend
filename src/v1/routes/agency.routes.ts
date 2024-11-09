@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { agencyProfileService } from '../modules/brands'
+import { agencyProfileService } from '../modules/agency'
 import { AgencyProfileController } from '../controller'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
@@ -7,7 +7,7 @@ import { BaseValidator } from '../../utils'
 import {
   addAgencyProfileSchema,
   updateAgencyProfileSchema,
-} from '../modules/brands/validators'
+} from '../modules/agency/validators'
 import { userService } from '../modules/user'
 
 const agencyRouter = Router()

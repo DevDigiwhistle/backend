@@ -48,6 +48,10 @@ class InfluencerCRUD implements IInfluencerCRUD {
         user: {
           id: data.userId,
         },
+        location: data.location,
+        instagramCommercial: data.instagramCommercial,
+        twitterCommercial: data.twitterCommercial,
+        youtubeCommercial: data.youtubeCommercial,
       })
 
       await queryRunner.commitTransaction()

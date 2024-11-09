@@ -24,6 +24,7 @@ import {
 } from './services'
 import { AxiosService, MailerService } from '../../utils'
 import { googleAuthService } from '../auth'
+import { searchCreditsService } from '../agency'
 
 const influencerProfileService = InfluencerProfileService.getInstance(
   InfluencerProfileCRUD.getInstance(InfluencerProfile)
@@ -44,16 +45,6 @@ const influencerStatsService = InfluencerStatsService.getInstance(
   )
 )
 
-const influencerService = InfluencerService.getInstance(
-  MailerService.getInstance(),
-  googleAuthService,
-  InfluencerCRUD.getInstance(),
-  InfluencerProfileService.getInstance(
-    InfluencerProfileCRUD.getInstance(InfluencerProfile)
-  ),
-  influencerStatsService
-)
-
 const instagramService = InstagramService.getInstance(
   AxiosService.getInstance()
 )
@@ -61,6 +52,20 @@ const instagramService = InstagramService.getInstance(
 const youtubeService = YoutubeService.getInstance(AxiosService.getInstance())
 
 const twitterService = TwitterService.getInstance(AxiosService.getInstance())
+
+const influencerService = InfluencerService.getInstance(
+  MailerService.getInstance(),
+  googleAuthService,
+  InfluencerCRUD.getInstance(),
+  InfluencerProfileService.getInstance(
+    InfluencerProfileCRUD.getInstance(InfluencerProfile)
+  ),
+  influencerStatsService,
+  instagramService,
+  youtubeService,
+  twitterService,
+  searchCreditsService
+)
 
 export {
   influencerProfileService,

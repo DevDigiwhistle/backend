@@ -17,17 +17,12 @@ import {
   CampaignStats,
   InfluencerFilters,
 } from '../types'
-import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm'
-import { IPayrollService } from '../../payroll/interface'
 import { AppDataSource } from '../../../../config'
 import { Campaign } from '../models'
 import { Payroll } from '../../payroll/models'
 import {
-  IInstagramProfileStatsService,
   IInstagramService,
-  ITwitterProfileStatsService,
   ITwitterService,
-  IYoutubeProfileStatsService,
   IYoutubeService,
 } from '../../influencer/interface'
 import { checkSocialMediaLink } from '../../../utils/post-pattern'
@@ -504,7 +499,10 @@ class CampaignService
 
   async releaseIncentive(id: string): Promise<void> {
     try {
-      const campaign = await this.findOne({ id: id }, ['incentiveWinner'])
+      const campaign = await this.findOne({ id: id }, [
+        'incentiveWinner',
+        'participants',
+      ])
 
       if (campaign === null) throw new HttpException(404, 'Campaign not found')
 
@@ -513,6 +511,10 @@ class CampaignService
 
       if (campaign.incentiveWinner === null)
         throw new HttpException(400, 'Incentive Winner not found')
+
+      const margin = campaign.participants.reduce((acc, curr) => {
+        return acc + (curr.margin === null ? 0 : curr.margin)
+      }, 0)
 
       await AppDataSource.manager.transaction(async (manager) => {
         await manager.update(
@@ -529,7 +531,7 @@ class CampaignService
             },
           },
           'incentive',
-          0.05 * campaign.commercial
+          0.05 * margin
         )
       })
     } catch (e) {

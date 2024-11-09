@@ -45,6 +45,8 @@ export class InfluencerDTO {
         profileUrl: data.youtubeURL,
         requestDate: data.createdAt,
         isApproved: data.user.isApproved,
+        commercial: data.youtubeCommercial,
+        location: data.location,
       }
     } else if (platform === Enum.Platform.INSTAGRAM) {
       return {
@@ -72,6 +74,8 @@ export class InfluencerDTO {
         profileUrl: data.instagramURL,
         requestDate: data.createdAt,
         isApproved: data.user.isApproved,
+        location: data.location,
+        commercial: data.instagramCommercial,
       }
     } else if (platform === Enum.Platform.X) {
       return {
@@ -94,6 +98,8 @@ export class InfluencerDTO {
         profileUrl: data.twitterURL,
         requestDate: data.createdAt,
         isApproved: data.user.isApproved,
+        commercial: data.twitterCommercial,
+        location: data.location,
       }
     }
   }
@@ -191,7 +197,7 @@ export class InfluencerDTO {
           label: 'Average Likes',
           value: data.likes,
           subValue: '',
-          iconName: 'EyeIcon',
+          iconName: 'HandThumbUpIcon',
         },
       ],
       name: data.name,

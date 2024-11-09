@@ -10,13 +10,13 @@ import {
 import { Enum } from '../../../../constants'
 import { EmployeeProfile } from '../../admin/models'
 import { InfluencerProfile } from '../../influencer/models'
-import { AgencyProfile, BrandProfile } from '../../brands/models'
+import { BrandProfile } from '../../brands/models'
 import {
   ICampaign,
   ICampaignDeliverables,
   ICampaignParticipants,
 } from '../interface'
-import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { IBrandProfile } from '../../brands/interface'
 import {
   ProformaInvoice,
   PurchaseInvoice,
@@ -27,6 +27,8 @@ import {
   IPurchaseInvoice,
   ISaleInvoice,
 } from '../../invoice/interface'
+import { AgencyProfile } from '../../agency/models'
+import { IAgencyProfile } from '../../agency/interface'
 
 @Entity()
 export class Campaign implements ICampaign {

@@ -3,9 +3,6 @@ import {
   influencerProfileService,
   influencerService,
   influencerStatsService,
-  instagramService,
-  twitterService,
-  youtubeService,
 } from '../modules/influencer'
 import { InfluencerProfileController } from '../controller/influencer-profile-controller'
 import { authorizeUser, verifyToken } from '../middleware'
@@ -31,10 +28,7 @@ const influencerProfileController = new InfluencerProfileController(
 const influencerController = new InfluencerController(
   influencerService,
   influencerStatsService,
-  userService,
-  instagramService,
-  youtubeService,
-  twitterService
+  userService
 )
 
 const addInfluencerProfileValidator = new BaseValidator(

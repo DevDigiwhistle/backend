@@ -5,6 +5,15 @@ import { Router } from 'express'
 import { contactUsFormSchema } from '../modules/landing/validators'
 import { authorizeUser, verifyToken } from '../middleware'
 import { Enum } from '../../constants'
+import { ContactUsConfigController } from '../controller/contactus-config-controller'
+import { contactUsConfigService } from '../modules/landing'
+import { contactUsConfigSchema } from '../modules/landing/validators'
+
+const contactUsConfigController = new ContactUsConfigController(
+  contactUsConfigService
+)
+
+const contactUsConfigValidator = new BaseValidator(contactUsConfigSchema)
 
 const contactUsController = new ContactUsController(contactUsFormService)
 const contactUsValidator = new BaseValidator(contactUsFormSchema)
@@ -36,6 +45,21 @@ contactUsRouter.delete(
   verifyToken,
   authorizeUser([Enum.ROLES.ADMIN, Enum.ROLES.EMPLOYEE]),
   contactUsController.deleteController.bind(contactUsController)
+)
+
+contactUsRouter.put(
+  '/config',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN]),
+  contactUsConfigValidator.validateInput.bind(contactUsConfigValidator),
+  contactUsConfigController.updateController.bind(contactUsConfigController)
+)
+
+contactUsRouter.get(
+  '/config',
+  verifyToken,
+  authorizeUser([Enum.ROLES.ADMIN]),
+  contactUsConfigController.getAllController.bind(contactUsConfigController)
 )
 
 export default contactUsRouter

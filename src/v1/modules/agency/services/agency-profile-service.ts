@@ -1,4 +1,4 @@
-import { FindOptionsWhere, ILike } from 'typeorm'
+import { DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
 import { BaseService, HttpException } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import {
@@ -6,6 +6,8 @@ import {
   IAgencyProfileCRUD,
   IAgencyProfileService,
 } from '../interface'
+import { AppDataSource } from '../../../../config'
+import { AgencyProfile, SearchCredits } from '../models'
 
 class AgencyProfileService
   extends BaseService<IAgencyProfile, IAgencyProfileCRUD>
@@ -25,6 +27,29 @@ class AgencyProfileService
 
   private constructor(agencyProfileCRUD: IAgencyProfileCRUD) {
     super(agencyProfileCRUD)
+  }
+
+  async add(data: DeepPartial<IAgencyProfile>): Promise<IAgencyProfile> {
+    try {
+      let resp: IAgencyProfile | null = null
+
+      AppDataSource.manager.transaction(async (manager) => {
+        resp = await manager.save(AgencyProfile, data)
+
+        await manager.save(SearchCredits, {
+          agency: {
+            id: resp.id,
+          },
+        })
+      })
+
+      if (resp === null)
+        throw new HttpException(500, 'Unable to process request')
+
+      return resp
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   async getAllAgencies(

@@ -35,6 +35,10 @@ export interface IInfluencerProfile extends ObjectLiteral {
   state: string
   pincode: string
   fundAccountId: string | null
+  location: string
+  instagramCommercial: number
+  twitterCommercial: number
+  youtubeCommercial: number
   createdAt?: Date
   updatedAt?: Date
 }

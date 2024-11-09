@@ -1,6 +1,4 @@
-import { FindOptionsWhere, ILike, Like } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
-import { IBaseController } from '../../utils/base-controller'
 import { responseHandler } from '../../utils/response-handler'
 import { IExtendedRequest } from '../interface'
 import { IUserService } from '../modules/user/interface'
@@ -8,7 +6,7 @@ import {
   IAgencyProfile,
   IAgencyProfileCRUD,
   IAgencyProfileService,
-} from '../modules/brands/interface'
+} from '../modules/agency/interface'
 import { Response, Request } from 'express'
 
 export class AgencyProfileController extends BaseController<

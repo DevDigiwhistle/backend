@@ -1,13 +1,10 @@
-import { FindOptionsWhere, ILike } from 'typeorm'
 import { BaseController, errorHandler, HttpException } from '../../utils'
-import { IBaseController } from '../../utils/base-controller'
 import {
   IContactUsForm,
   IContactUsFormCRUD,
   IContactUsService,
 } from '../modules/landing/interface'
 import { Request, Response } from 'express'
-import { Enum } from '../../constants'
 import { responseHandler } from '../../utils/response-handler'
 
 export class ContactUsController extends BaseController<

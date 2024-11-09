@@ -3,37 +3,30 @@ import { responseHandler } from '../../utils/response-handler'
 import {
   IInfluencerService,
   IInfluencerStatsService,
-  IInstagramService,
-  ITwitterService,
-  IYoutubeService,
 } from '../modules/influencer/interface'
 import { Request, Response } from 'express'
 import { IUserService } from '../modules/user/interface'
 import { InfluencerDTO } from '../dtos'
 import { Enum } from '../../constants'
+import { IExtendedRequest } from '../interface'
+import {
+  InstagramProfileStats,
+  TwitterProfileStats,
+  YoutubeProfileStats,
+} from '../modules/influencer/types'
 
 class InfluencerController {
   private readonly influencerService: IInfluencerService
   private readonly influencerStatsService: IInfluencerStatsService
   private readonly userService: IUserService
-  private readonly instagramService: IInstagramService
-  private readonly youtubeService: IYoutubeService
-  private readonly twitterService: ITwitterService
-
   constructor(
     influencerService: IInfluencerService,
     influencerStatsService: IInfluencerStatsService,
-    userService: IUserService,
-    instagramService: IInstagramService,
-    youtubeService: IYoutubeService,
-    twitterService: ITwitterService
+    userService: IUserService
   ) {
     this.influencerService = influencerService
     this.influencerStatsService = influencerStatsService
     this.userService = userService
-    this.instagramService = instagramService
-    this.youtubeService = youtubeService
-    this.twitterService = twitterService
   }
 
   async addInfluencerController(
@@ -210,7 +203,7 @@ class InfluencerController {
   }
 
   async exploreInfluencerController(
-    req: Request,
+    req: IExtendedRequest,
     res: Response
   ): Promise<Response> {
     try {
@@ -218,29 +211,45 @@ class InfluencerController {
 
       if (typeof url !== 'string') throw new HttpException(400, 'Invalid URL')
 
-      if (url.includes('instagram')) {
-        const data = await this.instagramService.getInstagramProfileStats(url)
+      let agencyId: string | undefined = undefined
 
+      if (req.user.role.id === Enum.ROLES.AGENCY) {
+        const agencyProfile = await this.userService.findOne(
+          {
+            id: req.user.id,
+          },
+          ['agencyProfile']
+        )
+
+        if (agencyProfile === null || agencyProfile.agencyProfile === null)
+          throw new HttpException(400, 'Agency Profile Not Found')
+
+        agencyId = agencyProfile.agencyProfile.id
+      }
+
+      const data = await this.influencerService.exploreInfluencer(
+        url,
+        req.user.role.id,
+        agencyId
+      )
+
+      if (url.includes('instagram')) {
         const _data = InfluencerDTO.transformationForExploreInstagramProfile(
-          data,
+          data as InstagramProfileStats,
           url
         )
 
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('x.com')) {
-        const data = await this.twitterService.getTwitterProfileStats(url)
-
         const _data = InfluencerDTO.transformationForExploreTwitterProfile(
-          data,
+          data as TwitterProfileStats,
           url
         )
 
         return responseHandler(200, res, 'Fetched Successfully', _data, req)
       } else if (url.includes('youtube')) {
-        const data = await this.youtubeService.getYoutubeProfileStats(url)
-
         const _data = InfluencerDTO.transformationForExploreYoutubeProfile(
-          data,
+          data as YoutubeProfileStats,
           url
         )
 

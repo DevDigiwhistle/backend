@@ -7,6 +7,10 @@ export interface IAddInfluencerInput {
   youtubeURL?: string
   instagramURL?: string
   linkedInURL?: string
+  location: string
+  instagramCommercial: number
+  twitterCommercial: number
+  youtubeCommercial: number
 }
 
 export interface IAddInfluencer extends IAddInfluencerInput {

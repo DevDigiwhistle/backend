@@ -17,6 +17,8 @@ import { Campaign } from '../../campaign/models'
 import { ICampaign } from '../../campaign/interface'
 import { Payroll, PayrollHistory } from '../../payroll/models'
 import { IPayroll, IPayrollHistory } from '../../payroll/interface'
+import { ContactUsConfig } from '../../landing/models'
+import { IContactUsConfig } from '../../landing/interface'
 
 @Entity()
 export class AdminProfile implements IAdminProfile {
@@ -111,6 +113,12 @@ export class EmployeeProfile implements IEmployeeProfile {
     { cascade: true }
   )
   payrollHistory: IPayrollHistory[]
+
+  @OneToMany(
+    () => ContactUsConfig,
+    (contactUsConfig) => contactUsConfig.employee
+  )
+  contactUsConfig: IContactUsConfig[]
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

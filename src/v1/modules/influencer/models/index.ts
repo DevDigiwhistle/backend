@@ -140,6 +140,18 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', default: null, nullable: true })
   fundAccountId: string | null
 
+  @Column({ type: 'varchar', default: null })
+  location: string
+
+  @Column({ type: 'decimal', default: 0 })
+  instagramCommercial: number
+
+  @Column({ type: 'decimal', default: 0 })
+  twitterCommercial: number
+
+  @Column({ type: 'decimal', default: 0 })
+  youtubeCommercial: number
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 

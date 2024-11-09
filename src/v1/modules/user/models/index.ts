@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { IRole, IUser } from '../interface'
-import { AgencyProfile, BrandProfile } from '../../brands/models'
-import { IAgencyProfile, IBrandProfile } from '../../brands/interface'
+import { BrandProfile } from '../../brands/models'
+import { IBrandProfile } from '../../brands/interface'
 import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
 import { AdminProfile, EmployeeProfile, Remarks } from '../../admin/models'
@@ -18,6 +18,8 @@ import {
   IEmployeeProfile,
   IRemarks,
 } from '../../admin/interface'
+import { AgencyProfile } from '../../agency/models'
+import { IAgencyProfile } from '../../agency/interface'
 
 @Entity()
 export class Role extends BaseEntity implements IRole {

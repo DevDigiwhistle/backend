@@ -13,8 +13,8 @@ import { Campaign } from '../../campaign/models'
 import { Enum } from '../../../../constants'
 import { InfluencerProfile } from '../../influencer/models'
 import { IInfluencerProfile } from '../../influencer/interface'
-import { AgencyProfile } from '../../brands/models'
-import { IAgencyProfile } from '../../brands/interface'
+import { AgencyProfile } from '../../agency/models'
+import { IAgencyProfile } from '../../agency/interface'
 import { ICreditNote, IProformaInvoice } from '../interface/IModels'
 
 @Entity()

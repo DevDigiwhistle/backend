@@ -1,3 +1,3 @@
 import { ContactUsFormService } from './contactus-service'
-
-export { ContactUsFormService }
+import { ContactUsConfigService } from './contactus-config-service'
+export { ContactUsFormService, ContactUsConfigService }
