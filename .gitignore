@@ -26,3 +26,4 @@ dist-ssr
 *.sw?
 temp.json
 reports
+test.js
