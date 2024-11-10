@@ -19,6 +19,7 @@ export interface ISaleInvoice {
   balanceAmount: number
   month: string
   paymentStatus: Enum.InvoiceStatus
+  creditNotes: ICreditNote[]
   createdAt?: Date
   updatedAt?: Date
 }

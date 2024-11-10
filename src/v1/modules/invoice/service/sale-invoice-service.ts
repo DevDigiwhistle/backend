@@ -1,4 +1,4 @@
-import { Between, FindOptionsWhere, ILike } from 'typeorm'
+import { Between, DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
 import {
   AppLogger,
   BaseService,
@@ -44,6 +44,21 @@ export class SaleInvoiceService
   ) {
     super(saleInvoiceCRUD)
     this.mailerService = mailerService
+  }
+
+  async add(data: DeepPartial<ISaleInvoice>): Promise<ISaleInvoice> {
+    try {
+      const invoice = await this.findOne({ invoiceNo: data.invoiceNo })
+      if (invoice) {
+        throw new HttpException(
+          400,
+          'Invoice Already Exists with this invoiceNo'
+        )
+      }
+      return await this.crudBase.add(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   private async generateInvoicePdf(invoiceId: string): Promise<{
@@ -146,6 +161,7 @@ export class SaleInvoiceService
           'campaign.brand',
           'campaign.participants.influencerProfile',
           'campaign.participants.agencyProfile',
+          'creditNotes',
         ],
         {
           invoiceDate: 'DESC',

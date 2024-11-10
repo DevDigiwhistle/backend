@@ -1,3 +1,4 @@
+import moment from 'moment-timezone'
 import { Enum } from '../../constants'
 import {
   ICampaignDeliverables,
@@ -47,6 +48,21 @@ export class SaleInvoiceDTO {
 
     return _data
   }
+
+  static generateInvoiceDueDate(
+    paymentTerms: Enum.PaymentTerms,
+    invoiceDate: Date
+  ) {
+    switch (paymentTerms) {
+      case Enum.PaymentTerms.DAYS_0:
+        return moment(invoiceDate).add(0, 'days')
+      case Enum.PaymentTerms.DAYS_30:
+        return moment(invoiceDate).add(30, 'days')
+      case Enum.PaymentTerms.DAYS_60:
+        return moment(invoiceDate).add(60, 'days')
+    }
+  }
+
   static transformationForSaleInvoice(saleInvoice: ISaleInvoice) {
     const participants = saleInvoice.campaign.participants
     const _deliverables: Array<{
@@ -106,6 +122,11 @@ export class SaleInvoiceDTO {
       igst: saleInvoice.igst,
       total: saleInvoice.total,
       deliverables: _deliverables,
+      creditNoteGenerated: saleInvoice.creditNotes.length > 0,
+      isLapse: this.generateInvoiceDueDate(
+        saleInvoice.campaign.paymentTerms,
+        saleInvoice.invoiceDate
+      ).isBefore(new Date()),
     }
   }
 }

@@ -114,6 +114,8 @@ export class PurchaseInvoiceService
 
       const participant = await this.campaignParticipantService.findOne(query, [
         'deliverables',
+        'influencerProfile',
+        'agencyProfile',
       ])
 
       if (participant === null)
@@ -121,6 +123,26 @@ export class PurchaseInvoiceService
           400,
           'Not Part of this campaign, cannot process the invoice'
         )
+
+      if (
+        participant.influencerProfile !== null &&
+        (participant.influencerProfile.bankAccountHolderName === null ||
+          participant.influencerProfile.bankAccountNumber === null ||
+          participant.influencerProfile.bankIfscCode === null ||
+          participant.influencerProfile.panNo === null)
+      ) {
+        throw new HttpException(400, 'Bank details not provided')
+      }
+
+      if (
+        participant.agencyProfile !== null &&
+        (participant.agencyProfile.bankAccountHolderName === null ||
+          participant.agencyProfile.bankAccountNumber === null ||
+          participant.agencyProfile.bankIfscCode === null ||
+          participant.agencyProfile.panNo === null)
+      ) {
+        throw new HttpException(400, 'Bank details not provided')
+      }
 
       // keep it for future client may ask for it
 

@@ -1,6 +1,22 @@
+import moment from 'moment'
+import { Enum } from '../../constants'
 import { IPurchaseInvoice } from '../modules/invoice/interface'
 
 export class PurchaseInvoiceDTO {
+  static generateInvoiceDueDate(
+    paymentTerms: Enum.PaymentTerms,
+    invoiceDate: Date
+  ) {
+    switch (paymentTerms) {
+      case Enum.PaymentTerms.DAYS_0:
+        return moment(invoiceDate).add(0, 'days')
+      case Enum.PaymentTerms.DAYS_30:
+        return moment(invoiceDate).add(30, 'days')
+      case Enum.PaymentTerms.DAYS_60:
+        return moment(invoiceDate).add(60, 'days')
+    }
+  }
+
   static transformationForInfluencerAndAgency(data: IPurchaseInvoice) {
     return {
       id: data.id,
@@ -27,6 +43,10 @@ export class PurchaseInvoiceDTO {
           ? data.agencyProfile?.panNo
           : data.influencerProfile?.panNo,
       file: data.file,
+      isDueDateMissed: this.generateInvoiceDueDate(
+        data.paymentTerms,
+        data.invoiceDate
+      ).isBefore(new Date()),
     }
   }
 
@@ -66,6 +86,10 @@ export class PurchaseInvoiceDTO {
           ? data.agencyProfile?.panNo
           : data.influencerProfile?.panNo,
       file: data.file,
+      isDueDateMissed: this.generateInvoiceDueDate(
+        data.paymentTerms,
+        data.invoiceDate
+      ).isBefore(new Date()),
     }
   }
 }

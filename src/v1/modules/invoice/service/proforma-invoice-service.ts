@@ -13,7 +13,7 @@ import {
 import { ShareInvoiceRequest } from '../types'
 import { IMailerService } from '../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
-import { Between, FindOptionsWhere, ILike } from 'typeorm'
+import { Between, DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
 import { generateProformaInvoicePdf } from '../../../pdf/proforma-invoice-pdf'
 import numWords from 'num-words'
 import fs from 'fs'
@@ -44,6 +44,21 @@ class ProformaInvoiceService
   ) {
     super(proformaInvoiceCRUD)
     this.mailerService = mailerService
+  }
+
+  async add(data: DeepPartial<IProformaInvoice>): Promise<IProformaInvoice> {
+    try {
+      const invoice = await this.findOne({ invoiceNo: data.invoiceNo })
+      if (invoice) {
+        throw new HttpException(
+          400,
+          'Invoice Already Exists with this invoiceNo'
+        )
+      }
+      return await this.crudBase.add(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   private async generatePdf(invoiceId: string): Promise<{

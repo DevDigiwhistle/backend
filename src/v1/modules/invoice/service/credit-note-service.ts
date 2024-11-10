@@ -9,6 +9,7 @@ import { generateCreditNotePdf } from '../../../pdf/credit-note-pdf'
 import { ICreditNote, ICreditNoteCRUD, ICreditNoteService } from '../interface'
 import fs from 'fs'
 import { firebase } from '../../../../config'
+import { DeepPartial } from 'typeorm'
 
 class CreditNoteService extends BaseService<ICreditNote, ICreditNoteCRUD> {
   private static instance: ICreditNoteService | null = null
@@ -22,6 +23,27 @@ class CreditNoteService extends BaseService<ICreditNote, ICreditNoteCRUD> {
 
   private constructor(creditNoteCRUD: ICreditNoteCRUD) {
     super(creditNoteCRUD)
+  }
+
+  async add(data: DeepPartial<ICreditNote>): Promise<ICreditNote> {
+    try {
+      const creditNote = await this.findOne({
+        invoice: {
+          id: data.invoice as string,
+        },
+      })
+
+      if (creditNote) {
+        throw new HttpException(
+          400,
+          'Credit Note Already Exists with this invoiceNo'
+        )
+      }
+
+      return await this.crudBase.add(data)
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
   }
 
   private async generatePdf(invoiceId: string): Promise<{

@@ -24,6 +24,7 @@ export interface ICampaign {
   saleInvoices?: ISaleInvoice[]
   purchaseInvoices?: IPurchaseInvoice[]
   incentiveReleased: boolean
+  paymentTerms: Enum.PaymentTerms
   cpv: number | null
   createdAt: Date
   updatedAt: Date
@@ -44,7 +45,6 @@ export interface ICampaignParticipants {
   margin: number | null
   deliverables: ICampaignDeliverables[]
   confirmationSent: boolean
-  paymentTerms: Enum.PaymentTerms
   createdAt: Date
   updatedAt: Date
 }

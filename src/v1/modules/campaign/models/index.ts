@@ -124,6 +124,9 @@ export class Campaign implements ICampaign {
   @Column({ type: 'boolean', default: false })
   incentiveReleased: boolean
 
+  @Column({ type: 'enum', enum: Enum.PaymentTerms, default: null })
+  paymentTerms: Enum.PaymentTerms
+
   @CreateDateColumn()
   createdAt: Date
 
@@ -198,9 +201,6 @@ export class CampaignParticipants implements ICampaignParticipants {
 
   @Column({ type: 'boolean', default: false })
   confirmationSent: boolean
-
-  @Column({ type: 'enum', enum: Enum.PaymentTerms, default: null })
-  paymentTerms: Enum.PaymentTerms
 
   @CreateDateColumn()
   createdAt: Date
