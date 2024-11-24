@@ -235,25 +235,43 @@ class InfluencerController {
 
       if (url.includes('instagram')) {
         const _data = InfluencerDTO.transformationForExploreInstagramProfile(
-          data as InstagramProfileStats,
+          data.stats as InstagramProfileStats,
           url
         )
 
-        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          { ..._data, isDigiwhistle: data.isDigiwhistle },
+          req
+        )
       } else if (url.includes('x.com')) {
         const _data = InfluencerDTO.transformationForExploreTwitterProfile(
-          data as TwitterProfileStats,
+          data.stats as TwitterProfileStats,
           url
         )
 
-        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          { ..._data, isDigiwhistle: data.isDigiwhistle },
+          req
+        )
       } else if (url.includes('youtube')) {
         const _data = InfluencerDTO.transformationForExploreYoutubeProfile(
-          data as YoutubeProfileStats,
+          data.stats as YoutubeProfileStats,
           url
         )
 
-        return responseHandler(200, res, 'Fetched Successfully', _data, req)
+        return responseHandler(
+          200,
+          res,
+          'Fetched Successfully',
+          { ..._data, isDigiwhistle: data.isDigiwhistle },
+          req
+        )
       } else throw new HttpException(400, 'Invalid Url')
     } catch (e) {
       return errorHandler(e, res, req)

@@ -12,6 +12,7 @@ import {
   YoutubeProfileStats,
   TwitterProfileStats,
   InstagramProfileStats,
+  LinkedInProfileStats,
 } from '../v1/modules/influencer/models'
 import { User, Role } from '../v1/modules/user/models'
 import {
@@ -61,6 +62,7 @@ export const AppDataSource = new DataSource({
     CreditNote,
     SearchCredits,
     ContactUsConfig,
+    LinkedInProfileStats,
   ],
   ssl: { rejectUnauthorized: false },
 })

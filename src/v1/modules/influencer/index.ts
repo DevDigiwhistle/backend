@@ -1,6 +1,7 @@
 import {
   InfluencerProfile,
   InstagramProfileStats,
+  LinkedInProfileStats,
   TwitterProfileStats,
   YoutubeProfileStats,
 } from './models'
@@ -10,6 +11,7 @@ import {
   InstagramProfileStatsCRUD,
   YoutubeProfileStatsCRUD,
   TwitterProfileStatsCRUD,
+  LinkedInProfileStatsCRUD,
 } from './crud'
 import {
   InfluencerProfileService,
@@ -25,6 +27,8 @@ import {
 import { AxiosService, MailerService } from '../../utils'
 import { googleAuthService } from '../auth'
 import { searchCreditsService } from '../agency'
+import { LinkedInProfileStatsService } from './services/linkedIn-profile-service'
+import { LinkedInService } from './services/linkedIn-service'
 
 const influencerProfileService = InfluencerProfileService.getInstance(
   InfluencerProfileCRUD.getInstance(InfluencerProfile)
@@ -34,6 +38,7 @@ const influencerStatsService = InfluencerStatsService.getInstance(
   InstagramService.getInstance(AxiosService.getInstance()),
   YoutubeService.getInstance(AxiosService.getInstance()),
   TwitterService.getInstance(AxiosService.getInstance()),
+  LinkedInService.getInstance(AxiosService.getInstance()),
   InstagramProfileStatsService.getInstance(
     InstagramProfileStatsCRUD.getInstance(InstagramProfileStats)
   ),
@@ -42,6 +47,9 @@ const influencerStatsService = InfluencerStatsService.getInstance(
   ),
   TwitterProfileStatsService.getInstance(
     TwitterProfileStatsCRUD.getInstance(TwitterProfileStats)
+  ),
+  LinkedInProfileStatsService.getInstance(
+    LinkedInProfileStatsCRUD.getInstance(LinkedInProfileStats)
   )
 )
 

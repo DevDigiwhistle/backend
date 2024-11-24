@@ -20,6 +20,7 @@ export interface IInfluencerProfile extends ObjectLiteral {
   youtubeStats?: IYoutubeProfileStats | null
   instagramStats?: IInstagramProfileStats | null
   twitterStats?: ITwitterProfileStats | null
+  linkedInStats?: ILinkedInProfileStats | null
   purchaseInvoices?: IPurchaseInvoice[] | null
   mobileNo: string
   aadharNo: string
@@ -39,6 +40,8 @@ export interface IInfluencerProfile extends ObjectLiteral {
   instagramCommercial: number
   twitterCommercial: number
   youtubeCommercial: number
+  linkedInCommercial: number
+  rating: number
   createdAt?: Date
   updatedAt?: Date
 }
@@ -53,6 +56,12 @@ export interface IInstagramProfileStats extends ObjectLiteral {
   views: number
   profilePic: string | null
   handleName: string | null
+  description: string | null
+  countries: string | null
+  genders: string | null
+  ages: string | null
+  cities: string | null
+  reach: string | null
   influencerProfile: IInfluencerProfile
   createdAt?: Date
   updatedAt?: Date
@@ -65,6 +74,7 @@ export interface IYoutubeProfileStats extends ObjectLiteral {
   subscribers: number
   profilePic: string | null
   handleName: string | null
+  description: string | null
   influencerProfile: IInfluencerProfile
   createdAt?: Date
   updatedAt?: Date
@@ -79,7 +89,23 @@ export interface ITwitterProfileStats extends ObjectLiteral {
   retweets: number
   profilePic: string | null
   handleName: string | null
+  description: string | null
   influencerProfile: IInfluencerProfile
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface ILinkedInProfileStats extends ObjectLiteral {
+  id: string
+  handleName: string | null
+  about: string | null
+  followers: number
+  profilePic: string | null
+  influencerProfile: IInfluencerProfile
+  likes: number
+  comments: number
+  shares: number
+  reactions: number
   createdAt?: Date
   updatedAt?: Date
 }

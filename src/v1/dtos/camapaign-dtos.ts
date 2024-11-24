@@ -13,6 +13,7 @@ import {
   ICampaignInfluencerData,
 } from '../modules/campaign/types'
 import millify from 'millify'
+import moment from 'moment-timezone'
 
 export class CampaignDTO {
   private static groupDeliverableByInfluencerName(
@@ -162,6 +163,20 @@ export class CampaignDTO {
     return influencer
   }
 
+  static generateInvoiceDueDate(
+    paymentTerms: Enum.PaymentTerms,
+    invoiceDate: Date
+  ) {
+    switch (paymentTerms) {
+      case Enum.PaymentTerms.DAYS_0:
+        return moment(invoiceDate).add(0, 'days')
+      case Enum.PaymentTerms.DAYS_30:
+        return moment(invoiceDate).add(30, 'days')
+      case Enum.PaymentTerms.DAYS_60:
+        return moment(invoiceDate).add(60, 'days')
+    }
+  }
+
   static transformationForAdminAndEmployee(data: ICampaign) {
     return {
       id: data.id,
@@ -242,6 +257,18 @@ export class CampaignDTO {
       )
     })
 
+    const invoice = data.purchaseInvoices?.filter((invoice) => {
+      invoice.influencerProfile?.id === influencerProfileId
+    })
+
+    const invoiceDueDate =
+      invoice !== undefined && invoice.length > 0
+        ? this.generateInvoiceDueDate(
+            invoice[0].paymentTerms,
+            invoice[0].invoiceDate
+          )
+        : null
+
     return {
       campaignId: data.id,
       name: data.name,
@@ -260,6 +287,7 @@ export class CampaignDTO {
       invoiceStatus: influencerDetails[0].invoiceStatus,
       deliverable: influencerDetails[0].deliverables,
       participantId: influencerDetails[0].id,
+      invoiceDueDate: invoiceDueDate,
     }
   }
 

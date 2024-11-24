@@ -43,6 +43,15 @@ export class PurchaseInvoiceDTO {
           ? data.agencyProfile?.panNo
           : data.influencerProfile?.panNo,
       file: data.file,
+      dueDate: this.generateInvoiceDueDate(
+        data.paymentTerms,
+        data.invoiceDate
+      ).toDate(),
+      isDueDateNear:
+        moment().diff(
+          this.generateInvoiceDueDate(data.paymentTerms, data.invoiceDate),
+          'days'
+        ) <= 7,
       isDueDateMissed: this.generateInvoiceDueDate(
         data.paymentTerms,
         data.invoiceDate
@@ -86,6 +95,15 @@ export class PurchaseInvoiceDTO {
           ? data.agencyProfile?.panNo
           : data.influencerProfile?.panNo,
       file: data.file,
+      dueDate: this.generateInvoiceDueDate(
+        data.paymentTerms,
+        data.invoiceDate
+      ).toDate(),
+      isDueDateNear:
+        moment().diff(
+          this.generateInvoiceDueDate(data.paymentTerms, data.invoiceDate),
+          'days'
+        ) <= 7,
       isDueDateMissed: this.generateInvoiceDueDate(
         data.paymentTerms,
         data.invoiceDate

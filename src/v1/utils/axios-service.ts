@@ -28,6 +28,7 @@ class AxiosService implements IAxiosService {
           resolve(res.data)
         })
         .catch((e) => {
+          console.log(e)
           AppLogger.getInstance().error(`Error: ${e} in url: ${url}`)
           reject(e.response)
         })

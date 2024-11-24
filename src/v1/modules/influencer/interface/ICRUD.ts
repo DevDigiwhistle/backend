@@ -4,6 +4,7 @@ import { IAddInfluencer, InfluencerStats } from '../types'
 import {
   IInfluencerProfile,
   IInstagramProfileStats,
+  ILinkedInProfileStats,
   ITwitterProfileStats,
   IYoutubeProfileStats,
 } from './IModels'
@@ -25,6 +26,11 @@ export interface IYoutubeProfileStatsCRUD
 export interface ITwitterProfileStatsCRUD
   extends ICRUDBase<ITwitterProfileStats> {
   addOrUpdate(data: DeepPartial<ITwitterProfileStats>): Promise<void>
+}
+
+export interface ILinkedInProfileStatsCRUD
+  extends ICRUDBase<ILinkedInProfileStats> {
+  addOrUpdate(data: DeepPartial<ILinkedInProfileStats>): Promise<void>
 }
 
 export interface IInfluencerCRUD {

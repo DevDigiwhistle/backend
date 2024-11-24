@@ -42,6 +42,7 @@ export interface ICampaignService
   ): Promise<CampaignStats>
   releaseIncentive(id: string): Promise<void>
   generateBrandReport(brandId?: string, id?: string): Promise<any>
+  sendConfirmationMail(id: string): Promise<void>
 }
 
 export interface ICampaignDeliverablesService

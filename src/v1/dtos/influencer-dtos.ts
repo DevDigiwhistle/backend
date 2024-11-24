@@ -47,8 +47,65 @@ export class InfluencerDTO {
         isApproved: data.user.isApproved,
         commercial: data.youtubeCommercial,
         location: data.location,
+        rating: data.rating,
       }
     } else if (platform === Enum.Platform.INSTAGRAM) {
+      const cities: Array<any> = []
+      const ages: Array<any> = []
+      const genders: Array<any> = []
+      const reach: Array<any> = []
+      const countries: Array<any> = []
+
+      if (data?.instagramStats?.cities) {
+        const obj = JSON.parse(data?.instagramStats?.cities)
+        obj.forEach((element: any) => {
+          cities.push({
+            label: element.name,
+            value: element.percent * 100,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.ages) {
+        const obj = JSON.parse(data?.instagramStats?.ages)
+        obj.forEach((element: any) => {
+          ages.push({
+            label: element.name,
+            value: element.percent * 100,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.genders) {
+        const obj = JSON.parse(data?.instagramStats?.genders)
+        obj.forEach((element: any) => {
+          genders.push({
+            label: element.name,
+            value: element.percent * 100,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.reach) {
+        const obj = JSON.parse(data?.instagramStats?.reach)
+        obj.forEach((element: any) => {
+          reach.push({
+            label: element.name,
+            value: element.percent * 100,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.countries) {
+        const obj = JSON.parse(data?.instagramStats?.countries)
+        obj.forEach((element: any) => {
+          countries.push({
+            label: element.name,
+            value: element.percent * 100,
+          })
+        })
+      }
+
       return {
         profileId: data.id,
         name:
@@ -67,15 +124,24 @@ export class InfluencerDTO {
         views: millify(data?.instagramStats?.views as number),
         engagementRate: {
           value: (data?.instagramStats?.engagementRate as number) * 100,
-          label: 'High',
+          label:
+            (data?.instagramStats?.engagementRate as number) * 100 >= 1
+              ? 'High'
+              : 'Moderate',
         },
-        percentageFakeFollowers:
-          (data?.instagramStats?.percentageFakeFollowers as number) * 100,
+        percentageFakeFollowers: data?.instagramStats
+          ?.percentageFakeFollowers as number,
         profileUrl: data.instagramURL,
         requestDate: data.createdAt,
         isApproved: data.user.isApproved,
         location: data.location,
         commercial: data.instagramCommercial,
+        rating: data.rating,
+        cities: cities,
+        countries: countries,
+        genders: genders,
+        ages: ages,
+        reach: reach,
       }
     } else if (platform === Enum.Platform.X) {
       return {
@@ -100,6 +166,31 @@ export class InfluencerDTO {
         isApproved: data.user.isApproved,
         commercial: data.twitterCommercial,
         location: data.location,
+        rating: data.rating,
+      }
+    } else if (platform === Enum.Platform.LINKEDIN) {
+      return {
+        profileId: data.id,
+        name:
+          data.firstName + ' ' + (data.lastName !== null ? data.lastName : ''),
+        email: data.user.email,
+        isPaused: data.user.isPaused,
+        isVerified: data.user.isVerified,
+        mobileNo: data.mobileNo,
+        exclusive: data.exclusive,
+        pay: data.pay,
+        hideFrom: data.hideFrom,
+        profileUrl: data.linkedInURL,
+        requestDate: data.createdAt,
+        isApproved: data.user.isApproved,
+        commercial: data.linkedInCommercial,
+        location: data.location,
+        followers: millify(data?.linkedInStats?.followers as number),
+        likes: millify(data?.linkedInStats?.likes as number),
+        comments: millify(data?.linkedInStats?.comments as number),
+        reactions: millify(data?.linkedInStats?.reactions as number),
+        shares: millify(data?.linkedInStats?.shares as number),
+        rating: data.rating,
       }
     }
   }
@@ -126,6 +217,62 @@ export class InfluencerDTO {
     }
 
     if (platform === Enum.Platform.INSTAGRAM) {
+      const cities: Array<any> = []
+      const ages: Array<any> = []
+      const genders: Array<any> = []
+      const reach: Array<any> = []
+      const countries: Array<any> = []
+
+      if (data?.instagramStats?.cities) {
+        const obj = JSON.parse(data?.instagramStats?.cities)
+        obj.forEach((element: any) => {
+          cities.push({
+            label: element.name,
+            value: element.percent,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.ages) {
+        const obj = JSON.parse(data?.instagramStats?.ages)
+        obj.forEach((element: any) => {
+          ages.push({
+            label: element.name,
+            value: element.percent,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.genders) {
+        const obj = JSON.parse(data?.instagramStats?.genders)
+        obj.forEach((element: any) => {
+          genders.push({
+            label: element.name,
+            value: element.percent,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.reach) {
+        const obj = JSON.parse(data?.instagramStats?.reach)
+        obj.forEach((element: any) => {
+          reach.push({
+            label: element.name,
+            value: element.percent,
+          })
+        })
+      }
+
+      if (data?.instagramStats?.countries) {
+        const obj = JSON.parse(data?.instagramStats?.countries)
+        obj.forEach((element: any) => {
+          countries.push({
+            label: element.name,
+            value: element.percent,
+          })
+        })
+      }
+
       return {
         profileId: data.id,
         name:
@@ -140,12 +287,20 @@ export class InfluencerDTO {
         views: millify(data?.instagramStats?.views as number),
         engagementRate: {
           value: (data?.instagramStats?.engagementRate as number) * 100,
-          label: 'High',
+          label:
+            (data?.instagramStats?.engagementRate as number) * 100 >= 1
+              ? 'High'
+              : 'Moderate',
         },
-        percentageFakeFollowers:
-          (data?.instagramStats?.percentageFakeFollowers as number) * 100,
+        percentageFakeFollowers: data?.instagramStats
+          ?.percentageFakeFollowers as number,
         profileUrl: data.instagramURL,
         requestDate: data.createdAt,
+        cities: cities,
+        countries: countries,
+        genders: genders,
+        ages: ages,
+        reach: reach,
       }
     }
 
@@ -165,6 +320,24 @@ export class InfluencerDTO {
         retweets: millify(data?.twitterStats?.retweets as number),
         profileUrl: data.twitterURL,
         requestDate: data.createdAt,
+      }
+    }
+
+    if (platform === Enum.Platform.LINKEDIN) {
+      return {
+        profileId: data.id,
+        name:
+          data.firstName + ' ' + (data.lastName !== null ? data.lastName : ''),
+        email: data.user.email,
+        mobileNo: data.mobileNo,
+        profileUrl: data.linkedInURL,
+        requestDate: data.createdAt,
+        isApproved: data.user.isApproved,
+        followers: millify(data?.linkedInStats?.followers as number),
+        likes: millify(data?.linkedInStats?.likes as number),
+        comments: millify(data?.linkedInStats?.comments as number),
+        reactions: millify(data?.linkedInStats?.reactions as number),
+        shares: millify(data?.linkedInStats?.shares as number),
       }
     }
   }

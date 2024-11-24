@@ -22,6 +22,7 @@ import {
   ITwitterService,
 } from '../interface'
 import {
+  ExploreInfluencerResponse,
   IAddInfluencerInput,
   IInviteInfluencerInput,
   InfluencerStats,
@@ -107,7 +108,7 @@ class InfluencerService implements IInfluencerService {
         .sendMail(
           data.email,
           'You are invited to Join Digiwhistle',
-          `<p>You are invited to Join your team, please login at the following link:</p><p>${process.env.FRONTEND_URL}/login</p><p> Your credentials are:</p><p>email: ${data.email}<br>password: 'digiwhistle@123'</p>`
+          `<p>You are invited to Join your team, please login at the following link:</p><p>${process.env.FRONTEND_URL}/login</p><p> Your credentials are:</p><p>email: ${data.email}<br>password: 'digiwhistle@123'</p><p>Please Click on the following link to complete your registration:</p><p>${process.env.FRONTEND_URL}/login</p>`
         )
         .then()
         .catch((e) => {
@@ -180,6 +181,17 @@ class InfluencerService implements IInfluencerService {
               undefined,
               value.twitterURL,
               undefined
+            )
+          )
+        }
+        if (platform === 'linkedin') {
+          promises.push(
+            this.influencerStatsService.fetchAllStatsAndSave(
+              value.id,
+              undefined,
+              undefined,
+              undefined,
+              value.linkedInURL
             )
           )
         }
@@ -402,6 +414,50 @@ class InfluencerService implements IInfluencerService {
         relation.push('twitterStats')
       }
 
+      if (platform === 'linkedin') {
+        if (followers === 'lessThan250K') {
+          query = {
+            ...query,
+            linkedInStats: {
+              id: Not(IsNull()),
+              followers: LessThanOrEqual(250000),
+            },
+          }
+        } else if (followers === '250Kto500K') {
+          query = {
+            ...query,
+            linkedInStats: {
+              id: Not(IsNull()),
+              followers: Between(250000, 500000),
+            },
+          }
+        } else if (followers === '500Kto750K') {
+          query = {
+            ...query,
+            linkedInStats: {
+              id: Not(IsNull()),
+              followers: Between(500000, 750000),
+            },
+          }
+        } else if (followers === 'moreThan750K') {
+          query = {
+            ...query,
+            linkedInStats: {
+              id: Not(IsNull()),
+              followers: MoreThanOrEqual(750000),
+            },
+          }
+        } else {
+          query = {
+            ...query,
+            linkedInStats: {
+              id: Not(IsNull()),
+            },
+          }
+        }
+        relation.push('linkedInStats')
+      }
+
       let combinedQuery:
         | FindOptionsWhere<IInfluencerProfile>[]
         | FindOptionsWhere<IInfluencerProfile> = query
@@ -472,6 +528,17 @@ class InfluencerService implements IInfluencerService {
         relation.push('twitterStats')
       }
 
+      if (platform === 'linkedin') {
+        query = {
+          ...query,
+          linkedInStats: {
+            id: Not(IsNull()),
+          },
+        }
+
+        relation.push('linkedInStats')
+      }
+
       const data = await this.influencerProfileService.findAllPaginated(
         page,
         limit,
@@ -519,9 +586,7 @@ class InfluencerService implements IInfluencerService {
     url: string,
     role: Enum.ROLES,
     agencyId?: string
-  ): Promise<
-    InstagramProfileStats | TwitterProfileStats | YoutubeProfileStats
-  > {
+  ): Promise<ExploreInfluencerResponse> {
     try {
       if (role === Enum.ROLES.AGENCY && agencyId !== undefined) {
         const credits = await this.searchCreditsService.findOne({
@@ -552,17 +617,88 @@ class InfluencerService implements IInfluencerService {
       }
 
       if (url.includes('instagram')) {
+        const influencer = await this.influencerProfileService.findOne(
+          { instagramURL: url },
+          ['instagramStats']
+        )
+
+        if (influencer !== null && influencer.instagramStats !== null) {
+          return {
+            stats: {
+              likes: influencer.instagramStats?.likes ?? 0,
+              comments: influencer.instagramStats?.comments ?? 0,
+              followers: influencer.instagramStats?.followers ?? 0,
+              engagementRate: influencer.instagramStats?.engagementRate ?? 0,
+              percentageFakeFollowers:
+                influencer.instagramStats?.percentageFakeFollowers ?? 0,
+              views: influencer.instagramStats?.views ?? 0,
+              name: influencer.instagramStats?.handleName ?? '',
+              image: influencer.instagramStats?.profilePic ?? '',
+              description: influencer.instagramStats?.description ?? '',
+              cities: influencer.instagramStats?.cities ?? null,
+              countries: influencer.instagramStats?.countries ?? null,
+              genders: influencer.instagramStats?.genders ?? null,
+              ages: influencer.instagramStats?.ages ?? null,
+              reach: influencer.instagramStats?.reach ?? null,
+            },
+            isDigiwhistle: true,
+          }
+        }
+
         const data = await this.instagramService.getInstagramProfileStats(url)
 
-        return data
+        return { stats: data, isDigiwhistle: false }
       } else if (url.includes('x.com')) {
+        const influencer = await this.influencerProfileService.findOne(
+          { twitterURL: url },
+          ['twitterStats']
+        )
+
+        if (influencer !== null && influencer.twitterStats !== null) {
+          return {
+            stats: {
+              followers: influencer.twitterStats?.followers ?? 0,
+              tweets: influencer.twitterStats?.tweets ?? 0,
+              views: influencer.twitterStats?.views ?? 0,
+              replyCount: influencer.twitterStats?.replyCount ?? 0,
+              retweets: influencer.twitterStats?.retweets ?? 0,
+              name: influencer.twitterStats?.handleName ?? '',
+              image: influencer.twitterStats?.profilePic ?? '',
+              description: influencer.twitterStats?.description ?? '',
+            },
+            isDigiwhistle: true,
+          }
+        }
+
         const data = await this.twitterService.getTwitterProfileStats(url)
 
-        return data
+        return { stats: data, isDigiwhistle: false }
       } else if (url.includes('youtube')) {
+        const influencer = await this.influencerProfileService.findOne(
+          { youtubeURL: url },
+          ['youtubeStats']
+        )
+
+        if (influencer !== null && influencer.youtubeStats !== null) {
+          return {
+            stats: {
+              views: influencer.youtubeStats?.views ?? 0,
+              subscribers: influencer.youtubeStats?.subscribers ?? 0,
+              videos: influencer.youtubeStats?.videos ?? 0,
+              title: influencer.youtubeStats?.handleName ?? '',
+              image: influencer.youtubeStats?.profilePic ?? '',
+              description: influencer.youtubeStats?.description ?? '',
+            },
+            isDigiwhistle: true,
+          }
+        }
+
         const data = await this.youtubeService.getYoutubeProfileStats(url)
 
-        return data
+        return {
+          stats: data,
+          isDigiwhistle: false,
+        }
       } else {
         throw new HttpException(400, 'Invalid URL')
       }

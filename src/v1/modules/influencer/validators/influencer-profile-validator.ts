@@ -15,6 +15,8 @@ const addInfluencerProfileSchema = {
     instagramCommercial: { type: 'number', nullable: true },
     twitterCommercial: { type: 'number', nullable: true },
     youtubeCommercial: { type: 'number', nullable: true },
+    linkedInCommercial: { type: 'number', nullable: true },
+    rating: { type: 'number', nullable: true },
   },
   required: ['firstName', 'mobileNo', 'user'],
   additionalProperties: false,
@@ -53,6 +55,8 @@ const updateInfluencerProfileSchema = {
     instagramCommercial: { type: 'number', nullable: true },
     twitterCommercial: { type: 'number', nullable: true },
     youtubeCommercial: { type: 'number', nullable: true },
+    linkedInCommercial: { type: 'number', nullable: true },
+    rating: { type: 'number', nullable: true },
   },
   additionalProperties: false,
 }

@@ -3,6 +3,8 @@ import {
   IInfluencerStatsService,
   IInstagramProfileStatsService,
   IInstagramService,
+  ILinkedInProfileStatsService,
+  ILinkedInService,
   ITwitterProfileStatsService,
   ITwitterService,
   IYoutubeProfileStatsService,
@@ -14,26 +16,32 @@ class InfluencerStatsService implements IInfluencerStatsService {
   private readonly instagramService: IInstagramService
   private readonly youtubeService: IYoutubeService
   private readonly twitterService: ITwitterService
+  private readonly linkedInService: ILinkedInService
   private readonly instagramProfileStatsService: IInstagramProfileStatsService
   private readonly youtubeProfileStatsService: IYoutubeProfileStatsService
   private readonly twitterProfileStatsService: ITwitterProfileStatsService
+  private readonly linkedInProfileStatsService: ILinkedInProfileStatsService
 
   static getInstance(
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
     twitterService: ITwitterService,
+    linkedInService: ILinkedInService,
     instagramProfileStatsService: IInstagramProfileStatsService,
     youtubeProfileStatsService: IYoutubeProfileStatsService,
-    twitterProfileStatsService: ITwitterProfileStatsService
+    twitterProfileStatsService: ITwitterProfileStatsService,
+    linkedInProfileStatsService: ILinkedInProfileStatsService
   ) {
     if (InfluencerStatsService.instance === null) {
       InfluencerStatsService.instance = new InfluencerStatsService(
         instagramService,
         youtubeService,
         twitterService,
+        linkedInService,
         instagramProfileStatsService,
         youtubeProfileStatsService,
-        twitterProfileStatsService
+        twitterProfileStatsService,
+        linkedInProfileStatsService
       )
     }
     return InfluencerStatsService.instance
@@ -43,16 +51,20 @@ class InfluencerStatsService implements IInfluencerStatsService {
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
     twitterService: ITwitterService,
+    linkedInService: ILinkedInService,
     instagramProfileStatsService: IInstagramProfileStatsService,
     youtubeProfileStatsService: IYoutubeProfileStatsService,
-    twitterProfileStatsService: ITwitterProfileStatsService
+    twitterProfileStatsService: ITwitterProfileStatsService,
+    linkedInProfileStatsService: ILinkedInProfileStatsService
   ) {
     this.instagramService = instagramService
     this.youtubeService = youtubeService
     this.twitterService = twitterService
+    this.linkedInService = linkedInService
     this.youtubeProfileStatsService = youtubeProfileStatsService
     this.instagramProfileStatsService = instagramProfileStatsService
     this.twitterProfileStatsService = twitterProfileStatsService
+    this.linkedInProfileStatsService = linkedInProfileStatsService
   }
 
   private async fetchInstagramStatsAndSave(
@@ -72,6 +84,12 @@ class InfluencerStatsService implements IInfluencerStatsService {
         views,
         name,
         image,
+        description,
+        cities,
+        countries,
+        genders,
+        ages,
+        reach,
       } = instagramProfileStats
 
       await this.instagramProfileStatsService.addOrUpdate({
@@ -86,6 +104,12 @@ class InfluencerStatsService implements IInfluencerStatsService {
         influencerProfile: {
           id: profileId,
         },
+        description: description,
+        cities: cities,
+        countries: countries,
+        genders: genders,
+        ages: ages,
+        reach: reach,
       })
     } catch (e) {
       await this.instagramProfileStatsService.addOrUpdate({
@@ -105,7 +129,8 @@ class InfluencerStatsService implements IInfluencerStatsService {
       const youtubeProfileStats =
         await this.youtubeService.getYoutubeProfileStats(youtubeURL)
 
-      const { views, subscribers, videos, title, image } = youtubeProfileStats
+      const { views, subscribers, videos, title, image, description } =
+        youtubeProfileStats
 
       await this.youtubeProfileStatsService.addOrUpdate({
         videos: videos,
@@ -113,6 +138,7 @@ class InfluencerStatsService implements IInfluencerStatsService {
         subscribers: subscribers,
         handleName: title,
         profilePic: image,
+        description: description,
         influencerProfile: {
           id: profileId,
         },
@@ -135,8 +161,16 @@ class InfluencerStatsService implements IInfluencerStatsService {
       const twitterProfileStats =
         await this.twitterService.getTwitterProfileStats(twitterURL)
 
-      const { followers, tweets, views, replyCount, retweets, name, image } =
-        twitterProfileStats
+      const {
+        followers,
+        tweets,
+        views,
+        replyCount,
+        retweets,
+        name,
+        image,
+        description,
+      } = twitterProfileStats
 
       await this.twitterProfileStatsService.addOrUpdate({
         followers: followers,
@@ -149,9 +183,52 @@ class InfluencerStatsService implements IInfluencerStatsService {
         influencerProfile: {
           id: profileId,
         },
+        description: description,
       })
     } catch (e) {
       await this.twitterProfileStatsService.addOrUpdate({
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  private async fetchLinkedInStatsAndSave(
+    profileId: string,
+    linkedInURL: string
+  ): Promise<void> {
+    try {
+      const linkedInProfileStats =
+        await this.linkedInService.getLinkedInProfileStats(linkedInURL)
+
+      const {
+        handleName,
+        about,
+        followers,
+        likes,
+        comments,
+        shares,
+        profilePic,
+        reactions,
+      } = linkedInProfileStats
+
+      await this.linkedInProfileStatsService.addOrUpdate({
+        handleName: handleName,
+        about: about,
+        followers: followers,
+        likes: likes,
+        comments: comments,
+        shares: shares,
+        profilePic: profilePic,
+        reactions: reactions,
+        influencerProfile: {
+          id: profileId,
+        },
+      })
+    } catch (e) {
+      await this.linkedInProfileStatsService.addOrUpdate({
         influencerProfile: {
           id: profileId,
         },
@@ -180,6 +257,10 @@ class InfluencerStatsService implements IInfluencerStatsService {
 
       if (twitterURL !== null && twitterURL !== undefined) {
         promises.push(this.fetchTwitterStatsAndSave(profileId, twitterURL))
+      }
+
+      if (linkedInURL !== null && linkedInURL !== undefined) {
+        promises.push(this.fetchLinkedInStatsAndSave(profileId, linkedInURL))
       }
 
       await Promise.allSettled([...promises])

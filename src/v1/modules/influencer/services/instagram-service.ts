@@ -43,6 +43,11 @@ class InstagramService implements IInstagramService {
         name,
         description,
         image,
+        countries,
+        cities,
+        ages,
+        genders,
+        membersReachability,
       } = _data
 
       return {
@@ -55,6 +60,15 @@ class InstagramService implements IInstagramService {
         name: name,
         description: description,
         image: image,
+        cities: typeof cities === 'object' ? JSON.stringify(cities) : null,
+        countries:
+          typeof countries === 'object' ? JSON.stringify(countries) : null,
+        ages: typeof ages === 'object' ? JSON.stringify(ages) : null,
+        genders: typeof genders === 'object' ? JSON.stringify(genders) : null,
+        reach:
+          typeof membersReachability === 'object'
+            ? JSON.stringify(membersReachability)
+            : null,
       }
     } catch (e) {
       AppLogger.getInstance().error(

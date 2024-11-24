@@ -19,6 +19,8 @@ import {
 import { IMailerService } from '../../../utils'
 import OTPgenerator from 'otp-generator'
 import { IUserService, IRoleService } from '../../user/interface'
+import { IEAgreementService } from '../../../utils/e-agreement-service'
+import { Enum } from '../../../../constants'
 
 class AuthService implements IAuthService {
   private readonly userService: IUserService
@@ -28,6 +30,7 @@ class AuthService implements IAuthService {
   private readonly whatsappService: IWhatsappService
   private readonly verificationService: IVerificationService
   private readonly authTokenService: IAuthTokenService
+  private readonly eAgreementService: IEAgreementService
   private static instance: IAuthService | null = null
 
   static getInstance(

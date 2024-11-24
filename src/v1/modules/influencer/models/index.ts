@@ -13,6 +13,7 @@ import { IUser } from '../../user/interface'
 import {
   IInfluencerProfile,
   IInstagramProfileStats,
+  ILinkedInProfileStats,
   ITwitterProfileStats,
   IYoutubeProfileStats,
 } from '../interface'
@@ -90,6 +91,12 @@ export class InfluencerProfile implements IInfluencerProfile {
   )
   twitterStats: ITwitterProfileStats
 
+  @OneToOne(
+    () => LinkedInProfileStats,
+    (linkedInStats) => linkedInStats.influencerProfile
+  )
+  linkedInStats: ILinkedInProfileStats
+
   @OneToMany(
     () => CampaignParticipants,
     (campaignParticipant) => campaignParticipant.influencerProfile
@@ -152,6 +159,12 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'bigint', default: 0 })
   youtubeCommercial: number
 
+  @Column({ type: 'bigint', default: 0 })
+  linkedInCommercial: number
+
+  @Column({ type: 'int4', default: 0 })
+  rating: number
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 
@@ -178,6 +191,9 @@ export class YoutubeProfileStats implements IYoutubeProfileStats {
 
   @Column({ type: 'varchar', default: null })
   handleName: string | null
+
+  @Column({ type: 'varchar', default: null })
+  description: string | null
 
   @OneToOne(
     () => InfluencerProfile,
@@ -222,12 +238,30 @@ export class InstagramProfileStats implements IInstagramProfileStats {
   @Column({ type: 'varchar', default: null })
   handleName: string | null
 
+  @Column({ type: 'varchar', default: null })
+  description: string | null
+
   @OneToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.instagramStats
   )
   @JoinColumn({ name: 'profileId' })
   influencerProfile: InfluencerProfile
+
+  @Column({ type: 'varchar', default: null })
+  cities: string | null
+
+  @Column({ type: 'varchar', default: null })
+  countries: string | null
+
+  @Column({ type: 'varchar', default: null })
+  reach: string | null
+
+  @Column({ type: 'varchar', default: null })
+  ages: string | null
+
+  @Column({ type: 'varchar', default: null })
+  genders: string | null
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
@@ -265,6 +299,52 @@ export class TwitterProfileStats implements ITwitterProfileStats {
   @OneToOne(
     () => InfluencerProfile,
     (influencerProfile) => influencerProfile.twitterStats
+  )
+  @JoinColumn({ name: 'profileId' })
+  influencerProfile: InfluencerProfile
+
+  @Column({ type: 'varchar', default: null })
+  description: string | null
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date
+}
+
+@Entity()
+export class LinkedInProfileStats implements ILinkedInProfileStats {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column({ type: 'bigint', default: 0 })
+  followers: number
+
+  @Column({ type: 'bigint', default: 0 })
+  likes: number
+
+  @Column({ type: 'bigint', default: 0 })
+  comments: number
+
+  @Column({ type: 'bigint', default: 0 })
+  shares: number
+
+  @Column({ type: 'bigint', default: 0 })
+  reactions: number
+
+  @Column({ type: 'varchar', default: null })
+  profilePic: string | null
+
+  @Column({ type: 'varchar', default: null })
+  handleName: string | null
+
+  @Column({ type: 'varchar', default: null })
+  about: string | null
+
+  @OneToOne(
+    () => InfluencerProfile,
+    (influencerProfile) => influencerProfile.linkedInStats
   )
   @JoinColumn({ name: 'profileId' })
   influencerProfile: InfluencerProfile

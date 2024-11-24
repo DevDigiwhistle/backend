@@ -2,6 +2,7 @@ import { DeepPartial } from 'typeorm'
 import { IBaseService } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import {
+  ExploreInfluencerResponse,
   IAddInfluencerInput,
   IInviteInfluencerInput,
   InfluencerByEmailResponse,
@@ -12,16 +13,19 @@ import {
   TwitterProfileStats,
   YoutubePostStats,
   YoutubeProfileStats,
+  LinkedInProfileStats,
 } from '../types'
 import {
   IInfluencerProfileCRUD,
   IInstagramProfileStatsCRUD,
+  ILinkedInProfileStatsCRUD,
   ITwitterProfileStatsCRUD,
   IYoutubeProfileStatsCRUD,
 } from './ICRUD'
 import {
   IInfluencerProfile,
   IInstagramProfileStats,
+  ILinkedInProfileStats,
   ITwitterProfileStats,
   IYoutubeProfileStats,
 } from './IModels'
@@ -46,6 +50,11 @@ export interface IInstagramProfileStatsService
 export interface ITwitterProfileStatsService
   extends IBaseService<ITwitterProfileStats, ITwitterProfileStatsCRUD> {
   addOrUpdate(data: DeepPartial<ITwitterProfileStats>): Promise<void>
+}
+
+export interface ILinkedInProfileStatsService
+  extends IBaseService<ILinkedInProfileStats, ILinkedInProfileStatsCRUD> {
+  addOrUpdate(data: DeepPartial<ILinkedInProfileStats>): Promise<void>
 }
 
 export interface IInfluencerService {
@@ -79,7 +88,7 @@ export interface IInfluencerService {
     url: string,
     role: Enum.ROLES,
     agencyId?: string
-  ): Promise<InstagramProfileStats | TwitterProfileStats | YoutubeProfileStats>
+  ): Promise<ExploreInfluencerResponse>
 }
 
 export interface IInstagramService {
@@ -93,8 +102,7 @@ export interface IYoutubeService {
 }
 
 export interface ILinkedInService {
-  getLinkedInProfileStats(profileURL: string): Promise<any>
-  getLinkedInPostStats(postURL: string): Promise<any>
+  getLinkedInProfileStats(profileURL: string): Promise<LinkedInProfileStats>
 }
 
 export interface ITwitterService {

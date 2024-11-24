@@ -1,4 +1,4 @@
-import { BaseService, HttpException } from '../../../../utils'
+import { AppLogger, BaseService, HttpException } from '../../../../utils'
 import {
   ICampaign,
   ICampaignCRUD,
@@ -26,6 +26,7 @@ import {
   IYoutubeService,
 } from '../../influencer/interface'
 import { checkSocialMediaLink } from '../../../utils/post-pattern'
+import { IMailerService } from '../../../utils'
 
 class CampaignService
   extends BaseService<ICampaign, ICampaignCRUD>
@@ -36,19 +37,22 @@ class CampaignService
   private readonly youtubeService: IYoutubeService
   private readonly twitterService: ITwitterService
   private readonly campaignParticipantService: ICampaignParticipantsService
+  private readonly mailerService: IMailerService
 
   private constructor(
     campaignCRUD: ICampaignCRUD,
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
     twitterService: ITwitterService,
-    campaignParticipantService: ICampaignParticipantsService
+    campaignParticipantService: ICampaignParticipantsService,
+    mailerService: IMailerService
   ) {
     super(campaignCRUD)
     this.instagramService = instagramService
     this.youtubeService = youtubeService
     this.twitterService = twitterService
     this.campaignParticipantService = campaignParticipantService
+    this.mailerService = mailerService
   }
 
   static getInstance = (
@@ -56,7 +60,8 @@ class CampaignService
     instagramService: IInstagramService,
     youtubeService: IYoutubeService,
     twitterService: ITwitterService,
-    campaignParticipantService: ICampaignParticipantsService
+    campaignParticipantService: ICampaignParticipantsService,
+    mailerService: IMailerService
   ) => {
     if (CampaignService.instance === null)
       CampaignService.instance = new CampaignService(
@@ -64,7 +69,8 @@ class CampaignService
         instagramService,
         youtubeService,
         twitterService,
-        campaignParticipantService
+        campaignParticipantService,
+        mailerService
       )
     return CampaignService.instance
   }
@@ -452,6 +458,8 @@ class CampaignService
           'participants.influencerProfile',
           'participants.agencyProfile',
           'brand',
+          'purchaseInvoices',
+          'purchaseInvoices.influencerProfile',
         ],
         { createdAt: 'DESC' }
       )
@@ -720,6 +728,95 @@ class CampaignService
         brandLogo: campaign.brand?.profilePic,
         table,
       }
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async sendConfirmationMail(id: string): Promise<void> {
+    try {
+      const participant = await this.campaignParticipantService.findOne(
+        { id },
+        ['campaign', 'influencerProfile', 'agencyProfile', 'deliverables']
+      )
+
+      if (!participant) throw new HttpException(404, 'No Participant Found')
+
+      const recipient =
+        participant.influencerProfile !== null
+          ? participant.influencerProfile.user.email
+          : participant.agencyProfile?.user.email
+
+      const campaign = participant.campaign
+
+      const name =
+        participant.influencerProfile !== null
+          ? participant.influencerProfile.firstName +
+            ' ' +
+            (participant.influencerProfile?.lastName !== null
+              ? participant.influencerProfile?.lastName
+              : '') +
+            ' '
+          : participant.agencyProfile?.name
+
+      const deliverableText = participant.deliverables
+        .map((deliverable) => {
+          return `<p><b>Platform:</b> ${deliverable.platform} </p>
+        <p><b>Deliverables:</b> ${deliverable.title}</p>`
+        })
+        .join('')
+
+      this.mailerService
+        .sendMail(
+          recipient as string,
+          'Campaign Confirmation Mail',
+          `<p>Hello ${name},</p>
+        <p>Greetings of the day!</p>
+        <p>As discussed with you, we are delighted to work with you for:</p>
+        <p><b>${campaign.brand?.name}</b></p>
+        <p>Please find below the campaign details:</p>
+        <p>This is the confirmation for: ${campaign.name}</p>
+        ${deliverableText}
+        <p><b>Commercials:</b> ${campaign.commercial} (20% to be paid to Digiwhistle)</p>
+        <p><b>To be posted on:</b> Brand's handles</p>
+        <p><b>Production:</b> Self</p>
+        <p><b>Post Date:</b> ${new Date()}</p>
+        <p><b>Payment Terms:</b> ${campaign.paymentTerms} after the video is live and the invoice is raised.</p>
+
+        <p><b>Please Note:</b></p>
+        <p>No other branded posts or collaborations should be posted within 24 hours of this content going live.</p>
+        <p>Content must adhere to brand guidelines and approvals, in accordance with the concept discussed over WhatsApp.</p>
+        <p>All content goes live only after brand vetting and approval.</p>
+
+        <p>Kindly raise the invoice once all deliverables are live. Please email the invoice to:</p>
+        <p>To: accounts@digiwhistle.com</p>
+        <p>CC: ojasvi@digiwhistle.com, deepak@digiwhistle.com</p>
+
+        <p><b>Invoice Address:</b></p>
+        <p>Name: DigiWhistle</p>
+        <p>Address: Off- 408 Paramount Golfforeste, Zeta I, Gr. Noida, UP-201306</p>
+        <p>PAN: AAUFD0323P</p>
+        <p>GSTIN: 09AAUFD0323P1ZY</p>
+
+        <p>Please reply to this email with your acknowledgement.</p>
+
+        <p>Looking forward to delivering a great campaign together!</p>`
+        )
+        .then(async () => {
+          await this.campaignParticipantService
+            .update(
+              { id: id },
+              {
+                confirmationSent: true,
+              }
+            )
+            .catch((e) => {
+              AppLogger.getInstance().error(e)
+            })
+        })
+        .catch((e) => {
+          AppLogger.getInstance().error(e)
+        })
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

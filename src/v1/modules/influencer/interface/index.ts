@@ -3,6 +3,7 @@ import {
   IInstagramProfileStats,
   ITwitterProfileStats,
   IYoutubeProfileStats,
+  ILinkedInProfileStats,
 } from './IModels'
 import {
   IInfluencerProfileCRUD,
@@ -10,6 +11,7 @@ import {
   IInstagramProfileStatsCRUD,
   IYoutubeProfileStatsCRUD,
   ITwitterProfileStatsCRUD,
+  ILinkedInProfileStatsCRUD,
 } from './ICRUD'
 import {
   IInfluencerProfileService,
@@ -22,6 +24,7 @@ import {
   ITwitterProfileStatsService,
   IYoutubeProfileStatsService,
   IInfluencerStatsService,
+  ILinkedInProfileStatsService,
 } from './IService'
 
 export {
@@ -44,4 +47,7 @@ export {
   IYoutubeProfileStatsService,
   ITwitterProfileStatsService,
   IInfluencerStatsService,
+  ILinkedInProfileStats,
+  ILinkedInProfileStatsCRUD,
+  ILinkedInProfileStatsService,
 }

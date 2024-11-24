@@ -13,6 +13,8 @@ const addInfluencerSchema = {
     instagramCommercial: { type: 'number', nullable: true },
     twitterCommercial: { type: 'number', nullable: true },
     youtubeCommercial: { type: 'number', nullable: true },
+    linkedInCommercial: { type: 'number', nullable: true },
+    rating: { type: 'number', nullable: true },
   },
   required: ['firstName', 'lastName', 'mobileNo', 'email'],
   additionalProperties: false,

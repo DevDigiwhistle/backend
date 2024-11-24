@@ -545,6 +545,10 @@ class CampaignController extends BaseController<
     try {
       const { id } = req.query
 
+      if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
+
+      await this.service.sendConfirmationMail(id)
+
       return responseHandler(200, res, 'Sent Successfully', {}, req)
     } catch (e) {
       return errorHandler(e, res, req)

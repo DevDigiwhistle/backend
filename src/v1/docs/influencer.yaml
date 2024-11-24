@@ -60,7 +60,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [youtube, instagram, x]
+            enum: [youtube, instagram, x, linkedin]
           description: The social media platform of the influencer.
         - name: type
           in: query

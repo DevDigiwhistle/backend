@@ -65,6 +65,7 @@ export enum Platform {
   INSTAGRAM = 'instagram',
   YOUTUBE = 'youtube',
   X = 'x',
+  LINKEDIN = 'linkedin',
 }
 
 export enum InvoiceStatus {

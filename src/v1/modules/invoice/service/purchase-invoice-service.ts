@@ -1,4 +1,11 @@
-import { Between, DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
+import {
+  Between,
+  DeepPartial,
+  FindOptionsWhere,
+  ILike,
+  IsNull,
+  Not,
+} from 'typeorm'
 import {
   AppLogger,
   BaseService,
@@ -183,7 +190,7 @@ export class PurchaseInvoiceService
     limit: number,
     startDate: Date,
     endDate: Date,
-    invoiceNo: string,
+    searchQuery: string,
     influencerProfileId?: string,
     agencyProfileId?: string
   ): Promise<PaginatedResponse<IPurchaseInvoice>> {
@@ -192,9 +199,7 @@ export class PurchaseInvoiceService
         invoiceDate: Between(startDate, endDate),
       }
 
-      if (typeof invoiceNo === 'string' && invoiceNo !== '') {
-        query = { ...query, invoiceNo: ILike(`%${invoiceNo}%`) }
-      }
+      let Query: FindOptionsWhere<IPurchaseInvoice>[] = []
 
       if (typeof influencerProfileId === 'string') {
         query = {
@@ -214,10 +219,35 @@ export class PurchaseInvoiceService
         }
       }
 
+      if (typeof searchQuery === 'string' && searchQuery !== '') {
+        Query = [
+          {
+            ...query,
+            invoiceNo: ILike(`%${searchQuery}%`),
+          },
+          {
+            ...query,
+            influencerProfile: {
+              firstName: searchQuery,
+            },
+          },
+          {
+            ...query,
+            agencyProfile: {
+              name: searchQuery,
+            },
+          },
+        ]
+      }
+
+      if (Query.length === 0) {
+        Query.push(query)
+      }
+
       const data = await this.crudBase.findAllPaginated(
         page,
         limit,
-        query,
+        Query.length === 1 ? Query[0] : Query,
         ['campaign', 'campaign.brand', 'influencerProfile', 'agencyProfile'],
         {
           invoiceDate: 'DESC',

@@ -11,6 +11,8 @@ export interface IAddInfluencerInput {
   instagramCommercial: number
   twitterCommercial: number
   youtubeCommercial: number
+  linkedInCommercial: number
+  rating: number
 }
 
 export interface IAddInfluencer extends IAddInfluencerInput {
@@ -33,6 +35,11 @@ export type InstagramProfileStats = {
   name: string
   description: string
   image: string
+  cities: string | null
+  countries: string | null
+  genders: string | null
+  ages: string | null
+  reach: string | null
 }
 
 export type InstagramPostStats = {
@@ -81,4 +88,20 @@ export type InfluencerByEmailResponse = {
 export type InfluencerStats = {
   nonexclusive: string
   exclusive: string
+}
+
+export type ExploreInfluencerResponse = {
+  stats: InstagramProfileStats | TwitterProfileStats | YoutubeProfileStats
+  isDigiwhistle: boolean
+}
+
+export type LinkedInProfileStats = {
+  handleName: string | null
+  about: string | null
+  followers: number
+  profilePic: string | null
+  likes: number
+  comments: number
+  shares: number
+  reactions: number
 }

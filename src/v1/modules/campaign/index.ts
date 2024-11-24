@@ -1,3 +1,4 @@
+import { MailerService } from '../../utils'
 import { instagramService, twitterService, youtubeService } from '../influencer'
 import {
   CampaignCRUD,
@@ -22,7 +23,8 @@ const campaignService = CampaignService.getInstance(
   instagramService,
   youtubeService,
   twitterService,
-  campaignParticipantsService
+  campaignParticipantsService,
+  MailerService.getInstance()
 )
 
 export {
