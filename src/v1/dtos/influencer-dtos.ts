@@ -48,6 +48,7 @@ export class InfluencerDTO {
         commercial: data.youtubeCommercial,
         location: data.location,
         rating: data.rating,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     } else if (platform === Enum.Platform.INSTAGRAM) {
       const cities: Array<any> = []
@@ -142,6 +143,7 @@ export class InfluencerDTO {
         genders: genders,
         ages: ages,
         reach: reach,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     } else if (platform === Enum.Platform.X) {
       return {
@@ -167,6 +169,7 @@ export class InfluencerDTO {
         commercial: data.twitterCommercial,
         location: data.location,
         rating: data.rating,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     } else if (platform === Enum.Platform.LINKEDIN) {
       return {
@@ -191,6 +194,7 @@ export class InfluencerDTO {
         reactions: millify(data?.linkedInStats?.reactions as number),
         shares: millify(data?.linkedInStats?.shares as number),
         rating: data.rating,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     }
   }
