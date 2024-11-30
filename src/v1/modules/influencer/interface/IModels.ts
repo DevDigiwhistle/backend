@@ -1,6 +1,5 @@
 import { type ObjectLiteral } from 'typeorm'
 import { IUser } from '../../user/interface'
-import { Enum } from '../../../../constants'
 import { IPurchaseInvoice } from '../../invoice/interface'
 
 export interface IInfluencerProfile extends ObjectLiteral {
@@ -42,6 +41,7 @@ export interface IInfluencerProfile extends ObjectLiteral {
   youtubeCommercial: number
   linkedInCommercial: number
   rating: number
+  agreement: string | null
   createdAt?: Date
   updatedAt?: Date
 }

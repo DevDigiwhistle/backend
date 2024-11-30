@@ -29,9 +29,11 @@ import { googleAuthService } from '../auth'
 import { searchCreditsService } from '../agency'
 import { LinkedInProfileStatsService } from './services/linkedIn-profile-service'
 import { LinkedInService } from './services/linkedIn-service'
+import { ZohoSignService } from '../utils/zoho-sign-service'
 
 const influencerProfileService = InfluencerProfileService.getInstance(
-  InfluencerProfileCRUD.getInstance(InfluencerProfile)
+  InfluencerProfileCRUD.getInstance(InfluencerProfile),
+  ZohoSignService.getInstance(AxiosService.getInstance())
 )
 
 const influencerStatsService = InfluencerStatsService.getInstance(
@@ -66,7 +68,8 @@ const influencerService = InfluencerService.getInstance(
   googleAuthService,
   InfluencerCRUD.getInstance(),
   InfluencerProfileService.getInstance(
-    InfluencerProfileCRUD.getInstance(InfluencerProfile)
+    InfluencerProfileCRUD.getInstance(InfluencerProfile),
+    ZohoSignService.getInstance(AxiosService.getInstance())
   ),
   influencerStatsService,
   instagramService,

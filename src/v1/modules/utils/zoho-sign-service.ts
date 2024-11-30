@@ -1,23 +1,23 @@
-import { HttpException } from '../../utils'
-import { IAxiosService } from './axios-service'
+import { HttpException } from '../../../utils'
+import { IAxiosService } from '../../utils/axios-service'
 import fs from 'fs'
-
-export interface IEAgreementService {
+export interface IZohoSignService {
   sendTemplateForSigning(templateId: string, body: any): Promise<string>
   getDocumentPdf(documentId: string): Promise<string>
+  getTemplates(templateId: string): Promise<any>
 }
 
-export class EAgreementService implements IEAgreementService {
-  private static instance: IEAgreementService | null = null
+export class ZohoSignService implements IZohoSignService {
+  private static instance: IZohoSignService | null = null
   private readonly axiosService: IAxiosService
   private readonly refreshToken = process.env.ZOHO_REFRESH_TOKEN
   private readonly clientSecret = process.env.ZOHO_CLIENT_SECRET
   private readonly clientId = process.env.ZOHO_CLIENT_ID
 
   static getInstance = (axiosService: IAxiosService) => {
-    if (EAgreementService.instance === null)
-      EAgreementService.instance = new EAgreementService(axiosService)
-    return EAgreementService.instance
+    if (ZohoSignService.instance === null)
+      ZohoSignService.instance = new ZohoSignService(axiosService)
+    return ZohoSignService.instance
   }
 
   private constructor(axiosService: IAxiosService) {
@@ -31,7 +31,25 @@ export class EAgreementService implements IEAgreementService {
         {}
       )
 
-      return response.data.access_token
+      return response.access_token
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async getTemplates(templateId: string): Promise<any> {
+    try {
+      const token = await this.generateAccessToken()
+
+      const response = await this.axiosService.get(
+        `https://sign.zoho.in/api/v1/templates/${templateId}`,
+        {},
+        {
+          Authorization: `Zoho-oauthtoken ${token}`,
+        }
+      )
+
+      return response
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }
@@ -42,15 +60,14 @@ export class EAgreementService implements IEAgreementService {
       const token = await this.generateAccessToken()
 
       const response = await this.axiosService.post(
-        `https://sign.zoho.com/api/v1/templates/${templateId}/createdocument`,
+        `https://sign.zoho.in/api/v1/templates/${templateId}/createdocument`,
         body,
         {
           Authorization: `Zoho-oauthtoken ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
         }
       )
 
-      const documentId = response.data?.requests?.request_id
+      const documentId = response.requests?.request_id
 
       return documentId
     } catch (e) {
@@ -63,51 +80,28 @@ export class EAgreementService implements IEAgreementService {
       const token = await this.generateAccessToken()
 
       const response = await this.axiosService.get(
-        `https://sign.zoho.com/api/v1/requests/${documentId}/pdf`,
+        `https://sign.zoho.in/api/v1/requests/${documentId}/pdf`,
+        {},
         {
           Authorization: `Zoho-oauthtoken ${token}`,
+          Accept: 'application/pdf',
         }
       )
 
       // Save the PDF response to a file
+      const pdfContent = Buffer.from(response, 'binary')
       const filePath = `./reports/${documentId}.pdf`
-      fs.writeFileSync(filePath, response?.data, { encoding: 'binary' })
+
+      fs.writeFileSync(filePath, pdfContent)
 
       return filePath
     } catch (e) {
+      console.log(e)
       throw new HttpException(e?.errorCode, e?.message)
     }
   }
 }
 
-//   77631000000035315
+// 77631000000039001  Agency Template
 
-// private getTemplateDataForInfluencerAgreement() {
-//   return {
-//     data: {
-//       templates: {
-//         field_data: {
-//           field_text_data: {},
-//           field_boolean_data: {},
-//           field_date_data: {},
-//         },
-//         actions: [
-//           {
-//             action_id: '2000000468052',
-//             action_type: 'SIGN',
-//             recipient_name: '',
-//             role: 'ts1',
-//             recipient_email: 's********@***.com',
-//             recipient_phonenumber: '',
-//             recipient_countrycode: '',
-//             private_notes: '',
-//             verify_recipient: true,
-//             verification_type: 'EMAIL',
-//           },
-//         ],
-//         notes: '',
-//       },
-//     },
-//     is_quicksend: true,
-//   }
-// }
+//   77631000000035315 Influencer Template

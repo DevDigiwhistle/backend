@@ -1,5 +1,9 @@
 import { DeepPartial, FindOptionsWhere, ILike } from 'typeorm'
-import { BaseService, HttpException } from '../../../../utils'
+import {
+  BaseService,
+  HttpException,
+  uploadPdfToFirebase,
+} from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import {
   IAgencyProfile,
@@ -8,25 +12,35 @@ import {
 } from '../interface'
 import { AppDataSource } from '../../../../config'
 import { AgencyProfile, SearchCredits } from '../models'
+import { IZohoSignService } from '../../utils/zoho-sign-service'
 
 class AgencyProfileService
   extends BaseService<IAgencyProfile, IAgencyProfileCRUD>
   implements IAgencyProfileService
 {
   private static instance: IAgencyProfileService | null = null
+  private readonly zohoSignService: IZohoSignService
 
-  static getInstance(agencyProfileCRUD: IAgencyProfileCRUD) {
+  static getInstance(
+    agencyProfileCRUD: IAgencyProfileCRUD,
+    zohoSignService: IZohoSignService
+  ) {
     if (AgencyProfileService.instance === null) {
       AgencyProfileService.instance = new AgencyProfileService(
-        agencyProfileCRUD
+        agencyProfileCRUD,
+        zohoSignService
       )
     }
 
     return AgencyProfileService.instance
   }
 
-  private constructor(agencyProfileCRUD: IAgencyProfileCRUD) {
+  private constructor(
+    agencyProfileCRUD: IAgencyProfileCRUD,
+    zohoSignService: IZohoSignService
+  ) {
     super(agencyProfileCRUD)
+    this.zohoSignService = zohoSignService
   }
 
   async add(data: DeepPartial<IAgencyProfile>): Promise<IAgencyProfile> {
@@ -99,6 +113,27 @@ class AgencyProfileService
         createdAt: 'DESC',
       })
       return data
+    } catch (e) {
+      throw new HttpException(e?.errorCode, e?.message)
+    }
+  }
+
+  async getAgreement(id: string): Promise<string> {
+    try {
+      const agency = await this.crudBase.findOne({ id: id })
+
+      if (agency === null) {
+        throw new HttpException(404, 'No Agency Found')
+      }
+
+      if (agency.agreement === null) {
+        throw new HttpException(404, 'No Agreement Found')
+      }
+
+      const path = await this.zohoSignService.getDocumentPdf(agency.agreement)
+
+      const url = uploadPdfToFirebase(path, `agreements/${id}.pdf`)
+      return url
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

@@ -6,6 +6,7 @@ import {
 } from '../modules/landing/interface'
 import { Request, Response } from 'express'
 import { responseHandler } from '../../utils/response-handler'
+import { IExtendedRequest } from '../interface'
 
 export class ContactUsController extends BaseController<
   IContactUsForm,
@@ -16,7 +17,10 @@ export class ContactUsController extends BaseController<
     super(contactUsService)
   }
 
-  async getAllPaginated(req: Request, res: Response): Promise<Response> {
+  async getAllPaginated(
+    req: IExtendedRequest,
+    res: Response
+  ): Promise<Response> {
     try {
       const { brands, influencer, page, limit, name } = req.query
 
@@ -26,6 +30,7 @@ export class ContactUsController extends BaseController<
       const data = await this.service.findAllContactUs(
         parseInt(page),
         parseInt(limit),
+        req.user,
         name as string,
         brands as string,
         influencer as string

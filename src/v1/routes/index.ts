@@ -17,6 +17,7 @@ import campaignDeliverableRouter from './campaign-deliverables.routes'
 import invoiceRouter from './invoice.routes'
 import payrollRouter from './payroll.routes'
 import razorpayRouter from './razorpay.routes'
+import agreementRouter from './agreement.routes'
 
 const apiRouter = Router()
 
@@ -37,5 +38,6 @@ apiRouter.use('/campaign', campaignRouter)
 apiRouter.use('/invoice', invoiceRouter)
 apiRouter.use('/payroll', payrollRouter)
 apiRouter.use('/razorpay', razorpayRouter)
+apiRouter.use('/agreement', agreementRouter)
 
 export default apiRouter

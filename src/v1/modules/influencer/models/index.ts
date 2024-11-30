@@ -150,20 +150,23 @@ export class InfluencerProfile implements IInfluencerProfile {
   @Column({ type: 'varchar', default: null })
   location: string
 
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'int4', default: 0 })
   instagramCommercial: number
 
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'int4', default: 0 })
   twitterCommercial: number
 
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'int4', default: 0 })
   youtubeCommercial: number
 
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'int4', default: 0 })
   linkedInCommercial: number
 
   @Column({ type: 'int4', default: 0 })
   rating: number
+
+  @Column({ type: 'varchar', default: null })
+  agreement: string | null
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date

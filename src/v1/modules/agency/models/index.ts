@@ -102,6 +102,9 @@ export class AgencyProfile implements IAgencyProfile {
   @JoinColumn({ name: 'searchCreditsId' })
   searchCredits: ISearchCredits
 
+  @Column({ type: 'varchar', default: null })
+  agreement: string | null
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
 

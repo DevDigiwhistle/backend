@@ -4,6 +4,7 @@ import { ICRUDBase } from '../../../../utils'
 import { IBaseService } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import { IEmployeeProfile } from '../../admin/interface'
+import { IUser } from '../../user/interface'
 
 export interface IContactUsForm {
   id: number
@@ -24,6 +25,7 @@ export interface IContactUsService
   findAllContactUs(
     page: number,
     limit: number,
+    user: IUser,
     name?: string,
     brands?: string,
     influencer?: string
