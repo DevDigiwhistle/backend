@@ -211,6 +211,7 @@ export class CampaignDTO {
             margin: participant.margin,
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
+            confirmationSent: participant.confirmationSent,
             deliverables: participant.deliverables.map((deliverable) => {
               return {
                 id: deliverable.id,
@@ -237,6 +238,7 @@ export class CampaignDTO {
             commercialCreator: participant.commercialCreator,
             toBeGiven: participant.toBePaid,
             margin: participant.margin,
+            confirmationSent: participant.confirmationSent,
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
             influencer: influencerGroupedData,
