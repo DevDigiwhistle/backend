@@ -213,6 +213,7 @@ export class InfluencerDTO {
         videos: millify(data?.youtubeStats?.videos as number),
         profileUrl: data.youtubeURL,
         requestDate: data.createdAt,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     }
 
@@ -301,6 +302,7 @@ export class InfluencerDTO {
         genders: genders,
         ages: ages,
         reach: reach,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     }
 
@@ -320,6 +322,7 @@ export class InfluencerDTO {
         retweets: millify(data?.twitterStats?.retweets as number),
         profileUrl: data.twitterURL,
         requestDate: data.createdAt,
+        isAgreementSent: data.agreement === null ? false : true,
       }
     }
 
@@ -338,6 +341,7 @@ export class InfluencerDTO {
         comments: millify(data?.linkedInStats?.comments as number),
         reactions: millify(data?.linkedInStats?.reactions as number),
         shares: millify(data?.linkedInStats?.shares as number),
+        isAgreementSent: data.agreement === null ? false : true,
       }
     }
   }

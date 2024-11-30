@@ -112,6 +112,14 @@ class AgencyProfileService
       const data = await this.findAllPaginated(page, limit, query, ['user'], {
         createdAt: 'DESC',
       })
+
+      data.data = data.data.map((value) => {
+        return {
+          ...value,
+          isAgreementSent: value.agreement === null ? false : true,
+        }
+      })
+
       return data
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
