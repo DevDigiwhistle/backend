@@ -53,6 +53,9 @@ jobs:
           LINKEDIN_API_KEY: ${{ secrets.LINKEDIN_API_KEY }}
           TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
           FB_STORAGE_BUCKET: ${{ secrets.FB_STORAGE_BUCKET }}
+          ZOHO_CLIENT_SECRET: ${{ secrets.ZOHO_CLIENT_SECRET }}
+          ZOHO_CLIENT_ID: ${{ secrets.ZOHO_CLIENT_ID }}
+          ZOHO_REFRESH_TOKEN: ${{ secrets.ZOHO_REFRESH_TOKEN }}
         run: |
           # Install sshpass to handle password authentication
           sudo apt-get update
