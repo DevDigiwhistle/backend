@@ -543,7 +543,7 @@ class CampaignController extends BaseController<
 
   async sendConfirmationEmail(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.query
+      const { id } = req.body
 
       if (typeof id !== 'string') throw new HttpException(400, 'Invalid Id')
 

@@ -500,6 +500,18 @@ export class CampaignDTO {
           subValue: '',
           iconName: 'CurrencyRupeeIcon',
         },
+        {
+          label: 'Pending Incentive',
+          value: millify(data.pendingIncentive),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
+        {
+          label: 'Total Incentive',
+          value: millify(data.totalIncentive),
+          subValue: '',
+          iconName: 'CurrencyRupeeIcon',
+        },
       ]
     } else if (roleId === Enum.ROLES.BRAND) {
       return [

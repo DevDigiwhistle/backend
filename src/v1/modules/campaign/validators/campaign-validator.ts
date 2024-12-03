@@ -10,10 +10,6 @@ const addCampaignSchema = {
     invoiceNo: { type: ['string', 'null'] },
     startDate: { type: 'string', format: 'date-time' },
     endDate: { type: 'string', format: 'date-time' },
-    paymentStatus: {
-      type: 'string',
-      enum: Object.values(Enum.CampaignPaymentStatus),
-    },
     commercial: { type: 'number' },
     details: { type: ['string', 'null'] },
     manager: { type: 'string' },
@@ -69,6 +65,10 @@ const updateCampaignSchema = {
     manager: { type: 'string' },
     incentiveWinner: {
       oneOf: [{ type: 'string' }, { type: 'null' }],
+    },
+    paymentStatus: {
+      type: 'string',
+      enum: Object.values(Enum.CampaignPaymentStatus),
     },
     participants: {
       type: 'array',

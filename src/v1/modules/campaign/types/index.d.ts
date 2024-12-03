@@ -33,6 +33,7 @@ export type CampaignStats = {
   totalMargin: number
   totalIncentive: number
   totalRevenue: number
+  pendingIncentive: number
 }
 
 export interface ICampaignInfluencerData {

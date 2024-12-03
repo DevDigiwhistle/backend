@@ -45,6 +45,7 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
         totalToBeGiven: 0,
         totalMargin: 0,
         totalIncentive: 0,
+        pendingIncentive: 0,
         totalRevenue: 0,
       }
 
@@ -65,6 +66,9 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
             participant.toBePaid === null ? 0 : participant.toBePaid
         })
         result.totalIncentive += totalBePaid * 0.05
+        if (value.incentiveReleased === true) {
+          result.pendingIncentive += totalBePaid * 0.05
+        }
       })
 
       return result
