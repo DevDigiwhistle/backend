@@ -228,13 +228,13 @@ export class PurchaseInvoiceService
           {
             ...query,
             influencerProfile: {
-              firstName: searchQuery,
+              firstName: ILike(`%${searchQuery}%`),
             },
           },
           {
             ...query,
             agencyProfile: {
-              name: searchQuery,
+              name: ILike(`%${searchQuery}%`),
             },
           },
         ]

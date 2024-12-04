@@ -8,13 +8,14 @@ import {
 } from '../../../../utils'
 import { PaginatedResponse } from '../../../../utils/base-service'
 import {
+  ICreditNote,
   ISaleInvoice,
   ISaleInvoiceCRUD,
   ISaleInvoiceService,
 } from '../interface'
 import { ShareInvoiceRequest } from '../types'
 import { IMailerService } from '../../../utils'
-import { generateCSV } from '../utils'
+import { generateCSV, generateExcel } from '../utils'
 import fs from 'fs'
 import { generateSaleInvoicePdf } from '../../../pdf/sale-invoice-pdf'
 import numWords from 'num-words'
@@ -221,6 +222,98 @@ export class SaleInvoiceService
     }
   }
 
+  private processInvoiceData(data: ISaleInvoice[]) {
+    const fields = [
+      'SNo',
+      'Campaign',
+      'Client',
+      'GSTIN',
+      'BillNo',
+      'InvoiceDate',
+      'TaxableAmt',
+      'IGST @ 18%',
+      'CGST @ 9%',
+      'SGST @ 9%',
+      'Total',
+      'TDS',
+      'Received',
+      'Balance',
+      'Month',
+    ]
+
+    const _data = data.map((value, index) => {
+      return [
+        index + 1,
+        value.campaign.name,
+        value.campaign.brand?.name,
+        value.gstTin,
+        value.invoiceNo,
+        value.invoiceDate,
+        value.amount,
+        value.igst,
+        value.cgst,
+        value.sgst,
+        value.total,
+        value.tds,
+        value.received,
+        value.balanceAmount,
+        value.month,
+      ]
+    })
+
+    return {
+      name: 'Sale Invoice',
+      data: [fields, ..._data],
+    }
+  }
+
+  private processCreditNotesData(data: ICreditNote[]) {
+    const fields = [
+      'S.No.',
+      'Campaign',
+      'Client',
+      'GSTIN',
+      'Credit Note No.',
+      'TAX Invoice NO.',
+      'Credit Note Date',
+      'Taxable Amt',
+      'IGST @ 18%',
+      'CGST @ 9%',
+      'SGST @ 9%',
+      'TOTAL',
+      'TDS',
+      'Advance',
+      'MONTH',
+      'Remarks',
+    ]
+
+    const _data = data.map((value, index) => {
+      return [
+        index + 1,
+        value.invoice.campaign.name,
+        value.invoice.campaign.brand?.name,
+        value.gstTin,
+        value.creditNoteNo,
+        value.invoice.invoiceNo,
+        value.creditNoteDate,
+        value.amount,
+        value.igst,
+        value.cgst,
+        value.sgst,
+        value.total,
+        value.tds,
+        value.advance,
+        value.month,
+        value.remarks,
+      ]
+    })
+
+    return {
+      name: 'Credit Note',
+      data: [fields, ..._data],
+    }
+  }
+
   async downloadSaleInvoiceReport(
     startDate: Date,
     endDate: Date
@@ -230,56 +323,37 @@ export class SaleInvoiceService
         invoiceDate: Between(startDate, endDate),
       }
 
-      const data = await this.findAll(query, ['campaign', 'campaign.brand'], {
-        invoiceDate: 'DESC',
-      })
+      const data = await this.findAll(
+        query,
+        ['campaign', 'campaign.brand', 'creditNotes'],
+        {
+          invoiceDate: 'DESC',
+        }
+      )
 
-      const _data = data.map((value, index) => {
-        return {
-          SNo: index + 1,
-          Campaign: value.campaign.name,
-          Client: value.campaign.brand?.name,
-          GSTIN: value.gstTin,
-          BillNo: value.invoiceNo,
-          InvoiceDate: value.invoiceDate,
-          TaxableAmt: value.amount,
-          IGST: value.igst,
-          CGST: value.cgst,
-          SGST: value.sgst,
-          Total: value.total,
-          TDS: value.tds,
-          Received: value.received,
-          Balance: value.balanceAmount,
-          Month: value.month,
+      const filePath = `./reports/sale_invoice_${new Date()}.xlsx`
+
+      const sheetData: any = []
+
+      const creditNotes: ICreditNote[] = []
+
+      data.forEach((value) => {
+        if (value.creditNotes.length > 0) {
+          value.creditNotes.forEach((creditNote) => {
+            creditNote['invoice'] = value
+            creditNotes.push(creditNote)
+          })
         }
       })
 
-      const fields = [
-        'SNo',
-        'Campaign',
-        'Client',
-        'GSTIN',
-        'BillNo',
-        'InvoiceDate',
-        'TaxableAmt',
-        'IGST',
-        'CGST',
-        'SGST',
-        'Total',
-        'TDS',
-        'Received',
-        'Balance',
-        'Month',
-      ]
+      sheetData.push(this.processInvoiceData(data))
+      sheetData.push(this.processCreditNotesData(creditNotes))
 
-      const csv = generateCSV(_data, fields)
-      const filePath = `./reports/sale_invoice_${new Date()}.csv`
-
-      fs.writeFileSync(filePath, csv)
+      await generateExcel(sheetData, filePath)
 
       const url = await uploadFileToFirebase(
         filePath,
-        `reports/sale_invoice_${new Date()}.csv`
+        `reports/sale_invoice_${new Date()}.xlsx`
       )
 
       fs.unlinkSync(filePath)

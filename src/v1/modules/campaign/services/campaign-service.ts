@@ -198,13 +198,11 @@ class CampaignService
         let adminQuery: FindOptionsWhere<ICampaign>[] = []
 
         if (typeof name === 'string') {
-          adminQuery[0] = {
-            ...adminQuery[0],
+          adminQuery.push({
             name: ILike(`%${name}%`),
-          }
+          })
 
           adminQuery.push({
-            ...adminQuery[0],
             manager: {
               firstName: ILike(`%${name}%`),
             },

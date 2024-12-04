@@ -106,7 +106,7 @@ export class SaleInvoiceDTO {
       issueDate: new Date(saleInvoice.invoiceDate).toDateString(),
       amount: saleInvoice.total,
       taxableAmount: saleInvoice.amount,
-      status: saleInvoice.paymentStatus,
+      paymentStatus: saleInvoice.paymentStatus,
       month: saleInvoice.month,
       gstTin: saleInvoice.gstTin,
       tds: saleInvoice.tds,
