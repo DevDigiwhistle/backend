@@ -195,19 +195,14 @@ class CampaignService
       }
 
       if (roleId === Enum.ROLES.ADMIN || roleId === Enum.ROLES.EMPLOYEE) {
-        let adminQuery: FindOptionsWhere<ICampaign>[] = []
-
-        if (typeof name === 'string') {
-          adminQuery.push({
-            name: ILike(`%${name}%`),
-          })
-
-          adminQuery.push({
-            manager: {
-              firstName: ILike(`%${name}%`),
-            },
-          })
-        }
+        let adminQuery: FindOptionsWhere<ICampaign>[] = [
+          {
+            startDate: Between(lowerBound, upperBound),
+          },
+          {
+            endDate: Between(lowerBound, upperBound),
+          },
+        ]
 
         if (typeof adminFilters?.paymentStatus === 'string') {
           if (
@@ -217,11 +212,21 @@ class CampaignService
               ...adminQuery[0],
               paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
             }
+
+            adminQuery[1] = {
+              ...adminQuery[1],
+              paymentStatus: Enum.CampaignPaymentStatus.ALL_PAID,
+            }
           } else if (
             adminFilters?.paymentStatus === Enum.CampaignPaymentStatus.PENDING
           ) {
             adminQuery[0] = {
               ...adminQuery[0],
+              paymentStatus: Enum.CampaignPaymentStatus.PENDING,
+            }
+
+            adminQuery[1] = {
+              ...adminQuery[1],
               paymentStatus: Enum.CampaignPaymentStatus.PENDING,
             }
           }
@@ -237,6 +242,15 @@ class CampaignService
                 },
               },
             }
+
+            adminQuery[1] = {
+              ...adminQuery[1],
+              participants: {
+                influencerProfile: {
+                  exclusive: true,
+                },
+              },
+            }
           } else if (adminFilters?.influencerType === 'non-exclusive') {
             adminQuery[0] = {
               ...adminQuery[0],
@@ -246,32 +260,53 @@ class CampaignService
                 },
               },
             }
+
+            adminQuery[1] = {
+              ...adminQuery[1],
+              participants: {
+                influencerProfile: {
+                  exclusive: false,
+                },
+              },
+            }
           }
         }
 
-        if (adminQuery.length > 1) {
-          query = [
-            {
-              ...adminQuery,
-              startDate: Between(lowerBound, upperBound),
+        if (typeof name === 'string') {
+          adminQuery.push({
+            ...adminQuery[0],
+          })
+
+          adminQuery.push({
+            ...adminQuery[1],
+          })
+
+          adminQuery[0] = {
+            ...adminQuery[0],
+            name: ILike(`%${name}%`),
+          }
+
+          adminQuery[1] = {
+            ...adminQuery[1],
+            name: ILike(`%${name}%`),
+          }
+
+          adminQuery[2] = {
+            ...adminQuery[2],
+            manager: {
+              firstName: ILike(`%${name}%`),
             },
-            {
-              ...adminQuery,
-              endDate: Between(lowerBound, upperBound),
+          }
+
+          adminQuery[3] = {
+            ...adminQuery[3],
+            manager: {
+              firstName: ILike(`%${name}%`),
             },
-          ]
-        } else {
-          query = [
-            {
-              ...adminQuery[0],
-              startDate: Between(lowerBound, upperBound),
-            },
-            {
-              ...adminQuery[0],
-              endDate: Between(lowerBound, upperBound),
-            },
-          ]
+          }
         }
+
+        query = adminQuery
       }
 
       if (roleId === Enum.ROLES.BRAND) {
