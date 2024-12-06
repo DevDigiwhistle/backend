@@ -282,6 +282,12 @@ export class CampaignDTO {
         data.manager.firstName +
         (data.manager.lastName === null ? '' : ' ' + data.manager.lastName) +
         ' DW (POC)',
+      file:
+        invoice !== undefined &&
+        invoice.length > 0 &&
+        invoice[0]?.file !== undefined
+          ? invoice[0]?.file
+          : null,
       paymentStatus: influencerDetails[0].paymentStatus,
       commercial: influencerDetails[0].commercialCreator,
       toBeGiven: influencerDetails[0].toBePaid,

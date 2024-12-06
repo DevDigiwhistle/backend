@@ -71,7 +71,7 @@ export class InfluencerDTO {
         const obj = JSON.parse(data?.instagramStats?.ages)
         obj.forEach((element: any) => {
           ages.push({
-            label: element.name,
+            label: element.name.replace('_', '-'),
             value: element.percent * 100,
           })
         })
@@ -81,7 +81,7 @@ export class InfluencerDTO {
         const obj = JSON.parse(data?.instagramStats?.genders)
         obj.forEach((element: any) => {
           genders.push({
-            label: element.name,
+            label: element.name === 'm' ? 'Male' : 'Female',
             value: element.percent * 100,
           })
         })
@@ -91,7 +91,10 @@ export class InfluencerDTO {
         const obj = JSON.parse(data?.instagramStats?.reach)
         obj.forEach((element: any) => {
           reach.push({
-            label: element.name,
+            label:
+              element.name === 'r1500_plus'
+                ? '1500+'
+                : element.name.replace('_', '-').replace('r', ''),
             value: element.percent * 100,
           })
         })
