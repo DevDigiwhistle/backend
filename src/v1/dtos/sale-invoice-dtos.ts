@@ -123,10 +123,12 @@ export class SaleInvoiceDTO {
       total: saleInvoice.total,
       deliverables: _deliverables,
       creditNoteGenerated: saleInvoice.creditNotes.length > 0,
-      isLapse: this.generateInvoiceDueDate(
-        saleInvoice.campaign.paymentTerms,
-        saleInvoice.invoiceDate
-      ).isBefore(new Date()),
+      isLapse:
+        this.generateInvoiceDueDate(
+          saleInvoice.campaign.paymentTerms,
+          saleInvoice.invoiceDate
+        ).isBefore(new Date()) &&
+        saleInvoice.paymentStatus === Enum.InvoiceStatus.PENDING,
     }
   }
 }

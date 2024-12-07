@@ -178,6 +178,21 @@ export class CampaignDTO {
   }
 
   static transformationForAdminAndEmployee(data: ICampaign) {
+    const saleInvoice = data?.saleInvoices
+    let paymentStatus: Enum.InvoiceStatus = Enum.InvoiceStatus.PENDING
+    let paymentPercent: string | null = null
+
+    if (saleInvoice && saleInvoice.length > 0) {
+      paymentStatus = saleInvoice[0].paymentStatus
+      if (paymentStatus === Enum.InvoiceStatus.ALL_RECEIVED) {
+        let paymentValue =
+          (saleInvoice[0].received /
+            (saleInvoice[0].balanceAmount + saleInvoice[0].received)) *
+          100
+        paymentPercent = paymentValue.toFixed(2) + '%'
+      }
+    }
+
     return {
       id: data.id,
       name: data.name,
@@ -192,7 +207,8 @@ export class CampaignDTO {
         ' 5% (incentive)',
       incentiveReleased: data.incentiveReleased,
       status: data.status,
-      paymentStatus: data.paymentStatus,
+      paymentStatus: paymentStatus,
+      paymentPercent: paymentPercent,
       participants: data.participants.map((participant) => {
         if (participant.influencerProfile !== null) {
           return {

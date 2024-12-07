@@ -493,6 +493,7 @@ class CampaignService
           'brand',
           'purchaseInvoices',
           'purchaseInvoices.influencerProfile',
+          'saleInvoices',
         ],
         { createdAt: 'DESC' }
       )
