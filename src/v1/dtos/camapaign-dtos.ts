@@ -228,6 +228,7 @@ export class CampaignDTO {
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
             confirmationSent: participant.confirmationSent,
+            paymentTerms: participant.paymentTerms,
             deliverables: participant.deliverables.map((deliverable) => {
               return {
                 id: deliverable.id,
