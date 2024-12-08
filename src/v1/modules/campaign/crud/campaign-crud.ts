@@ -2,6 +2,7 @@ import { Between, EntityTarget, FindOptions, FindOptionsWhere } from 'typeorm'
 import { CRUDBase, HttpException } from '../../../../utils'
 import { ICampaign, ICampaignCRUD } from '../interface'
 import { CampaignStats } from '../types'
+import { Enum } from '../../../../constants'
 
 class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
   private static instance: ICampaignCRUD | null = null
@@ -36,7 +37,10 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
         }
       }
 
-      const campaigns = await this.findAll(query, ['participants'])
+      const campaigns = await this.findAll(query, [
+        'participants',
+        'participants.deliverables',
+      ])
 
       const result: CampaignStats = {
         totalCampaign: campaigns.length,
@@ -47,12 +51,15 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
         totalIncentive: 0,
         pendingIncentive: 0,
         totalRevenue: 0,
+        totalActiveCampaign: 0,
       }
 
       campaigns.forEach((value) => {
         result.totalCommercialBrand += value.commercial
         result.totalRevenue += value.commercial
-        let totalBePaid = 0
+        let totalMargin = 0
+        let allLive = true
+
         value.participants.forEach((participant) => {
           result.totalCommercialCreator +=
             participant.commercialCreator === null
@@ -62,12 +69,23 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
             participant.toBePaid === null ? 0 : participant.toBePaid),
             (result.totalMargin +=
               participant.margin === null ? 0 : participant.margin)
-          totalBePaid +=
-            participant.toBePaid === null ? 0 : participant.toBePaid
+          totalMargin += participant.margin === null ? 0 : participant.margin
+
+          participant.deliverables.forEach((deliverable) => {
+            if (
+              deliverable.status === Enum.CampaignDeliverableStatus.NOT_LIVE
+            ) {
+              allLive = false
+            }
+          })
+
+          if (!allLive) {
+            result.totalActiveCampaign++
+          }
         })
-        result.totalIncentive += totalBePaid * 0.05
+        result.totalIncentive += totalMargin * 0.05
         if (value.incentiveReleased === false) {
-          result.pendingIncentive += totalBePaid * 0.05
+          result.pendingIncentive += totalMargin * 0.05
         }
       })
 

@@ -493,11 +493,36 @@ class CampaignController extends BaseController<
     }
   }
 
-  async searchCampaign(req: Request, res: Response): Promise<Response> {
+  async searchCampaign(
+    req: IExtendedRequest,
+    res: Response
+  ): Promise<Response> {
     try {
-      const { code } = req.query
+      const { code, type } = req.query
 
-      if (typeof code === 'string') {
+      if (
+        typeof code === 'string' &&
+        typeof type === 'string' &&
+        type === 'invoice'
+      ) {
+        const campaign = await this.service.findOne({ code: code }, [
+          'brand',
+          'participants',
+          'participants.influencerProfile',
+          'participants.agencyProfile',
+        ])
+
+        if (campaign === null)
+          throw new HttpException(404, 'Campaign Not Found')
+
+        const data =
+          CampaignDTO.transformationForCampaignSearchByCodeForInvoice(
+            campaign,
+            req.user.id
+          )
+
+        return responseHandler(200, res, 'Fetched Successfully', data, req)
+      } else if (typeof code === 'string') {
         const campaign = await this.service.findOne({ code: code }, ['brand'])
 
         if (campaign === null)

@@ -44,6 +44,7 @@ export interface ICampaignParticipants {
   toBePaid: number | null
   margin: number | null
   deliverables: ICampaignDeliverables[]
+  paymentTerms: Enum.INFLUENCER_PAYMENT_TERMS
   confirmationSent: boolean
   createdAt: Date
   updatedAt: Date

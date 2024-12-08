@@ -31,6 +31,7 @@ export class AgencyProfile implements IAgencyProfile {
 
   @OneToOne(() => User, (user) => user.agencyProfile, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn({ name: 'userId' })
   user: IUser

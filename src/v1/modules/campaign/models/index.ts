@@ -202,6 +202,14 @@ export class CampaignParticipants implements ICampaignParticipants {
   @Column({ type: 'boolean', default: false })
   confirmationSent: boolean
 
+  @Column({
+    type: 'enum',
+    nullable: false,
+    default: Enum.INFLUENCER_PAYMENT_TERMS.DAYS_30,
+    enum: Enum.INFLUENCER_PAYMENT_TERMS,
+  })
+  paymentTerms: Enum.INFLUENCER_PAYMENT_TERMS
+
   @CreateDateColumn()
   createdAt: Date
 

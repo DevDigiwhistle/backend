@@ -88,6 +88,7 @@ class CampaignParticipantsCRUD
           totalMargin: 0,
           totalIncentive: 0,
           pendingIncentive: 0,
+          totalActiveCampaign: 0,
         }
       } else {
         const data = await this.repository.find({
@@ -116,6 +117,7 @@ class CampaignParticipantsCRUD
           totalMargin: 0,
           pendingIncentive: 0,
           totalIncentive: 0,
+          totalActiveCampaign: 0,
         }
       }
     } catch (e) {

@@ -34,6 +34,7 @@ export type CampaignStats = {
   totalIncentive: number
   totalRevenue: number
   pendingIncentive: number
+  totalActiveCampaign: number
 }
 
 export interface ICampaignInfluencerData {
@@ -48,6 +49,7 @@ export interface ICampaignInfluencerData {
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
   invoice: string | null
+  paymentTerms: Enum.INFLUENCER_PAYMENT_TERMS
   deliverables: [
     {
       id: string
@@ -73,6 +75,7 @@ export interface ICampaignAgencyData {
   paymentStatus: Enum.CampaignPaymentStatus
   invoiceStatus: Enum.CampaignInvoiceStatus
   invoice: string | null
+  paymentTerms: Enum.INFLUENCER_PAYMENT_TERMS
   influencer: [
     {
       name: string

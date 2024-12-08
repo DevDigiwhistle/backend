@@ -617,8 +617,14 @@ class InfluencerService implements IInfluencerService {
       }
 
       if (url.includes('instagram')) {
+        const lastSlashIndex = url.lastIndexOf('/')
+
+        if (lastSlashIndex !== -1) {
+          url = url.substring(0, lastSlashIndex)
+        }
+
         const influencer = await this.influencerProfileService.findOne(
-          { instagramURL: url },
+          [{ instagramURL: url }, { instagramURL: url + '/' }],
           ['instagramStats']
         )
 
@@ -649,8 +655,14 @@ class InfluencerService implements IInfluencerService {
 
         return { stats: data, isDigiwhistle: false }
       } else if (url.includes('x.com')) {
+        const lastSlashIndex = url.lastIndexOf('/')
+
+        if (lastSlashIndex !== -1) {
+          url = url.substring(0, lastSlashIndex)
+        }
+
         const influencer = await this.influencerProfileService.findOne(
-          { twitterURL: url },
+          [{ twitterURL: url }, { twitterURL: url + '/' }],
           ['twitterStats']
         )
 
@@ -674,8 +686,14 @@ class InfluencerService implements IInfluencerService {
 
         return { stats: data, isDigiwhistle: false }
       } else if (url.includes('youtube')) {
+        const lastSlashIndex = url.lastIndexOf('/')
+
+        if (lastSlashIndex !== -1) {
+          url = url.substring(0, lastSlashIndex)
+        }
+
         const influencer = await this.influencerProfileService.findOne(
-          { youtubeURL: url },
+          [{ youtubeURL: url }, { youtubeURL: url + '/' }],
           ['youtubeStats']
         )
 

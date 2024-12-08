@@ -113,6 +113,10 @@ const updateCampaignCardsSchema = {
           commercialCreator: { type: ['number', 'null'] },
           toBeGiven: { type: ['number', 'null'] },
           margin: { type: ['number', 'null'] },
+          paymentTerms: {
+            type: 'string',
+            enum: [...Object.values(Enum.PaymentTerms)],
+          },
           paymentStatus: {
             type: 'string',
             enum: [...Object.values(Enum.CampaignPaymentStatus)],

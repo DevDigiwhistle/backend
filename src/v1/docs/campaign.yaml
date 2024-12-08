@@ -304,6 +304,11 @@ paths:
           schema:
             type: string
           description: The code of campaign
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: The type of query
       responses:
         '200':
           description: fetched successfully

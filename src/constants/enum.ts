@@ -96,3 +96,9 @@ export enum WEBHOOK_EVENTS {
   REVERSED = 'payout.reversed',
   FAILED = 'payout.failed',
 }
+
+export enum INFLUENCER_PAYMENT_TERMS {
+  ADVANCE = 'Advance',
+  DAYS_30 = '30 Days',
+  DAYS_60 = '60 Days',
+}

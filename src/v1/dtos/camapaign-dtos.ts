@@ -184,7 +184,7 @@ export class CampaignDTO {
 
     if (saleInvoice && saleInvoice.length > 0) {
       paymentStatus = saleInvoice[0].paymentStatus
-      if (paymentStatus === Enum.InvoiceStatus.ALL_RECEIVED) {
+      if (paymentStatus === Enum.InvoiceStatus.PENDING) {
         let paymentValue =
           (saleInvoice[0].received /
             (saleInvoice[0].balanceAmount + saleInvoice[0].received)) *
@@ -378,6 +378,7 @@ export class CampaignDTO {
         toBePaid: value.toBeGiven,
         margin: value.margin,
         invoice: value.invoice,
+        paymentTerms: value.paymentTerms,
       })
 
       if (value.type === 'influencer') {
@@ -493,6 +494,12 @@ export class CampaignDTO {
           iconName: 'UsersIcon',
         },
         {
+          label: 'Active Campaigns',
+          value: millify(data.totalActiveCampaign),
+          subValue: '',
+          iconName: 'UsersIcon',
+        },
+        {
           label: 'Total Comm.Brand',
           value: millify(data.totalCommercialBrand),
           subValue: '',
@@ -579,6 +586,72 @@ export class CampaignDTO {
       name,
       code,
       brand: brand?.name,
+    }
+  }
+
+  static transformationForCampaignSearchByCodeForInvoice(
+    data: ICampaign,
+    userId: string
+  ) {
+    const { id, name, code, brand, participants } = data
+
+    const influencer = participants.filter((participant) => {
+      return participant.influencerProfile?.user?.id === userId
+    })
+
+    const agency = participants.filter((participant) => {
+      return participant.agencyProfile?.user?.id === userId
+    })
+
+    if (influencer.length === 0 && agency.length === 0) return {}
+
+    const panNo =
+      influencer.length > 0
+        ? influencer[0].influencerProfile?.panNo
+        : agency[0].agencyProfile?.panNo
+
+    const paymentTerms =
+      influencer.length > 0
+        ? influencer[0].paymentTerms
+        : agency[0].paymentTerms
+
+    const gstNo =
+      influencer.length > 0
+        ? influencer[0].influencerProfile?.gstNo
+        : agency[0].agencyProfile?.gstNo
+
+    const toBeGiven =
+      influencer.length > 0 ? influencer[0].toBePaid : agency[0].toBePaid
+
+    const cgst = gstNo?.includes('09')
+      ? 0
+      : 0.09 * (toBeGiven == null ? 0 : toBeGiven)
+
+    const igst = gstNo?.includes('09')
+      ? 0.18 * (toBeGiven == null ? 0 : toBeGiven)
+      : 0
+
+    const sgst = gstNo?.includes('09')
+      ? 0
+      : 0.09 * (toBeGiven == null ? 0 : toBeGiven)
+
+    return {
+      campaignId: id,
+      campaignName: name,
+      campaignCode: code,
+      brand: {
+        id: brand?.id,
+        name: brand?.name,
+      },
+      panNo: panNo,
+      paymentTerms: paymentTerms,
+      cgst: cgst,
+      igst: igst,
+      sgst: sgst,
+      totalInvoiceAmount:
+        (toBeGiven == null ? 0 : toBeGiven) - (cgst + igst + sgst),
+      totalAmount: toBeGiven,
+      paymentStatus: Enum.InvoiceStatus.PENDING,
     }
   }
 }
