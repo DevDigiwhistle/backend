@@ -322,6 +322,11 @@ export class CampaignDTO {
     let isRaiseInvoice = false
 
     if (
+      influencerDetails[0].invoiceStatus ===
+      Enum.CampaignInvoiceStatus.GENERATED
+    ) {
+      isRaiseInvoice = false
+    } else if (
       influencerDetails[0].paymentTerms ===
       Enum.INFLUENCER_PAYMENT_TERMS.ADVANCE
     ) {
@@ -410,8 +415,11 @@ export class CampaignDTO {
     }
 
     let isRaiseInvoice = false
-
     if (
+      agencyDetails[0].invoiceStatus === Enum.CampaignInvoiceStatus.GENERATED
+    ) {
+      isRaiseInvoice = false
+    } else if (
       agencyDetails[0].paymentTerms === Enum.INFLUENCER_PAYMENT_TERMS.ADVANCE
     ) {
       isRaiseInvoice = true
