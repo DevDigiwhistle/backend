@@ -76,20 +76,22 @@ export class PurchaseInvoiceService
         },
       }
 
-      if (data.influencerProfile !== null) {
+      if (typeof data.influencerProfile === 'string') {
         Query = {
           ...Query,
           influencerProfile: {
             id: data.influencerProfile as unknown as string,
           },
         }
-      } else if (data.agencyProfile !== null) {
+      } else if (typeof data.agencyProfile === 'string') {
         Query = {
           ...Query,
           agencyProfile: {
             id: data.agencyProfile as unknown as string,
           },
         }
+      } else {
+        throw new HttpException(400, 'Invalid Data')
       }
 
       const exitingInvoice = await this.crudBase.findOne(Query)

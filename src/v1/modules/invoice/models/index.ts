@@ -95,7 +95,7 @@ export class PurchaseInvoice implements IPurchaseInvoice {
   @Column({ nullable: false })
   invoiceNo: string
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   pan: string
 
   @Column({ nullable: false, type: 'decimal' })
