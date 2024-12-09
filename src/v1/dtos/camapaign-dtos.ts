@@ -266,6 +266,20 @@ export class CampaignDTO {
     }
   }
 
+  static generateInvoiceRaiseDate(
+    paymentTerms: Enum.INFLUENCER_PAYMENT_TERMS,
+    updatedAt: Date
+  ) {
+    switch (paymentTerms) {
+      case Enum.INFLUENCER_PAYMENT_TERMS.DAYS_30:
+        return moment(updatedAt).add(30, 'days')
+      case Enum.INFLUENCER_PAYMENT_TERMS.DAYS_60:
+        return moment(updatedAt).add(60, 'days')
+      default:
+        return moment(updatedAt).add(0, 'days')
+    }
+  }
+
   static transformationForInfluencer(
     data: ICampaign,
     influencerProfileId: string
@@ -288,6 +302,40 @@ export class CampaignDTO {
             invoice[0].invoiceDate
           )
         : null
+
+    const updatedAt = influencerDetails[0].deliverables.map((deliverable) => {
+      return deliverable.updatedAt
+    })
+
+    let latestUpdatedAt: Date | null = null
+
+    if (updatedAt.length > 0) {
+      latestUpdatedAt = updatedAt[0]
+
+      for (let i = 0; i < updatedAt.length; i++) {
+        if (updatedAt[i] > latestUpdatedAt) {
+          latestUpdatedAt = updatedAt[i]
+        }
+      }
+    }
+
+    let isRaiseInvoice = false
+
+    if (
+      influencerDetails[0].paymentTerms ===
+      Enum.INFLUENCER_PAYMENT_TERMS.ADVANCE
+    ) {
+      isRaiseInvoice = true
+    } else if (latestUpdatedAt !== null) {
+      const raiseInvoiceDate = this.generateInvoiceRaiseDate(
+        influencerDetails[0].paymentTerms,
+        latestUpdatedAt
+      )
+
+      if (raiseInvoiceDate.isBefore(new Date())) {
+        isRaiseInvoice = true
+      }
+    }
 
     return {
       campaignId: data.id,
@@ -314,6 +362,7 @@ export class CampaignDTO {
       deliverable: influencerDetails[0].deliverables,
       participantId: influencerDetails[0].id,
       invoiceDueDate: invoiceDueDate,
+      isRaiseInvoice: isRaiseInvoice,
     }
   }
 
@@ -343,6 +392,40 @@ export class CampaignDTO {
         data.agencyProfile !== null && data.agencyProfile.id === agencyProfileId
       )
     })
+
+    const updatedAt = agencyDetails[0].deliverables.map((deliverable) => {
+      return deliverable.updatedAt
+    })
+
+    let latestUpdatedAt: Date | null = null
+
+    if (updatedAt.length > 0) {
+      latestUpdatedAt = updatedAt[0]
+
+      for (let i = 0; i < updatedAt.length; i++) {
+        if (updatedAt[i] > latestUpdatedAt) {
+          latestUpdatedAt = updatedAt[i]
+        }
+      }
+    }
+
+    let isRaiseInvoice = false
+
+    if (
+      agencyDetails[0].paymentTerms === Enum.INFLUENCER_PAYMENT_TERMS.ADVANCE
+    ) {
+      isRaiseInvoice = true
+    } else if (latestUpdatedAt !== null) {
+      const raiseInvoiceDate = this.generateInvoiceRaiseDate(
+        agencyDetails[0].paymentTerms,
+        latestUpdatedAt
+      )
+
+      if (raiseInvoiceDate.isBefore(new Date())) {
+        isRaiseInvoice = true
+      }
+    }
+
     return {
       id: data.id,
       name: data.name,
@@ -361,6 +444,7 @@ export class CampaignDTO {
       participants: this.groupDeliverableByInfluencerName(
         agencyDetails[0].deliverables
       ),
+      isRaiseInvoice: isRaiseInvoice,
     }
   }
 

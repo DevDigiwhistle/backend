@@ -58,6 +58,7 @@ const updateInfluencerProfileSchema = {
     youtubeCommercial: { type: 'number', nullable: true },
     linkedInCommercial: { type: 'number', nullable: true },
     rating: { type: 'number', nullable: true },
+    profilePic: { type: 'string', nullable: true },
   },
   additionalProperties: false,
 }
