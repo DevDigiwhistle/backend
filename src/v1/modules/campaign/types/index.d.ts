@@ -55,7 +55,7 @@ export interface ICampaignInfluencerData {
       id: string
       title: string
       platform: Enum.Platform
-      campaignStatus: Enum.CampaignDeliverableStatus
+      status: Enum.CampaignDeliverableStatus
       deliverableLink: string
       er: number | null
       cpv: number | null
@@ -84,7 +84,7 @@ export interface ICampaignAgencyData {
           id: string
           title: string
           platform: Enum.Platform
-          campaignStatus: Enum.CampaignDeliverableStatus
+          status: Enum.CampaignDeliverableStatus
           deliverableLink: string
           er: number | null
           cpv: number | null

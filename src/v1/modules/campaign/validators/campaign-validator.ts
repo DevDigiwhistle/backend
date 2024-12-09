@@ -115,7 +115,7 @@ const updateCampaignCardsSchema = {
           margin: { type: ['number', 'null'] },
           paymentTerms: {
             type: 'string',
-            enum: [...Object.values(Enum.PaymentTerms)],
+            enum: [...Object.values(Enum.INFLUENCER_PAYMENT_TERMS)],
           },
           paymentStatus: {
             type: 'string',
