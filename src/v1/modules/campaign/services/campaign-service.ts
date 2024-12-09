@@ -793,6 +793,11 @@ class CampaignService
             ' '
           : participant.agencyProfile?.name
 
+      const paymentTerms =
+        participant.influencerProfile !== null
+          ? participant.influencerProfile.paymentTerms
+          : participant.agencyProfile?.paymentTerms
+
       const deliverableText = participant.deliverables
         .map((deliverable) => {
           return `<p><b>Platform:</b> ${deliverable.platform} </p>
@@ -815,7 +820,7 @@ class CampaignService
         <p><b>To be posted on:</b> Brand's handles</p>
         <p><b>Production:</b> Self</p>
         <p><b>Post Date:</b> ${new Date()}</p>
-        <p><b>Payment Terms:</b> ${campaign.paymentTerms} after the video is live and the invoice is raised.</p>
+        <p><b>Payment Terms:</b> ${paymentTerms} after the video is live and the invoice is raised.</p>
 
         <p><b>Please Note:</b></p>
         <p>No other branded posts or collaborations should be posted within 24 hours of this content going live.</p>

@@ -31,11 +31,12 @@ export class BrandProfile implements IBrandProfile {
 
   @OneToOne(() => User, (user) => user.brandProfile, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinColumn({ name: 'userId' })
   user: IUser
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: true, default: null })
   websiteURL: string
 
   @Column({ type: 'varchar', nullable: false, unique: true })

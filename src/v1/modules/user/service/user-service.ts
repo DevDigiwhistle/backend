@@ -135,7 +135,73 @@ class UserService
 
   async findOverallUserStats(): Promise<userStats> {
     try {
-      return await this.crudBase.findOverallUserStats()
+      const data = await this.crudBase.findAll(
+        [
+          {
+            role: {
+              id: Enum.ROLES.INFLUENCER,
+            },
+          },
+          {
+            role: {
+              id: Enum.ROLES.AGENCY,
+            },
+          },
+          {
+            role: {
+              id: Enum.ROLES.BRAND,
+            },
+          },
+        ],
+        ['role', 'brandProfile', 'agencyProfile', 'influencerProfile']
+      )
+
+      let approved = 0,
+        rejected = 0,
+        pending = 0
+
+      data.forEach((value) => {
+        if (
+          value.isApproved === true &&
+          ((value.role.id === Enum.ROLES.INFLUENCER &&
+            value.influencerProfile !== null) ||
+            (value.role.id === Enum.ROLES.AGENCY &&
+              value.agencyProfile !== null) ||
+            (value.role.id === Enum.ROLES.BRAND && value.brandProfile !== null))
+        ) {
+          approved++
+        } else if (
+          value.isApproved === false &&
+          ((value.role.id === Enum.ROLES.INFLUENCER &&
+            value.influencerProfile !== null) ||
+            (value.role.id === Enum.ROLES.AGENCY &&
+              value.agencyProfile !== null) ||
+            (value.role.id === Enum.ROLES.BRAND && value.brandProfile !== null))
+        ) {
+          rejected++
+        } else if (
+          value.isApproved === null &&
+          ((value.role.id === Enum.ROLES.INFLUENCER &&
+            value.influencerProfile !== null &&
+            (value.influencerProfile?.instagramURL !== null ||
+              value.influencerProfile?.twitterURL !== null ||
+              value.influencerProfile?.youtubeURL !== null ||
+              value.influencerProfile?.linkedInURL !== null)) ||
+            (value.role.id === Enum.ROLES.AGENCY &&
+              value.agencyProfile !== null) ||
+            (value.role.id === Enum.ROLES.BRAND && value.brandProfile !== null))
+        ) {
+          pending++
+        }
+      })
+
+      const result: userStats = {
+        pending: pending.toString(),
+        approved: approved.toString(),
+        rejected: rejected.toString(),
+      }
+
+      return result
     } catch (e) {
       throw new HttpException(e?.errorCode, e?.message)
     }

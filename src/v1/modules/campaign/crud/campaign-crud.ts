@@ -23,14 +23,27 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
     brandProfileId?: string
   ): Promise<CampaignStats> {
     try {
-      let query: FindOptionsWhere<ICampaign> = {
-        startDate: Between(lowerBound, upperBound),
-        endDate: Between(lowerBound, upperBound),
-      }
+      console.log(lowerBound, upperBound)
+
+      let query: FindOptionsWhere<ICampaign>[] = [
+        {
+          startDate: Between(lowerBound, upperBound),
+        },
+        {
+          endDate: Between(lowerBound, upperBound),
+        },
+      ]
 
       if (typeof brandProfileId === 'string') {
-        query = {
-          ...query,
+        query[0] = {
+          ...query[0],
+          brand: {
+            id: brandProfileId,
+          },
+        }
+
+        query[1] = {
+          ...query[1],
           brand: {
             id: brandProfileId,
           },
