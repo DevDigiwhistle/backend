@@ -8,7 +8,7 @@ const addBrandProfileSchema = {
     user: { type: 'string', nullable: false },
     websiteURL: { type: 'string', nullable: false },
   },
-  required: ['pocFirstName', 'name', 'mobileNo', 'user', 'websiteURL'],
+  required: ['pocFirstName', 'name', 'mobileNo', 'user'],
   additionalProperties: false,
 }
 
