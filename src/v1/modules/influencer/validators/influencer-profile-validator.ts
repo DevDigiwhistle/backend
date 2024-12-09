@@ -17,6 +17,7 @@ const addInfluencerProfileSchema = {
     youtubeCommercial: { type: 'number', nullable: true },
     linkedInCommercial: { type: 'number', nullable: true },
     rating: { type: 'number', nullable: true },
+    profilePic: { type: 'string', nullable: true },
   },
   required: ['firstName', 'mobileNo', 'user'],
   additionalProperties: false,
