@@ -5,7 +5,7 @@ export const addPurchaseInvoiceSchema = {
   properties: {
     campaign: { type: 'string', format: 'uuid', nullable: false },
     invoiceNo: { type: 'string', nullable: false },
-    pan: { type: 'string', nullable: false },
+    pan: { type: 'string', nullable: true },
     amount: { type: 'number', nullable: false },
     igst: { type: 'number', nullable: false },
     cgst: { type: 'number', nullable: false },
