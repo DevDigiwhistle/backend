@@ -258,6 +258,7 @@ export class CampaignDTO {
             confirmationSent: participant.confirmationSent,
             paymentStatus: participant.paymentStatus,
             invoiceStatus: participant.invoiceStatus,
+            paymentTerms: participant.paymentTerms,
             influencer: influencerGroupedData,
           }
         }

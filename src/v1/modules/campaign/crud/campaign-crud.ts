@@ -78,14 +78,14 @@ class CampaignCRUD extends CRUDBase<ICampaign> implements ICampaignCRUD {
               allLive = false
             }
           })
-
-          if (!allLive) {
-            result.totalActiveCampaign++
-          }
         })
         result.totalIncentive += totalMargin * 0.05
         if (value.incentiveReleased === false) {
           result.pendingIncentive += totalMargin * 0.05
+        }
+
+        if (!allLive) {
+          result.totalActiveCampaign++
         }
       })
 
