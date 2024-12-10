@@ -391,7 +391,7 @@ class CampaignService
             startDate: Between(lowerBound, upperBound),
           },
           {
-            ...query,
+            ...brandQuery,
             endDate: Between(lowerBound, upperBound),
           }
         )
