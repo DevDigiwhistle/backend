@@ -743,7 +743,7 @@ export class CampaignDTO {
       igst: igst,
       sgst: sgst,
       totalInvoiceAmount:
-        (toBeGiven == null ? 0 : toBeGiven) - (cgst + igst + sgst),
+        (toBeGiven == null ? 0 : toBeGiven) + (cgst + igst + sgst),
       totalAmount: toBeGiven,
       paymentStatus: Enum.InvoiceStatus.PENDING,
     }
